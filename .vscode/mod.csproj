@@ -5,8 +5,8 @@
 		<PlatformTarget>x64</PlatformTarget>
 
 		<!-- Modify [RootNamespace], [AssemblyName], [OutputPath], [VersionPrefix] -->
-		<RootNamespace>Template</RootNamespace>
-		<AssemblyName>Template</AssemblyName>
+		<RootNamespace>RimworldTycoon</RootNamespace>
+		<AssemblyName>RimworldTycoon</AssemblyName>
 		<OutputPath>../1.4/Assemblies</OutputPath>
 		<VersionPrefix>0.1.0.0</VersionPrefix>
 
@@ -20,6 +20,14 @@
  	<ItemGroup>
 	 	<!-- Mod -->
 	 	<Compile Include="../Source/*" />
+		 <Compile Include="../Source/DefOf/*" />
+		 <Compile Include="../Source/JobDrivers/*" />
+		 <Compile Include="../Source/FinanceSystem/*" />
+		 <Compile Include="../Source/HireableSystem/*" />
+		 <Compile Include="../Source/TraderCaller/*" />
+		 <Compile Include="../Source/UItils/*" />
+		 <Compile Include="../Source/Burglar/*" />
+		 <Compile Include="../Source/Pyromaniac/*" />
 		
 	 	<!-- Rimworld -->
 	 	<Reference Include="../../../RimWorldWin64_Data/Managed/*.dll">
@@ -27,8 +35,8 @@
 		</Reference>
 
 		<!-- Harmony -->
-		<!-- <Reference Include="../../Harmony/Current/Assemblies/0Harmony.dll">
+		<Reference Include="../../Harmony/Current/Assemblies/0Harmony.dll">
 			<Private>False</Private>
-		</Reference> -->
+		</Reference>
 	</ItemGroup>
 </Project>

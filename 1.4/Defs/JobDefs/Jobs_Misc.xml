@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <JobDef>
+        <defName>RT_LeaveMap</defName>
+        <driverClass>RT.JobDriver_LeaveMap</driverClass>
+        <reportString>leaving.</reportString>
+        <allowOpportunisticPrefix>true</allowOpportunisticPrefix>
+        <playerInterruptible>false</playerInterruptible>
+        <casualInterruptible>false</casualInterruptible>
+        <alwaysShowWeapon>true</alwaysShowWeapon>
+    </JobDef>
+
+    <DutyDef>
+		<defName>RT_StealColony</defName>
+		<alwaysShowWeapon>true</alwaysShowWeapon>
+		<thinkNode Class="ThinkNode_Priority">
+			<subNodes>
+				<li Class="JobGiver_TakeCombatEnhancingDrug" />
+				<li Class="RT.JobGiver_StealColony" />
+			</subNodes>
+		</thinkNode>
+	</DutyDef>
+
+    <DutyDef>
+		<defName>RT_BurnColony</defName>
+		<alwaysShowWeapon>true</alwaysShowWeapon>
+		<thinkNode Class="ThinkNode_Priority">
+			<subNodes>
+				<li Class="JobGiver_TakeCombatEnhancingDrug" />
+				<li Class="RT.JobGiver_BurnColony" />
+			</subNodes>
+		</thinkNode>
+	</DutyDef>
+
+    <JobDef>
+        <defName>RT_IgniteWithTorches</defName>
+        <driverClass>RT.JobDriver_IgniteWithTorches</driverClass>
+        <reportString>igniting TargetA with torches.</reportString>
+        <allowOpportunisticPrefix>true</allowOpportunisticPrefix>
+      </JobDef>    
+</Defs>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <TraderKindDef>
+    <defName>Orbital_Furniture</defName>
+    <label>furniture trader</label>
+    <orbital>true</orbital>
+    <stockGenerators>
+      <!-- Buildings -->
+      <li Class="StockGenerator_Category">
+        <categoryDef>BuildingsFurniture</categoryDef>
+        <thingDefCountRange>25~50</thingDefCountRange>
+        <countRange>5~10</countRange>
+      </li>
+      <!-- Buying -->
+      <li Class="StockGenerator_BuyExpensiveSimple" />
+    </stockGenerators>
+  </TraderKindDef>
+
+  <TraderKindDef>
+    <defName>Orbital_Appliances</defName>
+    <label>appliances trader</label>
+    <orbital>true</orbital>
+    <stockGenerators>
+      <!-- Buildings -->
+      <li Class="StockGenerator_Category">
+        <categoryDef>BuildingsProduction</categoryDef>
+        <thingDefCountRange>5~10</thingDefCountRange>
+        <countRange>1~2</countRange>
+      </li>
+      <li Class="StockGenerator_Category">
+        <categoryDef>BuildingsSecurity</categoryDef>
+        <thingDefCountRange>4~5</thingDefCountRange>
+        <countRange>1~2</countRange>
+      </li>
+      <li Class="StockGenerator_Category">
+        <categoryDef>BuildingsTemperature</categoryDef>
+        <thingDefCountRange>4~5</thingDefCountRange>
+        <countRange>1~2</countRange>
+      </li>
+      <li Class="StockGenerator_Category">
+        <categoryDef>BuildingsJoy</categoryDef>
+        <thingDefCountRange>4~5</thingDefCountRange>
+        <countRange>1~2</countRange>
+      </li>
+      <li Class="StockGenerator_Category">
+        <categoryDef>BuildingsHygiene</categoryDef>
+        <thingDefCountRange>4~5</thingDefCountRange>
+        <countRange>1~2</countRange>
+      </li>
+      <li Class="StockGenerator_Category">
+        <categoryDef>BuildingsSpecial</categoryDef>
+        <thingDefCountRange>0~1</thingDefCountRange>
+        <countRange>1~1</countRange>
+      </li>
+      <li Class="StockGenerator_Category">
+        <categoryDef>BuildingsMisc</categoryDef>
+        <thingDefCountRange>5~10</thingDefCountRange>
+        <countRange>1~2</countRange>
+      </li>
+      <li Class="StockGenerator_Category">
+        <categoryDef>BuildingsPower</categoryDef>
+        <thingDefCountRange>5~10</thingDefCountRange>
+        <countRange>1~2</countRange>
+      </li>
+      <!-- Buying -->
+      <li Class="StockGenerator_BuyExpensiveSimple" />
+    </stockGenerators>
+  </TraderKindDef>  
+</Defs>

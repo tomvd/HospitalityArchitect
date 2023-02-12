@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <PawnKindDef ParentName="BasePlayerPawnKind">
+    <defName>RT_CEO</defName>
+    <label>ceo</label>
+    <defaultFactionType>RT_PlayerColony</defaultFactionType>
+    <chemicalAddictionChance>0.06</chemicalAddictionChance>
+    <apparelTags>
+      <li>IndustrialBasic</li>
+    </apparelTags>
+    <apparelRequired>
+      <li>VAE_Apparel_SuitJacket</li>
+      <li>VAE_Headgear_Sunglasses</li>
+    </apparelRequired>
+    <apparelAllowHeadgearChance>0</apparelAllowHeadgearChance>
+    <apparelMoney>350~600</apparelMoney>
+    <backstoryCryptosleepCommonality>0</backstoryCryptosleepCommonality>
+    <initialResistanceRange>13~21</initialResistanceRange>
+    <backstoryFiltersOverride>
+      <li>
+        <categoriesChildhood>
+          <li>Outlander</li>
+        </categoriesChildhood>
+        <categoriesAdulthood>
+          <li>Ceo</li>
+        </categoriesAdulthood>
+      </li>
+    </backstoryFiltersOverride>
+    <minGenerationAge>18</minGenerationAge>
+  </PawnKindDef>
+</Defs>

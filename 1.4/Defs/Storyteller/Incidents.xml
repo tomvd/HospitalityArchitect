@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<IncidentDef>
+		<defName>RT_Burglar</defName>
+		<label>burglars</label>
+		<targetTags>
+			<li>Map_PlayerHome</li>
+		</targetTags>
+		<letterLabel>Raid (Burglar)</letterLabel>
+		<letterDef>ThreatBig</letterDef>
+		<letterText>.</letterText>
+		<workerClass>RT.IncidentWorker_BurglarRaid</workerClass>
+		<tale>Raid</tale>
+		<baseChance>5</baseChance>
+		<minRefireDays>2</minRefireDays>
+		<category>ThreatSmall</category>		
+	</IncidentDef>
+
+	<IncidentDef>
+		<defName>RT_Pyromaniac</defName>
+		<label>pyromaniac</label>
+		<targetTags>
+			<li>Map_PlayerHome</li>
+		</targetTags>
+		<letterLabel>Raid (Burglar)</letterLabel>
+		<letterDef>ThreatBig</letterDef>
+		<letterText>.</letterText>
+		<workerClass>RT.IncidentWorker_PyromaniacRaid</workerClass>
+		<tale>Raid</tale>
+		<baseChance>5</baseChance>
+		<minRefireDays>2</minRefireDays>
+		<category>ThreatSmall</category>		
+	</IncidentDef>
+
+</Defs>

@@ -15,23 +15,27 @@ using RimWorld;
 using RimWorld.Planet;
 
 // using System.Reflection;
-// using HarmonyLib;
+using HarmonyLib;
 
-namespace Template
+namespace RT
 {
-    [DefOf]
-    public class TemplateDefOf
+    public class RimworldTycoon : Mod
     {
-        public static LetterDef success_letter;
+        public RimworldTycoon(ModContentPack content) : base(content)
+        {
+            harmonyInstance = new Harmony("Adamas.RimworldTycoon");
+            harmonyInstance.PatchAll();
+        }
+
+        public static Harmony harmonyInstance;
     }
 
     public class MyMapComponent : MapComponent
     {
         public MyMapComponent(Map map) : base(map){}
         public override void FinalizeInit()
-        {
-            Messages.Message("Success", null, MessageTypeDefOf.PositiveEvent);
-            Find.LetterStack.ReceiveLetter("Success", TemplateDefOf.success_letter.description, TemplateDefOf.success_letter, null);
+        {         
+            //Find.ResearchManager.DebugSetAllProjectsFinished();
         }
     }
 
@@ -40,7 +44,7 @@ namespace Template
     {
         static Start()
         {
-            Log.Message("Mod template loaded successfully!");
+            Log.Message("Rimworld Tycoon loaded successfully!");
         }
     }
 

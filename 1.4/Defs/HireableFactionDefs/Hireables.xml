@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+    <RT.HireableFactionDef>
+        <defName>Staff</defName>
+        <label>staff</label>
+        <description>people for hire</description>
+        <texPath>World/WorldObjects/Expanding/Town</texPath>
+        <color>(1, 0.74, 0.83)</color>
+        <pawnKinds>
+            <li>Janitor</li>
+            <li>Cook</li>
+            <li>Farmhand</li>
+            <li>Doctor</li>
+            <li>Construction_Worker_Pro</li>
+            <li>Construction_Worker_Expert</li>
+            <li>Construction_Worker_Master</li>
+            <li>Mercenary_Pro</li>
+            <li>Mercenary_Expert</li>
+            <li>Mercenary_Master</li>                        
+        </pawnKinds>
+        <commTag>staff</commTag>
+        <referencedFaction>OutlanderCivil</referencedFaction>
+    </RT.HireableFactionDef>
+</Defs>

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <PawnKindDef ParentName="OutlanderBase" Name="StaffBase" Abstract="true">
+    <defName>Staff</defName>
+    <label>staff</label>
+    <itemQuality>Poor</itemQuality>
+    <isFighter>false</isFighter>
+    <apparelTags>
+      <li>IndustrialBasic</li>
+    </apparelTags>
+    <gearHealthRange>0.2~2.0</gearHealthRange>
+    <apparelMoney>200~400</apparelMoney>
+    <apparelAllowHeadgearChance>0.4</apparelAllowHeadgearChance>
+    <techHediffsChance>0.06</techHediffsChance>
+    <techHediffsMoney>50~600</techHediffsMoney>
+    <techHediffsTags>
+      <li>Poor</li>
+      <li>Simple</li>
+      <li>ImplantEmpireCommon</li>
+    </techHediffsTags>
+    <initialWillRange>0~1</initialWillRange>
+    <initialResistanceRange>10~17</initialResistanceRange>
+    </PawnKindDef>
+   
+    <PawnKindDef ParentName="StaffBase" Name="JanitorBase">
+      <defName>Janitor</defName>
+      <label>janitor</label>
+      <backstoryFiltersOverride>
+        <li>
+          <categoriesChildhood>
+            <li>Outlander</li>
+          </categoriesChildhood>
+          <categoriesAdulthood>
+            <li>Janitor</li>
+          </categoriesAdulthood>
+        </li>
+      </backstoryFiltersOverride>      
+      <combatPower>2</combatPower>
+      <apparelRequired>
+        <li>VAE_Apparel_Overalls</li>
+      </apparelRequired>
+  </PawnKindDef>
+
+    <PawnKindDef ParentName="StaffBase" Name="ConstructionWorkerBase" Abstract="true">
+        <defName>Construction_Worker</defName>
+        <label>construction worker</label>
+        <backstoryFiltersOverride>
+          <li>
+            <categoriesChildhood>
+              <li>Outlander</li>
+            </categoriesChildhood>
+            <categoriesAdulthood>
+              <li>Construction_Worker</li>
+            </categoriesAdulthood>
+          </li>
+        </backstoryFiltersOverride>
+        <apparelRequired>
+          <li>VAE_Headgear_Hardhat</li>
+          <li>VAE_Apparel_BuildersJacket</li>
+        </apparelRequired>
+    </PawnKindDef>
+
+    <PawnKindDef ParentName="ConstructionWorkerBase" Name="ConstructionWorkerPro">
+      <defName>Construction_Worker_Pro</defName>
+      <label>construction worker</label>
+      <combatPower>6</combatPower>
+      <skills>
+          <li>
+            <skill>Construction</skill>
+            <range>7~11</range>
+          </li>
+        </skills>
+    </PawnKindDef>
+
+    <PawnKindDef ParentName="ConstructionWorkerBase" Name="ConstructionWorkerExpert">
+        <defName>Construction_Worker_Expert</defName>
+        <label>expert construction worker</label>
+        <combatPower>8</combatPower>
+        <skills>
+            <li>
+              <skill>Construction</skill>
+              <range>12~13</range>
+            </li>
+          </skills>
+          <forcedTraits>
+            <Industriousness>1</Industriousness>
+          </forcedTraits>
+    </PawnKindDef>
+
+    <PawnKindDef ParentName="ConstructionWorkerBase" Name="ConstructionWorkerMaster">
+        <defName>Construction_Worker_Master</defName>
+        <label>master construction worker</label>
+        <combatPower>10</combatPower>
+        <skills>
+            <li>
+              <skill>Construction</skill>
+              <range>14~18</range>
+            </li>
+          </skills>
+          <forcedTraits>
+            <Industriousness>1</Industriousness>
+          </forcedTraits>          
+    </PawnKindDef>
+
+    <PawnKindDef ParentName="StaffBase" Name="MercenaryBase" Abstract="true">
+        <defName>Mercenary</defName>
+        <label>mercenary</label>
+        <backstoryFiltersOverride>
+          <li>
+            <categoriesChildhood>
+              <li>Outlander</li>
+            </categoriesChildhood>
+            <categoriesAdulthood>
+              <li>Mercenary</li>
+            </categoriesAdulthood>
+          </li>
+        </backstoryFiltersOverride>        
+        <combatPower>6</combatPower>
+        <isFighter>true</isFighter>
+        <apparelTags>
+          <li>IndustrialMilitaryBasic</li>
+        </apparelTags>
+        <weaponTags>
+          <li>Gun</li>
+        </weaponTags>
+        <weaponMoney>250~400</weaponMoney>
+        <apparelRequired>
+          <li>VAE_Apparel_MilitaryJacket</li>
+          <li>VAE_Headgear_Beret</li>
+        </apparelRequired>              
+      </PawnKindDef>
+
+      <PawnKindDef ParentName="MercenaryBase" Name="MercenaryPro">
+        <defName>Mercenary_Pro</defName>
+        <label>mercenary</label>
+        <combatPower>6</combatPower>
+        <skills>
+          <li>
+            <skill>Shooting</skill>
+            <range>7~11</range>
+          </li>
+          <li>
+            <skill>Melee</skill>
+            <range>7~11</range>
+          </li>          
+        </skills>        
+      </PawnKindDef>      
+
+      <PawnKindDef ParentName="MercenaryBase" Name="MercenaryExpert">
+        <defName>Mercenary_Expert</defName>
+        <label>expert mercenary</label>
+        <combatPower>8</combatPower>
+        <apparelMoney>300~500</apparelMoney>
+        <weaponMoney>300~500</weaponMoney>
+        <forcedTraits>
+          <SpeedOffset>1</SpeedOffset>
+        </forcedTraits>    
+        <skills>
+          <li>
+            <skill>Shooting</skill>
+            <range>12~13</range>
+          </li>
+          <li>
+            <skill>Melee</skill>
+            <range>12~13</range>
+          </li>          
+        </skills>          
+      </PawnKindDef>   
+
+      <PawnKindDef ParentName="MercenaryBase" Name="MercenaryMaster">
+        <defName>Mercenary_Master</defName>
+        <label>master mercenary</label>
+        <combatPower>10</combatPower>
+        <apparelTags>
+          <li>IndustrialMilitaryBasic</li>
+          <li>IndustrialMilitaryAdvanced</li>
+        </apparelTags>
+        <weaponTags>
+          <li>Gun</li>
+        </weaponTags>
+        <apparelMoney>500~1500</apparelMoney>
+        <weaponMoney>500~1500</weaponMoney>
+        <forcedTraits>
+          <SpeedOffset>2</SpeedOffset>
+        </forcedTraits>    
+        <skills>
+          <li>
+            <skill>Shooting</skill>
+            <range>14~18</range>
+          </li>
+          <li>
+            <skill>Melee</skill>
+            <range>14~18</range>
+          </li>          
+        </skills>          
+      </PawnKindDef>      
+
+      <PawnKindDef ParentName="StaffBase" Name="CookBase">
+        <defName>Cook</defName>
+        <label>cook</label>
+        <backstoryFiltersOverride>
+          <li>
+            <categoriesChildhood>
+              <li>Outlander</li>
+            </categoriesChildhood>
+            <categoriesAdulthood>
+              <li>Cook</li>
+            </categoriesAdulthood>
+          </li>
+        </backstoryFiltersOverride>      
+        <combatPower>8</combatPower>
+        <apparelRequired>
+          <li>VAE_Headgear_ChefsToque</li>
+        </apparelRequired>
+        <skills>
+          <li>
+            <skill>Cooking</skill>
+            <range>10~14</range>
+          </li>
+        </skills>        
+    </PawnKindDef>
+
+    <PawnKindDef ParentName="StaffBase" Name="FarmhandBase">
+      <defName>Farmhand</defName>
+      <label>farmhand</label>
+      <backstoryFiltersOverride>
+        <li>
+          <categoriesChildhood>
+            <li>Outlander</li>
+          </categoriesChildhood>
+          <categoriesAdulthood>
+            <li>Farmhand</li>
+          </categoriesAdulthood>
+        </li>
+      </backstoryFiltersOverride>      
+      <combatPower>8</combatPower>
+      <apparelRequired>
+        <li>VAE_Headgear_BaseballCap</li>
+      </apparelRequired>
+      <skills>
+        <li>
+          <skill>Plants</skill>
+          <range>10~14</range>
+        </li>
+        <li>
+          <skill>Animals</skill>
+          <range>10~14</range>
+        </li>
+      </skills>     
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="StaffBase" Name="DoctorBase">
+    <defName>Doctor</defName>
+    <label>doctor</label>
+    <backstoryFiltersOverride>
+      <li>
+        <categoriesChildhood>
+          <li>Outlander</li>
+        </categoriesChildhood>
+        <categoriesAdulthood>
+          <li>Doctor</li>
+        </categoriesAdulthood>
+      </li>
+    </backstoryFiltersOverride>      
+    <combatPower>8</combatPower>
+    <apparelRequired>
+      <li>VAE_Apparel_DoctorScrubs</li>
+      <li>VAE_Headgear_SurgicalMask</li>
+    </apparelRequired>
+    <skills>
+      <li>
+        <skill>Medicine</skill>
+        <range>10~14</range>
+      </li>
+    </skills>       
+  </PawnKindDef>
+
+<!-- VAE_Apparel_LabCoat -->
+</Defs>
