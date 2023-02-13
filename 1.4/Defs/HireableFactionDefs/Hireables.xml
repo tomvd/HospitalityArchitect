@@ -11,9 +11,14 @@
             <li>Cook</li>
             <li>Farmhand</li>
             <li>Doctor</li>
+            <li>Miner</li>
+            <li>Scientist</li>
             <li>Construction_Worker_Pro</li>
             <li>Construction_Worker_Expert</li>
             <li>Construction_Worker_Master</li>
+            <li>Engineer_Pro</li>
+            <li>Engineer_Expert</li>
+            <li>Engineer_Master</li>
             <li>Mercenary_Pro</li>
             <li>Mercenary_Expert</li>
             <li>Mercenary_Master</li>                        

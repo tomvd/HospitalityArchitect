@@ -35,7 +35,7 @@
           </categoriesAdulthood>
         </li>
       </backstoryFiltersOverride>      
-      <combatPower>2</combatPower>
+      <combatPower>3</combatPower>
       <apparelRequired>
         <li>VAE_Apparel_Overalls</li>
       </apparelRequired>
@@ -63,7 +63,7 @@
     <PawnKindDef ParentName="ConstructionWorkerBase" Name="ConstructionWorkerPro">
       <defName>Construction_Worker_Pro</defName>
       <label>construction worker</label>
-      <combatPower>6</combatPower>
+      <combatPower>5</combatPower>
       <skills>
           <li>
             <skill>Construction</skill>
@@ -75,7 +75,7 @@
     <PawnKindDef ParentName="ConstructionWorkerBase" Name="ConstructionWorkerExpert">
         <defName>Construction_Worker_Expert</defName>
         <label>expert construction worker</label>
-        <combatPower>8</combatPower>
+        <combatPower>7</combatPower>
         <skills>
             <li>
               <skill>Construction</skill>
@@ -94,6 +94,67 @@
         <skills>
             <li>
               <skill>Construction</skill>
+              <range>14~18</range>
+            </li>
+          </skills>
+          <forcedTraits>
+            <Industriousness>1</Industriousness>
+          </forcedTraits>          
+    </PawnKindDef>
+
+        <PawnKindDef ParentName="StaffBase" Name="EngineerBase" Abstract="true">
+        <defName>Engineer</defName>
+        <label>engineer</label>
+        <backstoryFiltersOverride>
+          <li>
+            <categoriesChildhood>
+              <li>Outlander</li>
+            </categoriesChildhood>
+            <categoriesAdulthood>
+              <li>Engineer</li>
+            </categoriesAdulthood>
+          </li>
+        </backstoryFiltersOverride>
+        <apparelRequired>
+          <li>VAE_Headgear_Glasses</li>
+          <li>VAE_Apparel_Apron</li>
+        </apparelRequired>
+    </PawnKindDef>
+
+    <PawnKindDef ParentName="EngineerBase" Name="EngineerPro">
+      <defName>Engineer_Pro</defName>
+      <label>engineer</label>
+      <combatPower>5</combatPower>
+      <skills>
+          <li>
+            <skill>Crafting</skill>
+            <range>7~11</range>
+          </li>
+        </skills>
+    </PawnKindDef>
+
+    <PawnKindDef ParentName="EngineerBase" Name="EngineerExpert">
+        <defName>Engineer_Expert</defName>
+        <label>expert engineer</label>
+        <combatPower>7</combatPower>
+        <skills>
+            <li>
+              <skill>Crafting</skill>
+              <range>12~13</range>
+            </li>
+          </skills>
+          <forcedTraits>
+            <Industriousness>1</Industriousness>
+          </forcedTraits>
+    </PawnKindDef>
+
+    <PawnKindDef ParentName="EngineerBase" Name="EngineerMaster">
+        <defName>Engineer_Master</defName>
+        <label>master engineer</label>
+        <combatPower>10</combatPower>
+        <skills>
+            <li>
+              <skill>Crafting</skill>
               <range>14~18</range>
             </li>
           </skills>
@@ -274,6 +335,57 @@
       </li>
     </skills>       
   </PawnKindDef>
+  <PawnKindDef ParentName="StaffBase" Name="ScientistBase">
+    <defName>Scientist</defName>
+    <label>scientist</label>
+    <backstoryFiltersOverride>
+      <li>
+        <categoriesChildhood>
+          <li>Outlander</li>
+        </categoriesChildhood>
+        <categoriesAdulthood>
+          <li>Scientist</li>
+        </categoriesAdulthood>
+      </li>
+    </backstoryFiltersOverride>      
+    <combatPower>10</combatPower>
+    <apparelRequired>
+      <li>VAE_Apparel_LabCoat</li>
+      <li>VAE_Headgear_Glasses</li>
+    </apparelRequired>
+    <skills>
+      <li>
+        <skill>Research</skill>
+        <range>12~20</range>
+      </li>
+    </skills>       
+  </PawnKindDef>  
+  <PawnKindDef ParentName="StaffBase" Name="MinerBase">
+    <defName>Miner</defName>
+    <label>miner</label>
+    <backstoryFiltersOverride>
+      <li>
+        <categoriesChildhood>
+          <li>Outlander</li>
+        </categoriesChildhood>
+        <categoriesAdulthood>
+          <li>Miner</li>
+        </categoriesAdulthood>
+      </li>
+    </backstoryFiltersOverride>      
+    <combatPower>50</combatPower> <!-- level 8 miners can mine up to 100s/hour worth, given they will mine 50% of the time, this is a reasonable fee -->
+    <!-- https://github.com/Rikiki123456789/Rimworld/tree/master/MiningCo.%20MiningHelmet/MiningHelmet/MiningCo.%20MiningHelmet/Common/Textures/Things/Apparel
+    <apparelRequired>
+      <li>VAE_Apparel_LabCoat</li>
+      <li>VAE_Headgear_Glasses</li>
+    </apparelRequired>-->
+    <skills>
+      <li>
+        <skill>Mining</skill>
+        <range>10~14</range>
+      </li>
+    </skills>       
+  </PawnKindDef>    
 
 <!-- VAE_Apparel_LabCoat -->
 </Defs>
