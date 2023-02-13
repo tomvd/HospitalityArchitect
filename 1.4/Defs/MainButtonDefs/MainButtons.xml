@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <MainButtonDef>
+    <defName>RT_Finances</defName>
+    <label>Finances</label>
+    <description>Show financial reports of current and last quadrum.</description>
+    <workerClass>RT.MainButtonWorker_Finance</workerClass>
+    <order>60</order>
+    <defaultHotKey></defaultHotKey>
+  </MainButtonDef>
+
+</Defs>

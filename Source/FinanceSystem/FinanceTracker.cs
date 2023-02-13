@@ -14,7 +14,7 @@ namespace RT
         public class QuadrumReport : IExposable 
         {
             public QuadrumReport() {}
-            public int hiringExpenses;
+            public int hiringExpenses = 0;
 
             public void ExposeData()
             {
@@ -26,6 +26,8 @@ namespace RT
 
         List<QuadrumReport> reports;
 
+        public QuadrumReport getCurrentQuadrumReport() => reports[currentQuadrum];
+
         public FinanceTracker(World world) : base(world)
         {
             
@@ -35,16 +37,18 @@ namespace RT
             base.ExposeData();
             Scribe_Collections.Look(ref reports, "reports", LookMode.Deep);
             Scribe_Values.Look(ref currentQuadrum, "currentQuadrum");
-            if (reports is null){
-                reports = new List<QuadrumReport>();
-                reports.Add(new QuadrumReport());
-                currentQuadrum = 0;
+            if (Scribe.mode == LoadSaveMode.PostLoadInit) {
+                if (reports is null){
+                    reports = new List<QuadrumReport>();
+                    reports.Add(new QuadrumReport());
+                    currentQuadrum = 0;
+                }
             }
         }
 
         public void bookHiringExpenses(Map map, int value) {
             removeSilver(map, value);
-            //reports[0].hiringExpenses += value;
+            reports[0].hiringExpenses += value;
         }
 
         private void removeSilver(Map map, int value) {
