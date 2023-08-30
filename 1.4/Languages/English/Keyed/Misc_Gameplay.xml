@@ -1,3 +1,27 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
+
+    <!-- Messages -->
+    <HT.hourlydaily>hourly/daily</HT.hourlydaily>
+    <HT.choosecontracttype>Choose contract type</HT.choosecontracttype>
+    <HT.hire>Hire</HT.hire>
+    
+    <GameStartDialog>Congratulations! You are the founder of a new rimworld company.\n\n This piece of land is yours. I suggest you to start with installing your computer near the solar panel, order some materials and hire personnel to build yourself a small bed and breakfast, gain reputation and slowly grow your hospitality empire.</GameStartDialog>
+    <Colony>Company</Colony>
+
+    <!-- Player faction naming -->
+    <NamePlayerFactionMessage>Since it looks like you'll be here for a while, {0} thinks that you should give your company a name. What should your company be called?</NamePlayerFactionMessage>
+    <PlayerFactionGainsName>Your company is now known as {0}.</PlayerFactionGainsName>
+    <PlayerFactionNameIsInvalid>That name isn't valid.</PlayerFactionNameIsInvalid>
+
+    <!-- Player faction base naming -->
+    <NamePlayerFactionBaseMessage>{0} thinks that you should give this place a name. What should the place be called?</NamePlayerFactionBaseMessage>
+    <PlayerFactionBaseGainsName>This place is now known as {0}.</PlayerFactionBaseGainsName>
+    <PlayerFactionBaseNameIsInvalid>That name isn't valid.</PlayerFactionBaseNameIsInvalid>
+
+    <!-- Player faction and faction base naming -->
+    <NamePlayerFactionBaseMessage_NameFactionContinuation>{0} also thinks that you should give this place a name. What should this place be called?</NamePlayerFactionBaseMessage_NameFactionContinuation>
+    <PlayerFactionAndBaseGainsName>Your company is now known as {0}, and this place is now known as {1}.</PlayerFactionAndBaseGainsName>
+
+
 </LanguageData>

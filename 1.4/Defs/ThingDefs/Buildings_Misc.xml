@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+<ThingDef ParentName="BuildingBase">
+    <defName>RT_Computer</defName>
+    <label>computer</label>
+    <description>Can only be used by a CEO to manage the company.</description>
+    <thingClass>RT.Building_Computer</thingClass>
+    <graphicData>
+        <texPath>Things/Building/ModernComputer/ModernComputer</texPath>
+        <graphicClass>Graphic_Multi</graphicClass>
+        <shaderType>CutoutComplex</shaderType>
+        <shadowData>
+            <volume>(0.08, 0.2, 0.08)</volume>
+            <offset>(0, 0, -0.47)</offset>
+        </shadowData>
+        <damageData>
+            <rect>(0.3,0.3,0.4,0.4)</rect>
+        </damageData>
+        <drawSize>(3.95,3.05)</drawSize>
+    </graphicData>
+    <castEdgeShadows>true</castEdgeShadows>
+    <altitudeLayer>Building</altitudeLayer>
+    <minifiedDef>MinifiedThing</minifiedDef>
+    <thingCategories>
+        <li>BuildingsMisc</li>
+    </thingCategories>    
+    <passability>PassThroughOnly</passability>
+    <pathCost>50</pathCost>
+    <blockWind>true</blockWind>
+    <canOverlapZones>false</canOverlapZones>
+    <statBases>
+        <MaxHitPoints>100</MaxHitPoints>
+        <WorkToBuild>20000</WorkToBuild>
+        <Mass>18</Mass>
+        <Flammability>1.0</Flammability>
+    </statBases>
+    <size>(2,1)</size>
+    <building>
+      <destroySound>BuildingDestroyed_Metal_Big</destroySound>
+    </building>
+    <costList>
+      <Steel>120</Steel>
+      <ComponentIndustrial>10</ComponentIndustrial>
+    </costList>
+    <defaultPlacingRot>South</defaultPlacingRot>
+    <interactionCellOffset>(0,0,1)</interactionCellOffset>
+    <hasInteractionCell>true</hasInteractionCell>
+    <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
+    <designationCategory>Misc</designationCategory>
+    <uiOrder>2101</uiOrder>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <shortCircuitInRain>true</shortCircuitInRain>
+        <basePowerConsumption>200</basePowerConsumption>
+      </li>
+      <li Class="CompProperties_Flickable"/>
+      <li Class="CompProperties_Breakdownable"/>
+      <li Class="CompProperties_Usable">
+        <useJob>RT_UseComputer</useJob>
+        <useLabel>Use computer</useLabel>
+      </li>
+        <li Class="CompProperties_Glower">
+            <glowRadius>5.5</glowRadius>
+            <glowColor>(0,0,75,0)</glowColor>
+        </li>
+    </comps>
+    <designationHotKey>Misc3</designationHotKey>
+    <placeWorkers>
+      <li>PlaceWorker_PreventInteractionSpotOverlap</li>
+    </placeWorkers>
+    <researchPrerequisites>
+      <li>MicroelectronicsBasics</li>
+    </researchPrerequisites>
+    <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
+  </ThingDef>
+  </Defs>

@@ -5,7 +5,7 @@
     <label>New Company</label>
     <description>A new startup on Rimworld.</description>
     <isPlayer>true</isPlayer>
-    <basicMemberKind>RT_CEO</basicMemberKind>
+    <basicMemberKind>Colonist</basicMemberKind>
     <pawnSingular>member</pawnSingular>
     <pawnsPlural>members</pawnsPlural>
     <techLevel>Industrial</techLevel>
@@ -15,8 +15,7 @@
     <backstoryFilters>
       <li>
         <categories>
-          <li>Outlander</li>
-          <li>Ceo</li>
+          <li>Offworld</li>
         </categories>
       </li>
     </backstoryFilters>

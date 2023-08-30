@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <ThingDef Abstract="True" ParentName="BuildingBase" Name="DecalBase">
+    <description>A floor decal.</description>
+    <graphicData>
+        <graphicClass>Graphic_Single</graphicClass>
+        <shaderType>Transparent</shaderType>
+        <color>(255,255,255,65)</color>
+    </graphicData>
+    <rotatable>true</rotatable>
+    <selectable>false</selectable>
+    <altitudeLayer>Floor</altitudeLayer>
+    <passability>Standable</passability>
+    <pathCost>0</pathCost>
+    <drawerType>MapMeshOnly</drawerType>
+    <building>
+        <isInert>true</isInert>
+        <isEdifice>false</isEdifice>
+    </building>
+    <castEdgeShadows>false</castEdgeShadows>
+    <fillPercent>0</fillPercent>
+    <statBases>
+        <MaxHitPoints>100</MaxHitPoints>
+        <WorkToBuild>5</WorkToBuild>
+        <Mass>0.1</Mass>
+        <Flammability>0</Flammability>
+        <Beauty>1</Beauty>
+    </statBases>
+    <size>(1,1)</size>
+    <costList>
+        <Steel>1</Steel>
+    </costList>
+    <uiIconScale>1</uiIconScale>
+    <filthLeaving Inherit="False"/>
+    <clearBuildingArea>false</clearBuildingArea>
+    <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+    </ThingDef>
+
+
+    <ThingDef ParentName="DecalBase">
+        <defName>RT_DecalLineThin</defName>
+        <label>decal line thin</label>
+        <graphicData>
+            <texPath>Things/Building/Decals/DecalLineThin</texPath>
+            <drawSize>(1,1)</drawSize>
+        </graphicData>
+    </ThingDef>
+</Defs>

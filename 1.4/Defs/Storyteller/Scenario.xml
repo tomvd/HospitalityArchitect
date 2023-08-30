@@ -3,9 +3,9 @@
   <ScenarioDef>
     <defName>RT_Scenario</defName>
     <label>Start new rimworld company.</label>
-    <description>You are the CEO of a new rimworld company. Hire personnel, make money, rule the planet.</description>
+    <description>You are the fouder of a new rimworld company. Hire personnel, make money, rule the planet.</description>
     <scenario>
-      <summary>The Rimworld Tycoon starting scenario</summary>
+      <summary>The Hospitality Architect starting scenario</summary>
       <playerFaction>
         <def>PlayerFaction</def>
         <factionDef>RT_PlayerColony</factionDef>
@@ -38,12 +38,7 @@
         </li>
         <li Class="ScenPart_StartingThing_Defined">
           <def>StartingThing_Defined</def>
-          <thingDef>CommsConsole</thingDef>
-          <count>1</count>
-        </li>
-        <li Class="ScenPart_StartingThing_Defined">
-          <def>StartingThing_Defined</def>
-          <thingDef>OrbitalTradeBeacon</thingDef>
+          <thingDef>RT_Computer</thingDef>
           <count>1</count>
         </li>
         <li Class="ScenPart_StartingThing_Defined">
@@ -54,7 +49,7 @@
         <li Class="ScenPart_StartingThing_Defined">
           <def>StartingThing_Defined</def>
           <thingDef>Silver</thingDef>
-          <count>2000</count>
+          <count>50</count>
         </li>
 
         <!-- Game start dialog -->

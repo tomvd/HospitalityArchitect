@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Defs>
   <StorytellerDef ParentName="BaseStoryteller">
-    <defName>Will</defName>
-    <label>Will Wright</label>
-    <description>Will creates story events on a classic increasing curve of challenge and tension.</description>
+    <defName>TomTycoon</defName>
+    <label>Tom Tycoon</label>
+    <description>Tom creates story events on a classic increasing curve of challenge and tension.</description>
     <portraitLarge>UI/HeroArt/Storytellers/CassandraClassic</portraitLarge>
     <portraitTiny>UI/HeroArt/Storytellers/CassandraClassicTiny</portraitTiny>
     <listOrder>0</listOrder>
@@ -74,17 +74,8 @@
       </li>
       <li Class="StorytellerCompProperties_FactionInteraction">
         <incident>VisitorGroup</incident>
-        <minDaysPassed>3</minDaysPassed>
-        <baseIncidentsPerYear>4</baseIncidentsPerYear>
-        <minSpacingDays>5</minSpacingDays>
-        <allowedTargetTags>
-          <li>Map_PlayerHome</li>
-        </allowedTargetTags>
-      </li>
-      <li Class="StorytellerCompProperties_FactionInteraction">
-        <incident>TravelerGroup</incident>
         <minDaysPassed>1</minDaysPassed>
-        <baseIncidentsPerYear>6</baseIncidentsPerYear>
+        <baseIncidentsPerYear>10</baseIncidentsPerYear>
         <minSpacingDays>1</minSpacingDays>
         <allowedTargetTags>
           <li>Map_PlayerHome</li>

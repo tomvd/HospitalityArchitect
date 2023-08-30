@@ -22,9 +22,9 @@
 	 	<Compile Include="../Source/*" />
 		 <Compile Include="../Source/DefOf/*" />
 		 <Compile Include="../Source/JobDrivers/*" />
+		 <Compile Include="../Source/Computer/*" />
+		 <Compile Include="../Source/ComputerSystem/*" />
 		 <Compile Include="../Source/FinanceSystem/*" />
-		 <Compile Include="../Source/HireableSystem/*" />
-		 <Compile Include="../Source/TraderCaller/*" />
 		 <Compile Include="../Source/UItils/*" />
 		 <Compile Include="../Source/Burglar/*" />
 		 <Compile Include="../Source/Pyromaniac/*" />

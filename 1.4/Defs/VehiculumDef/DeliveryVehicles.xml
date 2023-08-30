@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <ThingDef Name="VehiculumBase" Abstract="True">
+        <thingClass>RT.DeliverySystem.Vehiculum</thingClass>
+        <useHitPoints>false</useHitPoints>
+        <drawOffscreen>true</drawOffscreen>
+        <tickerType>Normal</tickerType>
+        <altitudeLayer>Skyfaller</altitudeLayer>
+        <drawerType>RealtimeOnly</drawerType>
+        <castEdgeShadows>True</castEdgeShadows>
+        <blockWind>true</blockWind>
+        <passability>Impassable</passability>
+        <selectable>true</selectable>
+        <skyfaller/>
+    </ThingDef>
+
+    <ThingDef Name="DeliveryVehicle" ParentName="VehiculumBase">
+        <defName>RT_DeliveryVehicle</defName>
+        <label>delivery vehicle</label>
+        <thingClass>RT.DeliverySystem.DeliveryVehicle</thingClass>
+        <graphicData>
+            <texPath>Things/Building/Vehicles/CarDelivery/CarDelivery</texPath>
+            <graphicClass>Graphic_Multi</graphicClass>
+            <shaderType>CutoutComplex</shaderType>
+            <drawSize>(3,6)</drawSize>
+            <shadowData>
+                <volume>(0.55, 0.30, 0.40)</volume>
+            </shadowData>
+            <color>(25,25,25)</color>
+        </graphicData>
+    </ThingDef>
+
+    <ThingDef Name="Bus" ParentName="VehiculumBase">
+        <defName>RT_Bus</defName>
+        <label>bus</label>
+        <thingClass>RT.DeliverySystem.Bus</thingClass>
+        <graphicData>
+            <texPath>Things/Building/Vehicles/CarFamily/CarFamily</texPath>
+            <graphicClass>Graphic_Multi</graphicClass>
+            <shaderType>CutoutComplex</shaderType>
+            <drawSize>(3,6)</drawSize>
+            <shadowData>
+                <volume>(0.55, 0.30, 0.40)</volume>
+            </shadowData>
+            <color>(25,25,0)</color>
+        </graphicData>
+    </ThingDef>
+</Defs>

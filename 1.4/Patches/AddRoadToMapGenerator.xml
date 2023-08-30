@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+    <!-- geysers are OP for electricity -->
+    <Operation Class="PatchOperationRemove">
+        <xpath>Defs/MapGeneratorDef[@Name = "MapCommonBase"]/genSteps/li[text()="SteamGeysers"]</xpath>
+    </Operation>
+    <!-- roads through rocks sometimes gives issues -->
+    <Operation Class="PatchOperationRemove">
+        <xpath>Defs/MapGeneratorDef[@Name = "Base_Player"]/genSteps/li[text()="RocksFromGrid"]</xpath>
+    </Operation>
+    <Operation Class="PatchOperationAdd">
+        <xpath>Defs/MapGeneratorDef[@Name = "Base_Player"]/genSteps</xpath>
+        <value>
+            <li>RT_Road</li>
+        </value>
+    </Operation>
+</Patch>
