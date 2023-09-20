@@ -4,7 +4,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace RT.DeliverySystem
+namespace HospitalityArchitect
 {
     /*
 * this is a vehicle that can hold stuff and drop it when it does the delivery 

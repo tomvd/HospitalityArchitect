@@ -6,7 +6,7 @@ using UnityEngine;
 using Verse;
 using Verse.Sound;
 
-namespace RT.DeliverySystem
+namespace HospitalityArchitect
 {
     /*
 * a vehiculum is a transport that moves along the road (z-axis), it can be given a destination and will be moving towards it
@@ -38,6 +38,8 @@ namespace RT.DeliverySystem
             Scribe_Values.Look<int>(ref this.UnloadTick, "UnloadTick");
             Scribe_Values.Look(ref currentPos, "currentPos");
             Scribe_Values.Look(ref destPos, "destPos");
+            Scribe_Values.Look(ref State, "State");
+            Scribe_Values.Look(ref destLocation, "destLocation");
             //Scribe_Values.Look<int>(ref this.ticksToImpactMax, "ticksToImpactMax", this.LeaveMapAfterTicks);
             //Scribe_Values.Look<float>(ref this.angle, "angle");
             Scribe_Deep.Look<ThingOwner>(ref this.innerContainer, "innerContainer", (object)this);
@@ -137,7 +139,7 @@ namespace RT.DeliverySystem
                 {
                     continue;
                 }
-                GenSpawn.Spawn(innerContainer[innerContainer.Count - 1], deliveryCells[triedCell], Map);
+                GenSpawn.Spawn(innerContainer.GetAt(innerContainer.Count - 1), deliveryCells[triedCell], Map);
                 break;
             }
         }

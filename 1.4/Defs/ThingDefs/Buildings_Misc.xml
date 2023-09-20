@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Defs>
 <ThingDef ParentName="BuildingBase">
-    <defName>RT_Computer</defName>
+    <defName>HA_Computer</defName>
     <label>computer</label>
     <description>Can only be used by a CEO to manage the company.</description>
-    <thingClass>RT.Building_Computer</thingClass>
+    <thingClass>HospitalityArchitect.Building_Computer</thingClass>
     <graphicData>
         <texPath>Things/Building/ModernComputer/ModernComputer</texPath>
         <graphicClass>Graphic_Multi</graphicClass>
@@ -57,7 +57,7 @@
       <li Class="CompProperties_Flickable"/>
       <li Class="CompProperties_Breakdownable"/>
       <li Class="CompProperties_Usable">
-        <useJob>RT_UseComputer</useJob>
+        <useJob>HA_UseComputer</useJob>
         <useLabel>Use computer</useLabel>
       </li>
         <li Class="CompProperties_Glower">

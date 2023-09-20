@@ -2,7 +2,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace RT
+namespace HospitalityArchitect
 {
     public class Building_Computer : Building
     {
@@ -26,7 +26,7 @@ namespace RT
 
         private void UseAct(Pawn myPawn, ICommunicable commTarget)
         {
-            var job = JobMaker.MakeJob(RTDefOf.RT_UseComputer, (LocalTargetInfo)(Thing)this);
+            var job = JobMaker.MakeJob(HADefOf.HA_UseComputer, (LocalTargetInfo)(Thing)this);
             job.commTarget = commTarget;
             myPawn.jobs.TryTakeOrderedJob(job);
         }

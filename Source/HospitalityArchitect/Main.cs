@@ -1,8 +1,9 @@
 ﻿using HarmonyLib;
+using RimWorld;
 using Verse;
 // using System.Reflection;
 
-namespace RT
+namespace HospitalityArchitect
 {
     public class RimworldTycoon : Mod
     {
@@ -10,7 +11,7 @@ namespace RT
 
         public RimworldTycoon(ModContentPack content) : base(content)
         {
-            harmonyInstance = new Harmony("Adamas.RimworldTycoon");
+            harmonyInstance = new Harmony("Adamas.HospitalityArchitect");
             harmonyInstance.PatchAll();
         }
     }
@@ -32,7 +33,7 @@ namespace RT
     {
         static Start()
         {
-            Log.Message("Rimworld Tycoon loaded successfully!");
+            Log.Message("Hospitality Architect loaded successfully!");
         }
     }
 }

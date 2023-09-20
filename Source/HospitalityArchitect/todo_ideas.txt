@@ -1,0 +1,12 @@
+- ownership: when pawn joins colony check relationship, if not a partner, ask if you want to swap owner.
+- ownership: in the name of a pawn clearly display owner (owner)
+- marketing: slightly more options
+- loans: testing
+- preview image
+- new event: sales in certain category
+- disable traders
+- quicksell button on everything haulable(hauls to delivery area to be picked up)
+- land ownership: cant build, mine or chop wood un unowned land
+- price on land depends on resource on it (trees, minable +, water swamp -)
+- land ownership +/- home area
+- readd mountains in generator

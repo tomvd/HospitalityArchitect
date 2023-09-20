@@ -1,8 +1,7 @@
-﻿using RT.UItils;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
-namespace RT
+namespace HospitalityArchitect
 {
     public class Dialog_Finance : Window
     {
@@ -17,7 +16,7 @@ namespace RT
         }
 
         public override Vector2 InitialSize => new Vector2(600f, 300f);
-        protected override float Margin => 15f;
+        public override float Margin => 15f;
 
 
         public override void DoWindowContents(Rect inRect)

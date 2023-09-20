@@ -1,9 +1,7 @@
-﻿using RimWorld;
-using RT.UItils;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
-namespace RT
+namespace HospitalityArchitect
 {
     public class App_Staff : ComputerApp
     {

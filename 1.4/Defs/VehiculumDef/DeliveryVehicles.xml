@@ -2,7 +2,7 @@
 <Defs>
 
     <ThingDef Name="VehiculumBase" Abstract="True">
-        <thingClass>RT.DeliverySystem.Vehiculum</thingClass>
+        <thingClass>HospitalityArchitect.Vehiculum</thingClass>
         <useHitPoints>false</useHitPoints>
         <drawOffscreen>true</drawOffscreen>
         <tickerType>Normal</tickerType>
@@ -16,9 +16,9 @@
     </ThingDef>
 
     <ThingDef Name="DeliveryVehicle" ParentName="VehiculumBase">
-        <defName>RT_DeliveryVehicle</defName>
+        <defName>HA_DeliveryVehicle</defName>
         <label>delivery vehicle</label>
-        <thingClass>RT.DeliverySystem.DeliveryVehicle</thingClass>
+        <thingClass>HospitalityArchitect.DeliveryVehicle</thingClass>
         <graphicData>
             <texPath>Things/Building/Vehicles/CarDelivery/CarDelivery</texPath>
             <graphicClass>Graphic_Multi</graphicClass>
@@ -32,9 +32,9 @@
     </ThingDef>
 
     <ThingDef Name="Bus" ParentName="VehiculumBase">
-        <defName>RT_Bus</defName>
+        <defName>HA_Bus</defName>
         <label>bus</label>
-        <thingClass>RT.DeliverySystem.Bus</thingClass>
+        <thingClass>HospitalityArchitect.Bus</thingClass>
         <graphicData>
             <texPath>Things/Building/Vehicles/CarFamily/CarFamily</texPath>
             <graphicClass>Graphic_Multi</graphicClass>

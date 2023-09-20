@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
     <GenStepDef>
-        <defName>RT_Road</defName>
+        <defName>HA_Road</defName>
         <order>500</order>
-        <genStep Class="RT.Mapgen.GenStep_Road"/>
+        <genStep Class="HospitalityArchitect.GenStep_Road"/>
     </GenStepDef>
 </Defs>

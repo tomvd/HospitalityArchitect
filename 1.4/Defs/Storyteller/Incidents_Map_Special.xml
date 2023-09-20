@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <IncidentDef>
+    <defName>VisitorArrives</defName>
+    <label>visitor arrives</label>
+    <category>Misc</category>
+    <targetTags>
+      <li>Map_PlayerHome</li>
+    </targetTags>    
+    <workerClass>HospitalityArchitect.IncidentWorker_VisitorArrives</workerClass>
+    <pawnKind>Villager</pawnKind>
+    <baseChance>0</baseChance>
+    <minRefireDays>1</minRefireDays>
+    <letterLabel>New visitor arrived</letterLabel>
+    <letterText>{PAWN_possessive} name is {0}. x is looking for {1}</letterText>
+  </IncidentDef>
+</Defs>

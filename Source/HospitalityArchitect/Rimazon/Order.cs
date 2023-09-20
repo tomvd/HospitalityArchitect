@@ -3,7 +3,7 @@ using System.Linq;
 using RimWorld;
 using Verse;
 
-namespace RT.Rimazon
+namespace HospitalityArchitect
 {
     public class Order : IExposable
     {

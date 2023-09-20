@@ -1,6 +1,6 @@
 using RimWorld.Planet;
 
-namespace RT.Marketing;
+namespace HospitalityArchitect;
 
 public class MarketingService : WorldComponent
 {

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <DesignationDef>
+        <defName>Quicksell</defName>
+        <texturePath>Designations/Haul</texturePath>
+        <targetType>Thing</targetType>
+    </DesignationDef>
+    <WorkGiverDef>
+        <defName>Quicksell</defName>
+        <label>sell items</label>
+        <giverClass>HospitalityArchitect.WorkGiver_Quicksell</giverClass>
+        <workType>Hauling</workType>
+        <verb>sell</verb>
+        <gerund>selling</gerund>
+        <requiredCapacities>
+            <li>Manipulation</li>
+        </requiredCapacities>
+    </WorkGiverDef>
+</Defs>

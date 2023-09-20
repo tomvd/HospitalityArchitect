@@ -3,7 +3,7 @@ using RimWorld;
 using RimWorld.Planet;
 using Verse;
 
-namespace RT.DeliverySystem
+namespace HospitalityArchitect
 {
   public static class VehiculumMaker
   {

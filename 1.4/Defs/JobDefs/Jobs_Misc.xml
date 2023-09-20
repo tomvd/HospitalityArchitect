@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
     <JobDef>
-        <defName>RT_LeaveMap</defName>
-        <driverClass>RT.JobDriver_LeaveMap</driverClass>
+        <defName>HA_LeaveMap</defName>
+        <driverClass>HospitalityArchitect.JobDriver_LeaveMap</driverClass>
         <reportString>leaving.</reportString>
         <allowOpportunisticPrefix>true</allowOpportunisticPrefix>
         <playerInterruptible>false</playerInterruptible>
         <casualInterruptible>false</casualInterruptible>
         <alwaysShowWeapon>true</alwaysShowWeapon>
     </JobDef>
-	  <JobDef>
-		<defName>RT_UseComputer</defName>
-		<driverClass>RT.JobDriver_UseComputer</driverClass>
-		<reportString>Using TargetA.</reportString>
-	  </JobDef>	  
+      <JobDef>
+        <defName>HA_UseComputer</defName>
+        <driverClass>HospitalityArchitect.JobDriver_UseComputer</driverClass>
+        <reportString>Using TargetA.</reportString>
+      </JobDef>
+    <JobDef>
+        <defName>Quicksell</defName>
+        <driverClass>HospitalityArchitect.JobDriver_Quicksell</driverClass>
+        <reportString>Selling TargetA.</reportString>
+        <allowOpportunisticPrefix>true</allowOpportunisticPrefix>
+    </JobDef>
+    <JobDef>
+        <defName>QuicksellDesignated</defName>
+        <driverClass>HospitalityArchitect.JobDriver_Quicksell_Designated</driverClass>
+        <reportString>Selling TargetA.</reportString>
+        <allowOpportunisticPrefix>true</allowOpportunisticPrefix>
+    </JobDef>    
 </Defs>

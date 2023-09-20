@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Defs>
   <StorytellerDef ParentName="BaseStoryteller">
-    <defName>TomTycoon</defName>
-    <label>Tom Tycoon</label>
-    <description>Tom creates story events on a classic increasing curve of challenge and tension.</description>
+    <defName>CassandraCapitalist</defName>
+    <label>Cassandra Capitalist</label>
+    <description>Cassandra Capitalist creates story events on a classic increasing curve of challenge and tension.</description>
     <portraitLarge>UI/HeroArt/Storytellers/CassandraClassic</portraitLarge>
     <portraitTiny>UI/HeroArt/Storytellers/CassandraClassicTiny</portraitTiny>
     <listOrder>0</listOrder>

@@ -3,7 +3,7 @@ using System.Linq;
 using RimWorld;
 using Verse;
 
-namespace RT
+namespace HospitalityArchitect
 {
     public class FinanceReport : IExposable
     {
@@ -22,7 +22,8 @@ namespace RT
             Taxes,
             Sales,
             Beds,
-            Marketing
+            Marketing,
+            Land
         }
 
         public void recordIncome(ReportEntryType type, float value)

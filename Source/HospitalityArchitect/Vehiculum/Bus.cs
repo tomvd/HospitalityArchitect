@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Verse;
 
-namespace RT.DeliverySystem;
+namespace HospitalityArchitect;
 
 /*
 * this is a vehicle that transports pawns 

@@ -1,10 +1,9 @@
 ﻿using RimWorld;
-using RT.UItils;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
 
-namespace RT
+namespace HospitalityArchitect
 {
     public class App_Banking : ComputerApp
     {
@@ -46,10 +45,10 @@ namespace RT
                 categoryRect.y += 20f;
                 Widgets.Label(categoryRect,
                     $"loan {loanType.Amount.ToStringMoney()} from {loanType.Company} at {loanType.Interest.ToStringPercent()} daily");
-                categoryRect.x += 100f;
-                if (_financeService.Loans.Exists(loan => loan.LoanType == loanType.GetUniqueLoadID()))
+                categoryRect.x += 300f;
+                if (_financeService.Loans.Exists(loan => loan.LoanType.Equals(loanType.GetUniqueLoadID())))
                 {
-                    Loan l = _financeService.Loans.Find(loan => loan.LoanType == loanType.GetUniqueLoadID());
+                    Loan l = _financeService.Loans.Find(loan => loan.LoanType.Equals(loanType.GetUniqueLoadID()));
                     Widgets.Label(categoryRect,
                         "balance: " + l.Balance.ToStringMoney());
                     categoryRect.x += 100f;

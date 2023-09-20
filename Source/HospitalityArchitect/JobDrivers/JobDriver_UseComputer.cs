@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Verse;
 using Verse.AI;
 
-namespace RT
+namespace HospitalityArchitect
 {
     public class JobDriver_UseComputer : JobDriver
     {
@@ -11,7 +11,7 @@ namespace RT
             return pawn.Reserve(job.targetA, job, errorOnFailed: errorOnFailed);
         }
 
-        protected override IEnumerable<Toil> MakeNewToils()
+        public override IEnumerable<Toil> MakeNewToils()
         {
             this.FailOnDespawnedOrNull(TargetIndex.A);
             yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.InteractionCell).FailOn(to =>

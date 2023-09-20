@@ -3,7 +3,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace RT
+namespace HospitalityArchitect
 {
     public class JobDriver_LeaveMap : JobDriver
     {
@@ -12,7 +12,7 @@ namespace RT
             return true;
         }
 
-        protected override IEnumerable<Toil> MakeNewToils()
+        public override IEnumerable<Toil> MakeNewToils()
         {
             yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.ClosestTouch);
             yield return new Toil

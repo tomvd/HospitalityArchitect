@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
   <FactionDef ParentName="PlayerFactionBase">
-    <defName>RT_PlayerColony</defName>
+    <defName>HA_PlayerColony</defName>
     <label>New Company</label>
     <description>A new startup on Rimworld.</description>
     <isPlayer>true</isPlayer>

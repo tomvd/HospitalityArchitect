@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RT
+namespace HospitalityArchitect
 {
     public abstract class ComputerApp
     {

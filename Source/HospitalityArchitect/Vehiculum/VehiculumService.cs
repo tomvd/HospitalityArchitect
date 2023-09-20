@@ -1,11 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using RimWorld;
 using Verse;
 
-namespace RT.DeliverySystem
+namespace HospitalityArchitect
 {
     /*
  * this class basically spawns  vehicles and manages them if they are queued, it is basically the driver for all vehicles
@@ -53,7 +50,7 @@ namespace RT.DeliverySystem
 
         public DeliveryVehicle SpawnDeliveryVehicle(IEnumerable<Thing> things, IntVec3 pos, Map map)
         {
-            DeliveryVehicle vehicle = (DeliveryVehicle)ThingMaker.MakeThing(RTDefOf.RT_DeliveryVehicle);
+            DeliveryVehicle vehicle = (DeliveryVehicle)ThingMaker.MakeThing(HADefOf.HA_DeliveryVehicle);
             vehicle.innerContainer.TryAddRangeOrTransfer(things);
             vehicle.service = this;
             return (DeliveryVehicle)GenSpawn.Spawn(vehicle, pos, map);
@@ -61,7 +58,7 @@ namespace RT.DeliverySystem
         
         public Bus SpawnBus(IEnumerable<Pawn> pawns, IntVec3 pos, Map map)
         {
-            Bus vehicle = (Bus)ThingMaker.MakeThing(RTDefOf.RT_Bus);
+            Bus vehicle = (Bus)ThingMaker.MakeThing(HADefOf.HA_Bus);
             foreach (var pawn in pawns)
             {
                 if (pawn.Spawned) pawn.DeSpawn();
@@ -92,7 +89,7 @@ namespace RT.DeliverySystem
                         if (vehicle.UnloadTick == 0)
                         {
                             vehicle.Unload();
-                            vehicle.UnloadTick = 1000;                                
+                            vehicle.UnloadTick = 200;                                
                         }
                     }
                 }

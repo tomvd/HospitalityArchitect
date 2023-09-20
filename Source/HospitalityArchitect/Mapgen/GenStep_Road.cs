@@ -1,13 +1,9 @@
-namespace RT.Mapgen;
-
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
-using RimWorld.BaseGen;
-using UnityEngine;
 using Verse;
-using Verse.AI;
+
+namespace HospitalityArchitect;
 
 public class GenStep_Road : GenStep
 {
@@ -34,7 +30,7 @@ public class GenStep_Road : GenStep
 			// draw lines
 			if (tile.x == startX || tile.x == endX)
 			{
-				GenSpawn.Spawn(ThingMaker.MakeThing((ThingDef)RTDefOf.RT_DecalLineThin), tile, map, tile.x == startX?Rot4.East:Rot4.West);
+				GenSpawn.Spawn(ThingMaker.MakeThing((ThingDef)HADefOf.HA_DecalLineThin), tile, map, tile.x == startX?Rot4.East:Rot4.West);
 			}
 		}
 		// place concrete slab for the delivery area

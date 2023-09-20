@@ -1,15 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Hospitality;
-using Hospitality.Utilities;
 using RimWorld;
-using RT.DeliverySystem;
-using RT.UItils;
 using UnityEngine;
 using Verse;
-using Verse.Sound;
 
-namespace RT
+namespace HospitalityArchitect
 {
     /*
      * Marketing: "buys" goodwill, similar to what you can do through comms 
@@ -39,7 +34,7 @@ namespace RT
             var font = Text.Font;
             if (Widgets.ButtonText(inRect, "Launch promotion (100$)"))
             {
-                _financeService.bookExpenses(FinanceReport.ReportEntryType.Marketing, 100.0f);
+                _financeService.doAndBookExpenses(FinanceReport.ReportEntryType.Marketing, 100.0f);
                 PlanNewVisit(map, 1,null);
             }
 

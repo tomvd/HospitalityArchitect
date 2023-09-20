@@ -38,7 +38,7 @@
 
 
     <ThingDef ParentName="DecalBase">
-        <defName>RT_DecalLineThin</defName>
+        <defName>HA_DecalLineThin</defName>
         <label>decal line thin</label>
         <graphicData>
             <texPath>Things/Building/Decals/DecalLineThin</texPath>

@@ -6,7 +6,7 @@ using RimWorld.Planet;
 using UnityEngine;
 using Verse;
 
-namespace RT
+namespace HospitalityArchitect
 {
     /*
      * 
@@ -15,7 +15,7 @@ namespace RT
     {
         private float availableSilverCache;
 
-        public int currentDay;
+        public int currentDay; // reports index
         private Map mapCache;
 
         public float moneyInBank;
@@ -31,7 +31,17 @@ namespace RT
         public FinanceService(Map map) : base(map)
         {
             currentDay = GenDate.DaysPassed;
-            initLists();
+            _loanTypes ??= new List<LoanType>();
+            _loanTypes.Add(new LoanType(1000,0.01f,"Aunt Leeman", "loan1"));
+            _loanTypes.Add(new LoanType(2500,0.02f,"Wireshark Inc", "loan2"));
+            _loanTypes.Add(new LoanType(5000,0.03f,"Caxigo Oplo", "loan3"));
+            _loanTypes.Add(new LoanType(10000,0.04f,"Rimbank", "loan4"));
+            _reports ??= new List<FinanceReport>();
+            if (_reports.Count == 0)
+            {
+                _reports.Add(new FinanceReport());
+                moneyInBank = 2000;
+            }
         }
 
         public FinanceReport getCurrentReport()
@@ -62,6 +72,11 @@ namespace RT
             return moneyInBank;
         }
         
+        public float getFunds()
+        {
+            return getMoneyInBank() + getAvailableSilver();
+        }
+        
         public override void ExposeData()
         {
             base.ExposeData();
@@ -85,21 +100,22 @@ namespace RT
                 moneyInBank = 2000;
             }
             _loans ??= new List<Loan>();
-            _loanTypes ??= new List<LoanType>();
-            _loanTypes.Add(new LoanType(1000,0.01f,"Aunt Leeman", "loan1"));
-            _loanTypes.Add(new LoanType(2500,0.02f,"Wireshark Inc", "loan2"));
-            _loanTypes.Add(new LoanType(5000,0.03f,"Caxigo Oplo", "loan3"));
-            _loanTypes.Add(new LoanType(10000,0.04f,"Rimbank", "loan4"));
         }
 
 
 
-        public void bookExpenses(FinanceReport.ReportEntryType type, float value)
+        public void doAndBookExpenses(FinanceReport.ReportEntryType type, float value)
         {
             removeMoney(value);
             //Log.Message($"expenses[{type.ToString()}]: {value} result: {moneyInBank}");
             Messages.Message($"{type.ToString()} -{value.ToStringMoney()}", null, MessageTypeDefOf.NegativeEvent);
             _reports[currentDay].recordExpense(type, value);
+        }
+        
+        public void doAndBookIncome(FinanceReport.ReportEntryType type, float value)
+        {
+            moneyInBank += value;
+            bookIncome(type, value);
         }
         
         public void bookIncome(FinanceReport.ReportEntryType type, float value)
@@ -168,32 +184,44 @@ namespace RT
 
         private void RareTick()
         {
+            mapCache = null;
             if (GenDate.DaysPassed > currentDay && GenLocalDate.HourInteger(map) == 0) OnNextDay(GenDate.DaysPassed);
         }
         
         private void OnNextDay(int today)
         {
             Log.Message("OnNextDay "+today);
-            // calculate building taxes of this map = Daily property taxes per cell build on. 0.1s per 25 tiles of home (or tile of roof??).
-            /*if (Math.Floor(map.areaManager.Home.ActiveCells.Count() / 250f) > 0)
-                bookExpenses(FinanceReport.ReportEntryType.Taxes, map.areaManager.Home.ActiveCells.Count() / 250f);*/
-            
-            // pay taxes on the money on the bank, 1s per 1000s on the bank - this is the price player pays for the advantage of having "hidden wealth"/smaller raids 
-            if (Math.Floor(moneyInBank / 1000f) > 0)
-                bookExpenses(FinanceReport.ReportEntryType.Taxes, (float)Math.Floor(moneyInBank / 1000f));
-
-            foreach (var loan  in _loans)
+            try
             {
-                // pay interest on the balance of the loan
-                if (loan.Balance > 0)
-                {
-                    bookExpenses(FinanceReport.ReportEntryType.Interest, loan.Balance * loan.Interest);
-                }
-            }
-            Messages.Message("Cashflow today: " + _reports[currentDay].getNetResult().ToStringMoney(), MessageTypeDefOf.NeutralEvent);
+                // calculate building taxes of this map = Daily property taxes per cell build on. 0.1s per 25 tiles of home (or tile of roof??).
+                /*if (Math.Floor(map.areaManager.Home.ActiveCells.Count() / 250f) > 0)
+                    bookExpenses(FinanceReport.ReportEntryType.Taxes, map.areaManager.Home.ActiveCells.Count() / 250f);*/
             
-            currentDay = today;
-            _reports.Add(new FinanceReport());
+                // pay taxes on the money on the bank, 1s per 1000s on the bank - this is the price player pays for the advantage of having "hidden wealth"/smaller raids 
+                if (Math.Floor(moneyInBank / 1000f) > 0)
+                    doAndBookExpenses(FinanceReport.ReportEntryType.Taxes, (float)Math.Floor(moneyInBank / 1000f));
+
+                foreach (var loan  in _loans)
+                {
+                    // pay interest on the balance of the loan
+                    if (loan.Balance > 0)
+                    {
+                        doAndBookExpenses(FinanceReport.ReportEntryType.Interest, loan.Balance * loan.Interest);
+                    }
+                }
+                Messages.Message("Cashflow today: " + _reports[currentDay].getNetResult().ToStringMoney(), MessageTypeDefOf.NeutralEvent);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            finally
+            {
+                currentDay = today; // avoids being stuck when this for some reason became out of sync
+                while (_reports.Count < currentDay+1)
+                    _reports.Add(new FinanceReport());                
+            }
         }
 
 

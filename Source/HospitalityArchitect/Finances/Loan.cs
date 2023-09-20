@@ -1,7 +1,7 @@
 using System;
 using Verse;
 
-namespace RT;
+namespace HospitalityArchitect;
 
 public class Loan : IExposable
 { 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
-namespace RT.UItils
+namespace HospitalityArchitect
 {
     public static class UIUtility
     {

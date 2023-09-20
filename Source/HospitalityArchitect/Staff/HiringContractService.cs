@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using RimWorld.Planet;
-using RT.DeliverySystem;
 using UnityEngine;
 using Verse;
 using Verse.AI;
 
-namespace RT
+namespace HospitalityArchitect
 {
     public class HiringContractService : MapComponent
     {
@@ -97,7 +96,7 @@ namespace RT
                     }                    
                 }
                 if (totalBilling > 0)
-                    _financeService.bookExpenses(FinanceReport.ReportEntryType.Wages, totalBilling);
+                    _financeService.doAndBookExpenses(FinanceReport.ReportEntryType.Wages, totalBilling);
             }
         }
 
@@ -114,7 +113,7 @@ namespace RT
             contracts.Remove(contract);
             if (pawn.health.capacities.CapableOf(PawnCapacityDefOf.Moving))
             {
-                if (pawn.Map != null && pawn.CurJobDef != RTDefOf.RT_LeaveMap)
+                if (pawn.Map != null && pawn.CurJobDef != HADefOf.HA_LeaveMap)
                 {
                     pawn.jobs.StopAll();
                     if (!CellFinder.TryFindRandomPawnExitCell(pawn, out var exit))
@@ -130,7 +129,7 @@ namespace RT
 
                     Messages.Message(pawn.NameFullColored + " contract ended. Pawn is leaving.", null,
                         MessageTypeDefOf.NeutralEvent);
-                    pawn.jobs.TryTakeOrderedJob(new Job(RTDefOf.RT_LeaveMap, exit));
+                    pawn.jobs.TryTakeOrderedJob(new Job(HADefOf.HA_LeaveMap, exit));
                 }
                 else if (pawn.GetCaravan() != null)
                 {
@@ -162,7 +161,7 @@ namespace RT
 
             float wage = candidate.Wage();
             Log.Message($"hiring {candidate.Name} cost: {wage}");
-            _financeService.bookExpenses(FinanceReport.ReportEntryType.Wages, wage);
+            _financeService.doAndBookExpenses(FinanceReport.ReportEntryType.Wages, wage);
 
             if (!RCellFinder.TryFindRandomPawnEntryCell(out var cell, map, 1f))
                 cell = CellFinder.RandomEdgeCell(map);

@@ -1,6 +1,6 @@
 using Verse;
 
-namespace RT;
+namespace HospitalityArchitect;
 
 public class LoanType : ILoadReferenceable
 {

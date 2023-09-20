@@ -1,11 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
 using RimWorld;
-using RT.DeliverySystem;
 using Verse;
 using Verse.Sound;
 
-namespace RT.Rimazon
+namespace HospitalityArchitect
 {
     // gathers all orders and send delivery vehicles at appropriate times
     public class RimazonService : MapComponent
@@ -35,7 +33,7 @@ namespace RT.Rimazon
             // TODO buying should place a delivery per deliverytruck (= 6 stacks/items)
             // TODO check if we can afford
             SoundDefOf.ExecuteTrade.PlayOneShotOnCamera();
-            _financeService.bookExpenses(FinanceReport.ReportEntryType.Rimazon, CurrentOrder.total);
+            _financeService.doAndBookExpenses(FinanceReport.ReportEntryType.Rimazon, CurrentOrder.total);
             switch (CurrentOrder.DeliveryType)
             {
                 case 0:

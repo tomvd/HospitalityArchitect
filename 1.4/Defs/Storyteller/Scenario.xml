@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
   <ScenarioDef>
-    <defName>RT_Scenario</defName>
+    <defName>HA_Scenario</defName>
     <label>Start new rimworld company.</label>
     <description>You are the fouder of a new rimworld company. Hire personnel, make money, rule the planet.</description>
     <scenario>
       <summary>The Hospitality Architect starting scenario</summary>
       <playerFaction>
         <def>PlayerFaction</def>
-        <factionDef>RT_PlayerColony</factionDef>
+        <factionDef>HA_PlayerColony</factionDef>
       </playerFaction>
       <parts>
 
@@ -38,7 +38,7 @@
         </li>
         <li Class="ScenPart_StartingThing_Defined">
           <def>StartingThing_Defined</def>
-          <thingDef>RT_Computer</thingDef>
+          <thingDef>HA_Computer</thingDef>
           <count>1</count>
         </li>
         <li Class="ScenPart_StartingThing_Defined">

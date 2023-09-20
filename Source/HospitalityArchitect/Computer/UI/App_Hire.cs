@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using RimWorld;
-using RT.DeliverySystem;
-using RT.UItils;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
 
-namespace RT
+namespace HospitalityArchitect
 {
     public class App_Hire : ComputerApp
     {
@@ -62,7 +59,7 @@ namespace RT
             Text.Font = GameFont.Tiny;
             var nameRect = new Rect(titleRect);
             Widgets.Label(titleRect, "name, background");
-            titleRect.x += 400f;
+            titleRect.x += 550f;
             titleRect.width = 120f;
             Text.Anchor = TextAnchor.MiddleCenter;
             var valueRect = new Rect(titleRect);

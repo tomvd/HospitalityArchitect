@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using RT.UItils;
 using UnityEngine;
 using Verse;
 
-namespace RT
+namespace HospitalityArchitect
 {
     public class Window_Computer : Window
     {
@@ -38,7 +37,7 @@ namespace RT
         }
 
         public override Vector2 InitialSize => new Vector2(800, Mathf.Min(740, UI.screenHeight));
-        protected override float Margin => 5f;
+        public override float Margin => 5f;
 
         public override void DoWindowContents(Rect inRect)
         {
@@ -84,7 +83,7 @@ namespace RT
                 "Cashflow: " + _financeService.GetCashFlow().ToStringMoney());
             inRect.x += 150f;
             Widgets.Label(inRect,
-                "Reputation: " + _hiringContractService.Reputation.ToStringDecimalIfSmall());
+                "Reputation: " + _hiringContractService.Reputation.ToStringDecimalIfSmall() + " /100");
             
             
 

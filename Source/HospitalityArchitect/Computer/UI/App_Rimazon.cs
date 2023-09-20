@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using RimWorld;
-using RT.DeliverySystem;
-using RT.Rimazon;
-using RT.UItils;
 using UnityEngine;
 using Verse;
-using Verse.Sound;
 
-namespace RT
+namespace HospitalityArchitect
 {
     public class App_Rimazon : ComputerApp
     {

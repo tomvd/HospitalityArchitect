@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
-using RT.DeliverySystem;
 using UnityEngine;
 using Verse;
 using Verse.AI.Group;
+using GuestUtility = Hospitality.Utilities.GuestUtility;
 
-namespace RT
+namespace HospitalityArchitect
 {
     [StaticConstructorOnStartup]
     public static class HarmonyPatches
@@ -36,7 +35,7 @@ namespace RT
                 AccessTools.Method(typeof(EquipmentUtility), nameof(EquipmentUtility.QuestLodgerCanUnequip)),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(QuestLodgerCanUnequip_Postfix)));
             RimworldTycoon.harmonyInstance.Patch(
-                AccessTools.Method(typeof(Hospitality.Utilities.GuestUtility), nameof(Hospitality.Utilities.GuestUtility.OnLordSpawned)),
+                AccessTools.Method(typeof(GuestUtility), nameof(GuestUtility.OnLordSpawned)),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(VisitorGroupWithBus_Postfix)));
 
 
@@ -51,7 +50,23 @@ namespace RT
             RimworldTycoon.harmonyInstance.Patch(
                 AccessTools.Method(typeof(ForbidUtility), nameof(ForbidUtility.CaresAboutForbidden)),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(CaresAboutForbidden_Postfix)));
-            // TODO patch when mining 50% should be tracked as mining taxes
+            // TODO 
+
+            /*
+            RimworldTycoon.harmonyInstance.Patch(
+                AccessTools.Method(typeof(Area_Home), "Set"),
+                prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(SetHome_Prefix)));
+*/
+            
+            // quicksell button on everything haulable(hauls to delivery area to be picked up)
+            /*
+             * 
+             */
+            
+
+            
+
+
             
         /*    
             [HarmonyPatch(typeof(ThingOwner))]
@@ -104,7 +119,7 @@ namespace RT
                 if (map == null) return;
 
                 FinanceService financeService = map.GetComponent<FinanceService>();
-                var zombieCountString = "Funds: " + financeService.getMoneyInBank().ToStringMoney();
+                var zombieCountString = "Funds: " + financeService.getFunds().ToStringMoney();
                 var rightMargin = 7f;
 
                 var zlRect = new Rect(leftX, curBaseY - 24f, width, 24f);
@@ -201,10 +216,6 @@ namespace RT
             VehiculumService busService = lord.Map.GetComponent<VehiculumService>();
             busService.StartBus(lord.ownedPawns);
         }
-        
-
-
-
         public static void IsSurgeryViolation_Postfix(Bill_Medical bill, ref bool __result)
         {
             __result = __result || (GetContractTracker(bill.Map).IsHired(bill.GiverPawn) &&
@@ -214,7 +225,41 @@ namespace RT
         public static void CaresAboutForbidden_Postfix(Pawn pawn, ref bool __result)
         {
             __result = __result &&
-                       (!GetContractTracker(pawn.Map).IsHired(pawn) || pawn.CurJobDef != RTDefOf.RT_LeaveMap);
+                       (!GetContractTracker(pawn.Map).IsHired(pawn) || pawn.CurJobDef != HADefOf.HA_LeaveMap);
+        }
+        
+        // increase/decrease of home area is billed/refunded
+        /*
+         * Area_Home.
+         * 	protected override void Set(IntVec3 c, bool val)
+            {
+                if (base[c] != val)
+                {
+                    base.Set(c, val);
+                    base.Map.listerFilthInHomeArea.Notify_HomeAreaChanged(c);
+                }
+            }
+         */
+        
+        // TODO overwrite Designator_AreaHome
+        public static bool SetHome_Prefix(IntVec3 c, bool val, Area_Home __instance)
+        {
+            if (__instance[c] == val) return true;
+            float landValue = Utils.GetLandValue(cachedMap, c);
+            if (val)
+            {
+                if (cachedMap.GetComponent<FinanceService>().canAfford(landValue))
+                    cachedMap.GetComponent<FinanceService>().doAndBookExpenses(FinanceReport.ReportEntryType.Land, landValue);
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                cachedMap.GetComponent<FinanceService>().doAndBookIncome(FinanceReport.ReportEntryType.Land, landValue);
+            }
+            return true;
         }
     }
 }
