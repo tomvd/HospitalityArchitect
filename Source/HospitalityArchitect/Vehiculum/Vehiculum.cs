@@ -139,7 +139,11 @@ namespace HospitalityArchitect
                 {
                     continue;
                 }
-                GenSpawn.Spawn(innerContainer.GetAt(innerContainer.Count - 1), deliveryCells[triedCell], Map);
+                Thing spawn = GenSpawn.Spawn(innerContainer.GetAt(innerContainer.Count - 1), deliveryCells[triedCell], Map);
+                if (spawn is Pawn pawn && pawn.IsCustomer(out _))
+                {
+                    CustomerUtility.SetUpNewCustomer(pawn);
+                }
                 break;
             }
         }

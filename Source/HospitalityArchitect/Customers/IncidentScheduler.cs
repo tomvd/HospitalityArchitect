@@ -25,12 +25,12 @@ public class IncidentScheduler : MapComponent
         base.MapComponentTick();
         if (GenTicks.TicksGame % 42 == 0) // every ingame minute
         {
-            float baseChance = 0.008f; // 1% every minute, gives about a patient per 100 minutes  
+            float baseChance = 0.001f; // 1% every minute, gives about a customer per 100 minutes  
             if (Rand.Chance(baseChance))
             {
                 IncidentParms parms = new IncidentParms();
                 parms.target = map;
-                DefDatabase<IncidentDef>.GetNamed("VisitorArrives").Worker.TryExecuteWorker(parms);
+                DefDatabase<IncidentDef>.GetNamed("CustomerArrives").Worker.TryExecuteWorker(parms);
             }
         }        
     }

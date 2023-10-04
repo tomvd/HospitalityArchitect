@@ -6,11 +6,11 @@ using Verse;
 
 namespace HospitalityArchitect
 {
-    public class VisitorMapComponent : MapComponent
+    public class CustomerService : MapComponent
     {
-        public Dictionary<Pawn, VisitorData> Patients;
+        public Dictionary<Pawn, CustomerData> Customers;
         private List<Pawn> _colonistsKeysWorkingList;
-        private List<VisitorData> _colonistsValuesWorkingList;
+        private List<CustomerData> _colonistsValuesWorkingList;
         
         public bool openForBusiness = false;
         public List<bool> openingHours = new System.Collections.Generic.List<bool>
@@ -24,9 +24,9 @@ namespace HospitalityArchitect
         public List<RecipeDef> refusedOperations = new List<RecipeDef>();
         public int bedsReserved = 0;
         
-        public VisitorMapComponent(Map map) : base(map)
+        public CustomerService(Map map) : base(map)
         {
-            Patients = new Dictionary<Pawn, VisitorData>();
+            Customers = new Dictionary<Pawn, CustomerData>();
         }
         
         public override void ExposeData()
@@ -46,8 +46,8 @@ namespace HospitalityArchitect
             Scribe_Collections.Look(ref refusedOperations, "refusedOperations");
             Scribe_Values.Look(ref openForBusiness, "openForBusiness", false);
             Scribe_Values.Look(ref bedsReserved, "bedsReserved", 0);
-            Patients ??= new Dictionary<Pawn, VisitorData>();
-            Scribe_Collections.Look(ref Patients, "patients", LookMode.Reference, LookMode.Deep, ref _colonistsKeysWorkingList, ref _colonistsValuesWorkingList);
+            Customers ??= new Dictionary<Pawn, CustomerData>();
+            Scribe_Collections.Look(ref Customers, "patients", LookMode.Reference, LookMode.Deep, ref _colonistsKeysWorkingList, ref _colonistsValuesWorkingList);
         }
 
         public bool IsOpen()
@@ -56,15 +56,15 @@ namespace HospitalityArchitect
             return openingHours[GenLocalDate.HourOfDay(map)];
         }
 
-        public void PatientArrived(Pawn pawn, VisitorData data)
+        public void CustomerArrived(Pawn pawn, CustomerData data)
         {
-            Patients.Add(pawn, data);
+            Customers.Add(pawn, data);
             MainTabWindowUtility.NotifyAllPawnTables_PawnsChanged();
         }
         
-        public void PatientLeaves(Pawn pawn)
+        public void CustomerLeaves(Pawn pawn)
         {
-            if (Patients.TryGetValue(pawn, out var patientData))
+            if (Customers.TryGetValue(pawn, out var patientData))
             {
                 /*float silver = PatientUtility.CalculateSilverToReceive(pawn, patientData);
                 if (silver > 0)
@@ -87,7 +87,7 @@ namespace HospitalityArchitect
                     GenPlace.TryPlaceThing(silverThing, pawn.Position, pawn.Map, ThingPlaceMode.Near);
                 }
 */
-                Patients.Remove(pawn);
+                Customers.Remove(pawn);
                 MainTabWindowUtility.NotifyAllPawnTables_PawnsChanged();
             }
             else
@@ -98,68 +98,35 @@ namespace HospitalityArchitect
 
         public void PatientDied(Pawn pawn)
         {
-            if (Patients.TryGetValue(pawn, out var patientData))
+            if (Customers.TryGetValue(pawn, out var patientData))
             {
                 Messages.Message($"{pawn.NameFullColored} died: -10 "+pawn.Faction.name, MessageTypeDefOf.PawnDeath);
                 pawn.Faction.TryAffectGoodwillWith(Faction.OfPlayer, -10, false);
-                Patients.Remove(pawn);    
+                Customers.Remove(pawn);    
                 MainTabWindowUtility.NotifyAllPawnTables_PawnsChanged();
             }
             // else - was not a patient?
         }
         
-        public void DismissPatient(Pawn pawn)
+        public void DismissCustomer(Pawn pawn)
         {
-            if (Patients.TryGetValue(pawn, out var patientData))
+            if (Customers.TryGetValue(pawn, out var patientData))
             {
                 Messages.Message(
                     $"{pawn.NameFullColored} dismissed.", MessageTypeDefOf.NeutralEvent); 
-                Patients.Remove(pawn);    
+                Customers.Remove(pawn);    
                 MainTabWindowUtility.NotifyAllPawnTables_PawnsChanged();
             }
             // else - was not a patient?
             
         }
 
-        public bool IsSurgeryRecipeAllowed(RecipeDef recipe)
+        public bool IsRecreationAvailable()
         {
-            return !refusedOperations.Exists(def => def.Equals(recipe));
-        }
-
-        public void RefuseOperation(Pawn pawn, RecipeDef recipe)
-        {
-            if (!refusedOperations.Exists(def => def.Equals(recipe)))
-            {
-                refusedOperations.Add(recipe);
-                Messages.Message(
-                    $"{recipe.LabelCap} blacklisted.", MessageTypeDefOf.NeutralEvent); 
-            }
-
-            DismissPatient(pawn);
+            //return map.listerBuildings.
+            return true;
         }
         
-        public void UnRefuseOperation(RecipeDef recipe)
-        {
-            if (refusedOperations.Exists(def => def.Equals(recipe)))
-            {
-                refusedOperations.Remove(recipe);
-            }
-        }
-
-        public bool IsFull()
-        {
-            // check if we have enough beds left for colonists
-            if (FreeMedicalBeds() <= bedsReserved) return true;
-            return false;
-        }
-
-        public int FreeMedicalBeds()
-        {
-            return map.listerBuildings.AllBuildingsColonistOfClass<Building_Bed>().Count(bed => bed.Medical 
-                && !bed.ForPrisoners 
-                && bed.def.building.bed_humanlike 
-                && !bed.IsBurning()) - Patients.Count;            
-        }
     }
 
  

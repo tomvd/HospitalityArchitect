@@ -11,6 +11,8 @@ namespace HospitalityArchitect
         private VehiculumService _deliveryService;
         private FinanceService _financeService;
         private List<Order> orders = new List<Order>();
+        public string categoryOnSale;
+        public int salesEndsOn;
 
         public RimazonService(Map map) : base(map)
         {
@@ -58,12 +60,20 @@ namespace HospitalityArchitect
                     orders.RemoveAt(i);
                 }
             }
+
+            if (categoryOnSale is { Length: > 0 } && GenDate.TicksGame > salesEndsOn)
+            {
+                categoryOnSale = "";
+            }
         }
 
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Collections.Look(ref orders, "orders", LookMode.Deep);
+            Scribe_Values.Look(ref categoryOnSale, "categoryOnSale");
+            Scribe_Values.Look(ref salesEndsOn, "salesEndsOn");
+            
             if (orders is null) orders = new List<Order>();
         }
 

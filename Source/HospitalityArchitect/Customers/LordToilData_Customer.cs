@@ -4,7 +4,7 @@ using Verse.AI.Group;
 
 namespace HospitalityArchitect
 {
-    internal class LordToilData_Patient : LordToilData
+    internal class LordToilData_Customer : LordToilData
     {
         public float radius;
 
@@ -15,13 +15,13 @@ namespace HospitalityArchitect
         }
     }
 
-    internal class LordToil_Patient : LordToil
+    internal class LordToil_Customer : LordToil
     {
-        public LordToilData_Patient Data => (LordToilData_Patient) data;
+        public LordToilData_Customer Data => (LordToilData_Customer) data;
 
-        public LordToil_Patient()
+        public LordToil_Customer()
         {
-            data = new LordToilData_Patient();
+            data = new LordToilData_Customer();
         }
 
         public override void Init()
@@ -44,17 +44,17 @@ namespace HospitalityArchitect
 
         private void Leave()
         {
-            var hospital = Map.GetComponent<VisitorMapComponent>();
+            var hospital = Map.GetComponent<CustomerService>();
             foreach (var pawn in lord.ownedPawns.ToArray())
             {
-                hospital.PatientLeaves(pawn);
+                hospital.CustomerLeaves(pawn);
             }
         }
         public override void UpdateAllDuties()
         {
             foreach (Pawn pawn in lord.ownedPawns)
             {
-                pawn.mindState.duty = new PawnDuty(DefDatabase<DutyDef>.GetNamed("Relax"), pawn.Position, Data.radius);
+                CustomerUtility.SetCustomerDuty(pawn);
             }
         }
     }

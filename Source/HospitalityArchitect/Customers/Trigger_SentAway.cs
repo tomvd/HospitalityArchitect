@@ -16,30 +16,23 @@ namespace HospitalityArchitect
             return false;
         }
 
-        // fire the patient from the hospital when cured
+        // a vistior leaves when:
+        // recreation need is full (positive outcome)
+        // timeout is reached (negative outcome)
         private static bool SentAway(Pawn pawn)
         {
             //Log.Message($"SentAway? HasHediffsNeedingTend? {pawn.health.HasHediffsNeedingTend()} ShouldSeekMedicalRest? {HealthAIUtility.ShouldSeekMedicalRest(pawn)} pawn.health.surgeryBills.Count? {pawn.health.surgeryBills.Count } pawn.health.healthState? {pawn.health.healthState}");
             if (pawn?.Map == null) return false; // has not arrived yet...
             
-            var canbedismissed =  (!pawn.health.HasHediffsNeedingTend() 
-                    && !HealthAIUtility.ShouldSeekMedicalRest(pawn)
-                    && pawn.health.surgeryBills.Count == 0
-                    && pawn.health.healthState == PawnHealthState.Mobile);
+            var canbedismissed =  pawn.needs.joy.CurLevel >= pawn.needs.joy.MaxLevel*0.99;
             //Log.Message("result=" + canbedismissed);
-            // sometimes patients have to be reminded to stay in bed :)
-            if (pawn.IsVisitor(out _) && !canbedismissed && (pawn.mindState.duty == null || !pawn.mindState.duty.def.defName.Equals("Patient")))
+            // sometimes customers have to be reminded to SpendMoney :)
+            if (pawn.IsCustomer(out _) && !canbedismissed && (pawn.mindState.duty == null))
             {
                 Log.Message("mindState duty was " + pawn.mindState.duty?.def.defName.ToStringSafe());
-                pawn.mindState.duty = new PawnDuty(DefDatabase<DutyDef>.GetNamed("Patient"), pawn.Position, 100f);
+                CustomerUtility.SetCustomerDuty(pawn);
             }
-            // we indicate that the patient is just resting to get his anesthetic worked out
-            /*if (pawn.IsPatient() && !canbedismissed && pawn.health.surgeryBills.Count == 0 && pawn.health.healthState == PawnHealthState.Down)
-            {
-                pawn.Map..treatment = "resting";
-            }*/
-
-            return canbedismissed || !pawn.IsVisitor(out _);
+            return canbedismissed || !pawn.IsCustomer(out _);
         }
     }
 }

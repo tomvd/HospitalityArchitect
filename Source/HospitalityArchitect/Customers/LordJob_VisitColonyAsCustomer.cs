@@ -3,14 +3,14 @@ using Verse;
 using Verse.AI.Group;
 
 namespace HospitalityArchitect;
-public class LordJob_VisitColonyAsPatient : LordJob
+public class LordJob_VisitColonyAsCustomer : LordJob
 {
-        public LordJob_VisitColonyAsPatient()
+        public LordJob_VisitColonyAsCustomer()
         {
             // Required
         }
 
-        public LordJob_VisitColonyAsPatient(Faction faction)
+        public LordJob_VisitColonyAsCustomer(Faction faction)
         {
 
         }
@@ -26,13 +26,13 @@ public class LordJob_VisitColonyAsPatient : LordJob
         {
             StateGraph graphArrive = new StateGraph();
             StateGraph graphExit = new LordJob_TravelAndExit(IntVec3.Invalid).CreateGraph();
-            // Be a patient
-            var toilVisiting = new LordToil_Patient();
+            // Be a customer
+            var toilVisiting = new LordToil_Customer();
             graphArrive.lordToils.Add(toilVisiting);
             // Exit
             LordToil toilExit = graphArrive.AttachSubgraph(graphExit).StartingToil;
 
-            // Leave if patient is cured
+            // Leave if customer is satisfied
             {
                 Transition transition = new Transition(toilVisiting, toilExit);
                 transition.triggers.Add(new Trigger_SentAway()); // Sent away during stay
@@ -43,15 +43,9 @@ public class LordJob_VisitColonyAsPatient : LordJob
             return graphArrive;
         }
         
-        public override bool ShouldRemovePawn(Pawn p, PawnLostCondition reason)
-        {
-            if (reason == PawnLostCondition.Incapped) return false; // they are incapped when under surgery
-            return true;
-        }
-
         public override void Notify_PawnLost(Pawn pawn, PawnLostCondition condition)
         {
             //Log.Message($"{pawn.NameFullColored} lost because of {condition}");
-            Find.CurrentMap.GetComponent<VisitorMapComponent>().DismissPatient(pawn);
+            Find.CurrentMap.GetComponent<CustomerService>().DismissCustomer(pawn);
         }
 }

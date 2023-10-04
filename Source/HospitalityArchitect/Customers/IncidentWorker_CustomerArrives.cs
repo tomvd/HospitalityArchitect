@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
+using Hospitality;
 using RimWorld;
+using UnityEngine;
 using Verse;
 using Verse.AI.Group;
 
 namespace HospitalityArchitect
 {
     // modified IncidentWorker_VisitorGroup
-    public class IncidentWorker_VisitorArrives : IncidentWorker
+    public class IncidentWorker_CustomerArrives : IncidentWorker
     {
         public override bool CanFireNowSub(IncidentParms parms)
         {
@@ -17,7 +19,7 @@ namespace HospitalityArchitect
             }
 
             Map map = (Map)parms.target;
-            return CanSpawnPatient(map);
+            return CanSpawnCustomer(map);
         }
 
         public virtual Pawn GeneratePawn(Faction faction)
@@ -31,11 +33,14 @@ namespace HospitalityArchitect
                 null, null, null, null, null, null, null, null, null, null, null, null));
         }
 
-        public virtual bool CanSpawnPatient(Map map)
+        /*
+         * TODO we need to check if there are facilities that visitors can enjoy
+         */
+        public virtual bool CanSpawnCustomer(Map map)
         {
-            var hospital = map.GetComponent<VisitorMapComponent>();
-            if (!hospital.IsOpen()) return false;
-            if (hospital.IsFull()) return false;
+            var hospital = map.GetComponent<CustomerService>();
+            //if (!hospital.IsOpen()) return false;
+            //if (hospital.IsRecreationAvailable()) return false;
             //Log.Message((int)HospitalMod.Settings.PatientLimit + " - " + map.GetComponent<HospitalMapComponent>().Patients.Count);
             IntVec3 cell;
             return TryFindEntryCell(map, out cell);
@@ -46,38 +51,51 @@ namespace HospitalityArchitect
         public override bool TryExecuteWorker(IncidentParms parms)
         {
             Map map = (Map)parms.target;
-            if (!CanSpawnPatient(map))
+            if (!CanSpawnCustomer(map))
             {
                 return false;
             }
             Faction faction = Find.FactionManager.AllFactions.Where(f => !f.IsPlayer && !f.defeated && !f.def.hidden && !f.HostileTo(Faction.OfPlayer) && f.def.humanlikeFaction).RandomElement();
             parms.faction = faction;
             Pawn pawn = GeneratePawn(faction);
-            VisitorData visitor = SpawnVisitor(map, pawn);
+            CustomerData customer = SpawnCustomers(map, pawn);
             var list = new List<Pawn> { pawn };
             LordMaker.MakeNewLord(parms.faction, CreateLordJob(parms, list), map, list);
             //pawn.mindState.duty = new PawnDuty(DefDatabase<DutyDef>.GetNamed("Patient"), pawn.Position, 1000);
-            var diagnosis = visitor.Diagnosis;
-            TaggedString text = def.letterText.Formatted(pawn.Named("PAWN"), diagnosis).AdjustedFor(pawn);
-            //text += " " + patient.baseCost.ToStringMoney();
+            TaggedString text = def.letterText.Formatted(pawn.Named("PAWN"), customer.Type.ToString()).AdjustedFor(pawn);
+            //text += " " + customer.baseCost.ToStringMoney();
             TaggedString title = def.letterLabel.Formatted(pawn.Named("PAWN")).AdjustedFor(pawn);
             Messages.Message(title + ": " + text, MessageTypeDefOf.PositiveEvent);                
 
             return true;
         }
 
-        protected virtual VisitorData SpawnVisitor(Map map, Pawn pawn)
+        // TODO could be more than 1 customer in 1 group?
+        protected virtual CustomerData SpawnCustomers(Map map, Pawn pawn)
         {
             pawn.guest.SetGuestStatus(Faction.OfPlayer); // mark as guest otherwise the pawn just wanders off again
-            pawn.playerSettings.selfTend = false;
+            if (pawn.needs.joy == null)
+            {
+                pawn.needs.AddNeed( DefDatabase<NeedDef>.GetNamed("Joy"));
+            }
+            pawn.needs.joy.CurLevel = pawn.needs.joy.MaxLevel * 0.1f;
 
-            VisitorType type = VisitorType.Shopping;//(VisitorType)Rand.Range(1, 5);
-            //type = PatientType.Surgery; // debug
+            List<JoyKindDef> joys = new List<JoyKindDef>();
+            joys.Add(DefDatabase<JoyKindDef>.GetNamed("Gamble"));
+            joys.Add(DefDatabase<JoyKindDef>.GetNamed("Hydrotherapy"));
+            
+            //joys.Add(DefDatabase<JoyKindDef>.GetNamed("Shopping")); // only works for vending machines - need to check for storefront
+            //joys.Add(DefDatabase<JoyKindDef>.GetNamed("Gluttonous")); // actually does not work, it is a gastronomy customer :p 
+            // TODO check for gastronomy or storefront as those dont really refer to a joykind this needs a whole other approach
+            
+            CustomerType type = new List<CustomerType>{CustomerType.Gambling, CustomerType.Wellness}.RandomElement(); // for now, all the rest wont work properly
+            joys.RemoveAll(kindDef =>
+                !map.listerBuildings.allBuildingsColonist.Any(building => building.def.building.joyKind.Equals(kindDef)));
             //Log.Message(pawn.Label + " -> " +type.ToString());
-            VisitorData data = new VisitorData(GenDate.TicksGame, pawn.MarketValue, pawn.needs.mood.curLevelInt, type);
+            CustomerData data = new CustomerData(GenDate.TicksGame, type);
             //TryFindEntryCell(map, out var cell);
             //GenSpawn.Spawn(pawn, cell, map);
-            var spot = map.listerBuildings.AllBuildingsColonistOfDef(ThingDef.Named("PatientLandingSpot")).RandomElement();
+            /*var spot = map.listerBuildings.AllBuildingsColonistOfDef(ThingDef.Named("PatientLandingSpot")).RandomElement();
             var loc = DropCellFinder.TryFindSafeLandingSpotCloseToColony(map, IntVec2.Two);
             if (spot != null)
             {
@@ -91,10 +109,13 @@ namespace HospitalityArchitect
             activeDropPodInfo.despawnPodBeforeSpawningThing = true;
             activeDropPodInfo.spawnWipeMode = WipeMode.Vanish;
             DropPodUtility.MakeDropPodAt(loc, map, activeDropPodInfo);
+            */
+            VehiculumService busService = map.GetComponent<VehiculumService>();
+            busService.StartBus(new []{pawn});
             
-            VisitorMapComponent hospital = map.GetComponent<VisitorMapComponent>();
+            CustomerService shop = map.GetComponent<CustomerService>();
             //PatientUtility.DamagePawn(pawn, data, hospital);
-            hospital.PatientArrived(pawn, data);
+            shop.CustomerArrived(pawn, data);
             return data;
         }
         
@@ -105,10 +126,10 @@ namespace HospitalityArchitect
                 CellFinder.EdgeRoadChance_Neutral, out cell);
         }
         
-        protected virtual LordJob_VisitColonyAsPatient CreateLordJob(IncidentParms parms, List<Pawn> pawns)
+        protected virtual LordJob_VisitColonyAsCustomer CreateLordJob(IncidentParms parms, List<Pawn> pawns)
         {
             //RCellFinder.TryFindRandomSpotJustOutsideColony(pawns[0], out var result);
-            return new LordJob_VisitColonyAsPatient(parms.faction);
+            return new LordJob_VisitColonyAsCustomer(parms.faction);
         }
     }
 }

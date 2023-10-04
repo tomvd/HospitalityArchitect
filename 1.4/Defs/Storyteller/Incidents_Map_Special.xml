@@ -1,17 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
   <IncidentDef>
-    <defName>VisitorArrives</defName>
-    <label>visitor arrives</label>
+    <defName>CustomerArrives</defName>
+    <label>customer arrives</label>
     <category>Misc</category>
     <targetTags>
       <li>Map_PlayerHome</li>
     </targetTags>    
-    <workerClass>HospitalityArchitect.IncidentWorker_VisitorArrives</workerClass>
+    <workerClass>HospitalityArchitect.IncidentWorker_CustomerArrives</workerClass>
     <pawnKind>Villager</pawnKind>
     <baseChance>0</baseChance>
     <minRefireDays>1</minRefireDays>
-    <letterLabel>New visitor arrived</letterLabel>
+    <letterLabel>New customer arrived</letterLabel>
     <letterText>{PAWN_possessive} name is {0}. x is looking for {1}</letterText>
   </IncidentDef>
+
+  <IncidentDef>
+    <defName>RimazonSales</defName>
+    <label>rimazon sales</label>
+    <category>Misc</category>
+    <targetTags>
+      <li>Map_PlayerHome</li>
+    </targetTags>
+    <workerClass>HospitalityArchitect.IncidentWorker_RimazonSales</workerClass>
+    <baseChance>1.0</baseChance>
+    <minRefireDays>5</minRefireDays>
+    <durationDays>1.5~2.0</durationDays>
+  </IncidentDef>
+  
 </Defs>
