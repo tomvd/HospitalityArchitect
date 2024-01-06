@@ -71,6 +71,7 @@ namespace HospitalityArchitect
         public override void MapComponentTick()
         {
             base.MapComponentTick();
+            vehicles.RemoveAll(vehiculum => vehiculum == null); // bit weird but vehicles sometimes get bugged;
             foreach (var vehicle in vehicles.ToList())
             {
                 if (vehicle.State == 0)
@@ -89,7 +90,6 @@ namespace HospitalityArchitect
                         if (vehicle.UnloadTick == 0)
                         {
                             vehicle.Unload();
-                            vehicle.UnloadTick = 200;                                
                         }
                     }
                 }

@@ -62,6 +62,32 @@ namespace HospitalityArchitect
             if (!readOnly) value = temp;
         }
 
+        public static Rect[] CreateColumns(Rect rect, int columns, float height = 20f)
+        {
+            Rect[] cols = new Rect[columns];
+            Rect toprect = rect.TakeTopPart(height);
+            float colwidth = toprect.width / columns;
+            for (int i = 0; i < columns; i++)
+            {
+                cols[i] = toprect.TakeLeftPart(colwidth);
+            }
+
+            return cols;
+        }
+        
+        public static float Percentage(Rect inRect, float f)
+        {
+            return (inRect.width / 100.0f) * f;
+        }
+        
+        public static void NextRow(Rect[] col, float height = 20f)
+        {
+            for (int i = 0; i < col.Length; i++)
+            {
+                col[i].y += height;
+            }
+        }
+
         public static IEnumerable<Rect> Divide(Rect rect, int items, int columns = 0, int rows = 0,
             bool drawLines = true)
         {

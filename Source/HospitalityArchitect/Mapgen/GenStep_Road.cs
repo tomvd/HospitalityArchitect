@@ -47,6 +47,20 @@ public class GenStep_Road : GenStep
 			// place concrete
 			map.terrainGrid.SetTerrain(deliveryRectCell, TerrainDefOf.Concrete);
 		}
+		// bit lower start putting 2 tents and small cabin
+		/*
+		var cabin = new IntVec3(startX - 10, 0, (map.Size.z / 2) + 3);
+		ThingDef stuff = Rand.Element(ThingDefOf.WoodLog, ThingDefOf.Steel);
+		foreach (IntVec3 corner in cellRect2.Corners)
+		{
+			if (corner.InBounds(thing.Map) && corner.Standable(thing.Map) && corner.GetFirstItem(thing.Map) == null && corner.GetFirstBuilding(thing.Map) == null && corner.GetFirstPawn(thing.Map) == null && !GenAdj.CellsAdjacent8Way(new TargetInfo(corner, thing.Map)).Any((IntVec3 x) => !x.InBounds(thing.Map) || !x.Walkable(thing.Map)) && corner.SupportsStructureType(thing.Map, ThingDefOf.Wall.terrainAffordanceNeeded))
+			{
+				Thing thing2 = ThingMaker.MakeThing(ThingDefOf.Wall, stuff);
+				GenSpawn.Spawn(thing2, corner, thing.Map);
+				thing2.SetFaction(thing.Faction);
+				num++;
+			}
+		}*/
 		
 	}
 

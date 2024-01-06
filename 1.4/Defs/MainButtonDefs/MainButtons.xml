@@ -4,10 +4,33 @@
   <MainButtonDef>
     <defName>HA_Finances</defName>
     <label>Finances</label>
-    <description>Show financial reports of current and last quadrum.</description>
-    <workerClass>HospitalityArchitect.MainButtonWorker_Finance</workerClass>
+    <description>Loans, financial reports, everything with numbers.</description>
+    <tabWindowClass>HospitalityArchitect.Dialog_Finance</tabWindowClass>
     <order>60</order>
     <defaultHotKey></defaultHotKey>
   </MainButtonDef>
-
+  <MainButtonDef>
+    <defName>HA_Facilities</defName>
+    <label>Facilities</label>
+    <description>Overview of buildings related to your hotel.</description>
+    <tabWindowClass>HospitalityArchitect.Dialog_Facilities</tabWindowClass>
+    <order>60</order>
+    <defaultHotKey></defaultHotKey>
+  </MainButtonDef>  
+  <MainButtonDef>
+    <defName>HA_Staff</defName>
+    <label>Staff</label>
+    <description>Hire and fire employees.</description>
+    <tabWindowClass>HospitalityArchitect.Dialog_Staff</tabWindowClass>
+    <order>62</order>
+    <defaultHotKey></defaultHotKey>
+  </MainButtonDef>    
+  <MainButtonDef>
+    <defName>HA_Rimazon</defName>
+    <label>Rimazon</label>
+    <description>Delivers everything in Rimworld at your door.</description>
+    <tabWindowClass>HospitalityArchitect.Dialog_Rimazon</tabWindowClass>
+    <order>62</order>
+    <defaultHotKey></defaultHotKey>
+  </MainButtonDef>    
 </Defs>

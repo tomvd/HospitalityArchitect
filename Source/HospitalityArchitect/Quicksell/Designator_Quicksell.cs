@@ -10,20 +10,25 @@ public class Designator_Quicksell : Designator
         public Designator_Quicksell()
         {
             this.defaultLabel = "Quicksell";
-            this.defaultDesc = "Sell item immediatly at 50% of market value.";
+            this.defaultDesc = "Sell item immediately at 50% of market value.";
             this.icon = ContentFinder<Texture2D>.Get("UI/Designators/Claim", true);
             this.soundDragSustain = SoundDefOf.Designate_DragStandard;
             this.soundDragChanged = SoundDefOf.Designate_DragStandard_Changed;
             this.useMouseIcon = true;
-            this.soundSucceeded = SoundDefOf.Designate_Claim;
+            this.soundSucceeded = SoundDefOf.ExecuteTrade;
             //this.hotKey = KeyBindingDefOf.Command_ItemForbid;
             this.hasDesignateAllFloatMenuOption = true;
             //this.designateAllLabel = "Forbid all blueprints";
         }
 
+        public override string DescReverseDesignating(Thing t)
+        {
+            return "Sell for " + ((t.MarketValue / 2f) * t.stackCount).ToStringMoney();
+        }
+
         public override AcceptanceReport CanDesignateThing(Thing t)
         {
-            if (t.def.category != ThingCategory.Item || t.IsForbidden(Faction.OfPlayer))
+            if (t.def.category != ThingCategory.Item || t.IsForbidden(Faction.OfPlayer) || !Map.areaManager.Home[t.Position])
             {
                 return false;
             }
@@ -32,7 +37,7 @@ public class Designator_Quicksell : Designator
 
         public override AcceptanceReport CanDesignateCell(IntVec3 c)
         {
-            if (!c.InBounds(base.Map) || c.Fogged(base.Map))
+            if (!c.InBounds(base.Map) || c.Fogged(base.Map) || !Map.areaManager.Home[c])
             {
                 return false;
             }

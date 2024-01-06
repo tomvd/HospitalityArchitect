@@ -2,8 +2,8 @@
 <Defs>
   <ScenarioDef>
     <defName>HA_Scenario</defName>
-    <label>Start new rimworld company.</label>
-    <description>You are the fouder of a new rimworld company. Hire personnel, make money, rule the planet.</description>
+    <label>Start new rimworld hospitality company.</label>
+    <description>You bought a huge piece of land to start your hospitality business. Create a hostel for backpackers, start to make money and expand your business and attract wealthier guests.</description>
     <scenario>
       <summary>The Hospitality Architect starting scenario</summary>
       <playerFaction>
@@ -26,39 +26,32 @@
         </li>
 
         <!-- Player starting things -->
-        <li Class="ScenPart_StartingAnimal">
-          <def>StartingAnimal</def>
-          <count>1</count>
-          <bondToRandomPlayerPawnChance>1.0</bondToRandomPlayerPawnChance>
-        </li>
-        <li Class="ScenPart_StartingThing_Defined">
-          <def>StartingThing_Defined</def>
-          <thingDef>SolarGenerator</thingDef>
-          <count>1</count>
-        </li>
-        <li Class="ScenPart_StartingThing_Defined">
-          <def>StartingThing_Defined</def>
-          <thingDef>HA_Computer</thingDef>
-          <count>1</count>
-        </li>
         <li Class="ScenPart_StartingThing_Defined">
           <def>StartingThing_Defined</def>
           <thingDef>MealSurvivalPack</thingDef>
-          <count>8</count>
+          <count>10</count>
         </li>
         <li Class="ScenPart_StartingThing_Defined">
           <def>StartingThing_Defined</def>
-          <thingDef>Silver</thingDef>
-          <count>50</count>
+          <thingDef>PitLatrine</thingDef>
+          <stuff>WoodLog</stuff>          
         </li>
-
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>WashBucket</thingDef>
+          <stuff>WoodLog</stuff>          
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>WoodLog</thingDef>
+          <count>150</count>        
+        </li>            
         <!-- Game start dialog -->
         <li Class="ScenPart_GameStartDialog">
           <def>GameStartDialog</def>
           <textKey>GameStartDialog</textKey>
           <closeSound>GameStartSting</closeSound>
         </li>
-
       </parts>
     </scenario>
   </ScenarioDef>

@@ -8,17 +8,34 @@
 	</supportedVersions>
 
 	<modDependencies>
+		<!-- TODO add hospitality, storefront and gastronomy -->
 		<li>
 			<packageId>brrainz.harmony</packageId>
 			<displayName>Harmony</displayName>
 			<steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
 			<downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
 		</li>
+		<li>
+			<packageId>Orion.Hospitality</packageId>
+			<displayName>Hospitality</displayName>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/2553700067</steamWorkshopUrl>
+		</li>		
+		<li>
+			<packageId>Dubwise.DubsBadHygiene</packageId>
+			<displayName>Dubs Bad Hygiene</displayName>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/836308268</steamWorkshopUrl>
+		</li>			
 	</modDependencies>
 	<incompatibleWith>
 		<!-- <li>username.modname</li> -->
 	</incompatibleWith>
-
+	<loadAfter>
+		<li>Orion.Hospitality</li>
+		<li>Dubwise.DubsBadHygiene</li>
+		<li>Dubwise.DubsBadHygiene.Lite</li>
+		<li>balistafreak.StandaloneHotSpring</li>
+		<li>Aoba.Tent</li>
+	</loadAfter>
 	<description>Hospitality Architect is a new scenario where everything is about money and building up an imperium by getting silver out of guests and visitors.
 	The scenario starts with just 1 person - you. There will never be anyone joining your colony, you can only hire people.</description>
 </ModMetaData>

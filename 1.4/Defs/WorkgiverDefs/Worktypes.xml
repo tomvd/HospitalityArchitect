@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <WorkTypeDef>
+        <defName>Reception_Hosting</defName>
+        <labelShort>Hosting</labelShort>
+        <pawnLabel>Cashier</pawnLabel>
+        <gerundLabel>hosting</gerundLabel>
+        <description>Receive hotel guests.</description>
+        <verb>Host</verb>
+        <naturalPriority>1066</naturalPriority>
+        <relevantSkills>
+            <li>Social</li>
+        </relevantSkills>
+        <workTags>
+            <li>Commoner</li>
+            <li>Social</li>
+            <li>AllWork</li>
+        </workTags>
+    </WorkTypeDef>
+
+    <WorkTypeDef>
+        <defName>RoomCleaning</defName>
+        <labelShort>Clean Rooms</labelShort>
+        <pawnLabel>Room Cleaner</pawnLabel>
+        <gerundLabel>room cleaning</gerundLabel>
+        <description>Clean guest bed and bathrooms.</description>
+        <verb>Room Clean</verb>
+        <naturalPriority>1175</naturalPriority>
+        <alwaysStartActive>true</alwaysStartActive>
+        <requireCapableColonist>true</requireCapableColonist>
+        <workTags>
+            <li>ManualDumb</li>
+            <li>Cleaning</li>
+            <li>Commoner</li>
+        </workTags>
+    </WorkTypeDef>
+</Defs>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <ThoughtDef>
+        <defName>HospitalityArchitect_NoReception</defName>
+        <durationDays>1</durationDays>
+        <stackLimit>5</stackLimit>
+        <stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+        <stages>
+            <li>
+                <label>this place has no reception desk</label>
+                <description>I could not find a place to check in.</description>
+                <baseMoodEffect>-5</baseMoodEffect>
+            </li>
+        </stages>
+        <modExtensions>
+            <li Class="HospitalityArchitect.GuestThoughtRating">
+                <ratings>
+                    <li>-20</li>
+                </ratings>
+            </li>
+        </modExtensions>          
+    </ThoughtDef>
+    
+    <ThoughtDef>
+        <defName>HospitalityArchitect_ServicedMood</defName>
+        <durationDays>1</durationDays>
+        <stackLimit>5</stackLimit>
+        <stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+        <stages>
+            <li>
+                <label>had awful service</label>
+                <description>I've been treated awfully.</description>
+                <baseMoodEffect>-2</baseMoodEffect>
+            </li>
+            <li>
+                <label>had bad service</label>
+                <description>I've been treated poorly.</description>
+                <baseMoodEffect>-1</baseMoodEffect>
+            </li>
+            <li>
+                <label>had decent service</label>
+                <description>I've been treated decently.</description>
+                <baseMoodEffect>1</baseMoodEffect>
+            </li>
+            <li>
+                <label>had good service</label>
+                <description>I've been treated well.</description>
+                <baseMoodEffect>2</baseMoodEffect>
+            </li>
+            <li>
+                <label>had excellent service</label>
+                <description>I've been treated exceptionally well.</description>
+                <baseMoodEffect>3</baseMoodEffect>
+            </li>
+        </stages>
+        <modExtensions>
+            <li Class="HospitalityArchitect.GuestThoughtRating">
+                <ratings>
+                    <li>-20</li>
+                    <li>-10</li>
+                    <li>10</li>
+                    <li>20</li>
+                    <li>30</li>
+                </ratings>
+            </li>
+        </modExtensions>          
+    </ThoughtDef>
+    
+    <ThoughtDef>
+        <defName>HospitalityArchitect_Cleanliness</defName>
+        <durationDays>1</durationDays>
+        <stackLimit>5</stackLimit>
+        <stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+        <stages>
+            <li>
+                <label>very dirty room</label>
+                <description>My room is very dirty.</description>
+                <baseMoodEffect>-3</baseMoodEffect>
+            </li>
+            <li>
+                <label>dirty room</label>
+                <description>My room is dirty.</description>
+                <baseMoodEffect>-2</baseMoodEffect>
+            </li>
+            <li>
+                <label>slightly dirty room</label>
+                <description>My room is slightly dirty.</description>
+                <baseMoodEffect>-1</baseMoodEffect>
+            </li>
+            <li>
+                <label>clean room</label>
+                <description>My room is clean.</description>
+                <baseMoodEffect>1</baseMoodEffect>
+            </li>
+            <li>
+                <label>sterile room</label>
+                <description>My room is exceptionally clean.</description>
+                <baseMoodEffect>2</baseMoodEffect>
+            </li>
+        </stages>
+        <modExtensions>
+            <li Class="HospitalityArchitect.GuestThoughtRating">
+                <ratings>
+                    <li>-30</li>
+                    <li>-20</li>
+                    <li>-10</li>
+                    <li>10</li>
+                    <li>20</li>
+                </ratings>
+            </li>
+        </modExtensions>              
+    </ThoughtDef>
+</Defs>

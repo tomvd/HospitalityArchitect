@@ -18,12 +18,27 @@
         <WarningLevel>4</WarningLevel>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks> <!-- Unsafe is required for publicising! -->
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        
+        <DebugType>none</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>../../1.4/Assemblies</OutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>        
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <DefineConstants>TRACE;DEBUG</DefineConstants>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>portable</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>../../1.4/Assemblies</OutputPath>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>        
+        
     </PropertyGroup>
 
     <ItemGroup>
@@ -34,12 +49,32 @@
         <PackageReference Include="Krafs.Rimworld.Ref" Version="*" GeneratePathProperty="true" />
         <!-- Use Version="*-*" to get the latest beta! -->
         <PackageReference Include="Lib.Harmony" Version="*" ExcludeAssets="runtime" />
-        <PackageReference Include="RimWorld.MultiplayerAPI" Version="0.4.0" />
+        <PackageReference Include="RimWorld.MultiplayerAPI" ExcludeAssets="runtime" Version="0.4.0" />
     </ItemGroup>
     <ItemGroup>
         <Publicize Include="Assembly-CSharp" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Hospitality\Source\Source\Hospitality.csproj" />
+      <ProjectReference Include="..\..\..\Hospitality\Source\Source\Hospitality.csproj">
+        <Private>false</Private>
+      </ProjectReference>
+      <ProjectReference Include="..\..\..\Storefront\Source\Storefront\Storefront.csproj">
+        <Private>false</Private>
+      </ProjectReference>
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="0DubCore">
+        <HintPath>..\..\..\..\..\..\workshop\content\294100\836308268\1.4\Assemblies\0DubCore.dll</HintPath>
+      </Reference>
+      <Reference Include="BadHygiene">
+        <HintPath>..\..\..\..\..\..\workshop\content\294100\836308268\1.4\Assemblies\BadHygiene.dll</HintPath>
+      </Reference>
+      <Reference Include="CashRegister">
+        <HintPath>..\..\..\CashRegister\1.4\Assemblies\CashRegister.dll</HintPath>
+      </Reference>
+      <Reference Include="Gastronomy">
+        <HintPath>..\..\..\Gastronomy\1.4\Assemblies\Gastronomy.dll</HintPath>
+          <Private>false</Private>
+      </Reference>
     </ItemGroup>
 </Project>

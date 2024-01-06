@@ -45,12 +45,12 @@ namespace HospitalityArchitect
             total = subtotal + deliverycost;
         }
         
-        public void AddToCart(Thing shopThing, bool fullStack, Faction faction)
+        public void AddToCart(Thing shopThing, bool fullStack)
         {
             Thing cartThing;
             if (shopThing is Pawn pawn)
             {
-                var animalGen = new PawnGenerationRequest(pawn.kindDef, faction, PawnGenerationContext.NonPlayer, pawn.Tile);
+                var animalGen = new PawnGenerationRequest(pawn.kindDef, Faction.OfPlayer, PawnGenerationContext.NonPlayer, pawn.Tile);
                 animalGen.FixedGender = pawn.gender;
                 cartThing = PawnGenerator.GeneratePawn(animalGen);
             }

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <PawnKindDef ParentName="VillagerBase">
+        <defName>BackpackerGuest</defName>
+        <label>backpacker</label>
+        <forcedTraits>
+          <Ascetic>0</Ascetic>
+        </forcedTraits>
+        <modExtensions>
+            <li Class="HospitalityArchitect.GuestTypeDef">
+                <bringsFood>true</bringsFood>
+                <budget>36~46</budget>
+                <bedBudget>30</bedBudget>
+                <travelWithPartnerChance>0.2</travelWithPartnerChance>
+                <arrivesAt>20~23</arrivesAt>
+                <leavesAt>9~11</leavesAt>
+                <maxVisitors>20</maxVisitors>
+                <baseRating>90</baseRating>
+                <dayVisitChance>0</dayVisitChance>
+                <seasonalVariance>1</seasonalVariance>
+                <initRest>0.1</initRest>
+                <initFood>1.0</initFood>
+                <initJoy>1.0</initJoy>
+            </li>
+        </modExtensions>          
+    </PawnKindDef>       
+    <PawnKindDef ParentName="VillagerBase">
+        <defName>BudgetTouristGuest</defName>
+        <label>budget tourist</label>
+        <modExtensions>
+            <li Class="HospitalityArchitect.GuestTypeDef">
+                <budget>76~105</budget>
+                <bedBudget>60</bedBudget>
+                <arrivesAt>16~18</arrivesAt>
+                <leavesAt>10~12</leavesAt>
+                <maxVisitors>15</maxVisitors>
+                <baseRating>80</baseRating>
+                <dayVisitChance>0</dayVisitChance>
+                <travelWithPartnerChance>1</travelWithPartnerChance>
+                <seasonalVariance>1</seasonalVariance>
+                <initRest>0.5</initRest>
+                <initFood>0.3</initFood>
+                <initJoy>0.8</initJoy>                
+                <bedroomRequirements>
+                  <li Class="HospitalityArchitect.RoomRequirement_Privacy">
+                      <privateBedRoom>true</privateBedRoom>
+                      <privateBathRoom>false</privateBathRoom>
+                  </li>
+                </bedroomRequirements>                
+            </li>
+        </modExtensions>          
+     </PawnKindDef>   
+    <PawnKindDef ParentName="VillagerBase">
+        <defName>TouristGuest</defName>
+        <label>tourist</label>
+        <modExtensions>
+            <li Class="HospitalityArchitect.GuestTypeDef">
+                <budget>106~135</budget>
+                <bedBudget>90</bedBudget>
+                <arrivesAt>16~18</arrivesAt>
+                <leavesAt>10~12</leavesAt>
+                <maxVisitors>15</maxVisitors>
+                <baseRating>70</baseRating>
+                <dayVisitChance>0</dayVisitChance>
+                <travelWithPartnerChance>1</travelWithPartnerChance>
+                <seasonalVariance>1</seasonalVariance>
+                <initRest>0.5</initRest>
+                <initFood>0.3</initFood>
+                <initJoy>0.8</initJoy>                   
+                <bedroomRequirements>
+                  <li Class="HospitalityArchitect.RoomRequirement_Privacy">
+                      <privateBedRoom>true</privateBedRoom>
+                      <privateBathRoom>true</privateBathRoom>
+                  </li>
+                    <li Class="HospitalityArchitect.RoomRequirement_Rating">
+                        <rating>200</rating>
+                    </li>
+                </bedroomRequirements>                
+            </li>
+        </modExtensions>          
+     </PawnKindDef>      
+    <PawnKindDef ParentName="VillagerBase">
+        <defName>LuxTouristGuest</defName>
+        <label>luxury tourist</label>
+        <modExtensions>
+            <li Class="HospitalityArchitect.GuestTypeDef">
+                <budget>300~450</budget>
+                <bedBudget>180</bedBudget>
+                <arrivesAt>16~18</arrivesAt>
+                <leavesAt>10~12</leavesAt>
+                <maxVisitors>15</maxVisitors>
+                <baseRating>50</baseRating>
+                <dayVisitChance>0</dayVisitChance>
+                <travelWithPartnerChance>1</travelWithPartnerChance>
+                <seasonalVariance>1</seasonalVariance>
+                <initRest>0.5</initRest>
+                <initFood>0.3</initFood>
+                <initJoy>0.8</initJoy>                   
+                <bedroomRequirements>
+                  <li Class="HospitalityArchitect.RoomRequirement_Privacy">
+                      <privateBedRoom>true</privateBedRoom>
+                      <privateBathRoom>true</privateBathRoom>
+                  </li>
+                    <li Class="HospitalityArchitect.RoomRequirement_Rating">
+                        <rating>400</rating>
+                    </li>
+                </bedroomRequirements>                
+            </li>
+        </modExtensions>          
+     </PawnKindDef>          
+    <PawnKindDef ParentName="VillagerBase">
+        <defName>BusinessGuest</defName>
+        <label>business guest</label>
+        <modExtensions>
+            <li Class="HospitalityArchitect.GuestTypeDef">
+                <budget>106~135</budget>
+                <bedBudget>90</bedBudget>
+                <arrivesAt>16~18</arrivesAt>
+                <leavesAt>10~12</leavesAt>
+                <maxVisitors>5</maxVisitors>
+                <baseRating>70</baseRating>
+                <dayVisitChance>0</dayVisitChance>
+                <travelWithPartnerChance>0</travelWithPartnerChance>
+                <seasonalVariance>0</seasonalVariance>
+                <initRest>0.5</initRest>
+                <initFood>0.3</initFood>
+                <initJoy>0.5</initJoy>                   
+                <bedroomRequirements>
+                  <li Class="HospitalityArchitect.RoomRequirement_Privacy">
+                      <privateBedRoom>true</privateBedRoom>
+                      <privateBathRoom>true</privateBathRoom>
+                  </li>         
+                    <li Class="HospitalityArchitect.RoomRequirement_Rating">
+                        <rating>200</rating>
+                    </li>                    
+                </bedroomRequirements>
+            </li>
+        </modExtensions>          
+    </PawnKindDef>
+    <TraitDef>
+        <defName>Gambler</defName>
+        <commonality>0.0</commonality>
+        <degreeDatas>
+            <li>
+                <label>gambler</label>
+                <description>{PAWN_nameDef} wants to go to the casino.</description>
+            </li>
+        </degreeDatas>
+    </TraitDef>    
+    <PawnKindDef ParentName="VillagerBase">
+        <defName>CasinoGuest</defName>
+        <label>casino guest</label>
+       <forcedTraits>
+            <Gambler>0</Gambler>
+        </forcedTraits>
+        <modExtensions>
+            <li Class="HospitalityArchitect.GuestTypeDef">
+                <budget>240~300</budget>
+                <bedBudget>90</bedBudget>
+                <arrivesAt>13~15</arrivesAt>
+                <leavesAt>10~12</leavesAt>
+                <maxVisitors>10</maxVisitors>
+                <baseRating>70</baseRating>
+                <dayVisitChance>0.5</dayVisitChance>
+                <travelWithPartnerChance>0</travelWithPartnerChance>
+                <seasonalVariance>0</seasonalVariance>
+                <initRest>0.9</initRest>
+                <initFood>0.9</initFood>
+                <initJoy>0.1</initJoy>                   
+                <bedroomRequirements>
+                    <li Class="HospitalityArchitect.RoomRequirement_Privacy">
+                        <privateBedRoom>true</privateBedRoom>
+                        <privateBathRoom>true</privateBathRoom>
+                    </li>         
+                    <li Class="HospitalityArchitect.RoomRequirement_FacilitiesAvailable">
+                        <facilities>
+                            <li>Casino</li>
+                        </facilities>
+                    </li>
+                    <li Class="HospitalityArchitect.RoomRequirement_Rating">
+                        <rating>200</rating>
+                    </li>                    
+                </bedroomRequirements>
+            </li>
+        </modExtensions>          
+    </PawnKindDef>        
+</Defs>

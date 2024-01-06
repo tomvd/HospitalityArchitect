@@ -7,12 +7,10 @@ namespace HospitalityArchitect
 {
     public class FinanceReport : IExposable
     {
-        private Dictionary<string,float> income = new Dictionary<string,float>();
-        private Dictionary<string,float> expenses = new Dictionary<string,float>();
+        private Dictionary<string,float> booking = new Dictionary<string,float>();
         private int day = GenDate.DaysPassed;
 
-        public Dictionary<string,float> getIncome() => income;
-        public Dictionary<string,float> getExpenses() => expenses;
+        public Dictionary<string,float> getBooking() => booking;
         
         public enum ReportEntryType
         {
@@ -26,19 +24,14 @@ namespace HospitalityArchitect
             Land
         }
 
-        public void recordIncome(ReportEntryType type, float value)
+        public void recordBooking(ReportEntryType type, float value)
         {
-            income.SetOrAdd(type.ToString(), income.GetValueOrDefault(type.ToString(), 0) + value);
+            booking.SetOrAdd(type.ToString(), booking.GetValueOrDefault(type.ToString(), 0) + value);
         }
         
-        public void recordExpense(ReportEntryType type, float value)
-        {
-            expenses.SetOrAdd(type.ToString(), expenses.GetValueOrDefault(type.ToString(), 0) + value);
-        }
-
         public float getNetResult()
         {
-            return income.Values.Sum() - expenses.Values.Sum();
+            return booking.Values.Sum();
         }
 
         public void ExposeData()
@@ -47,8 +40,7 @@ namespace HospitalityArchitect
             {
                 reset();
             }
-            Scribe_Collections.Look(ref this.income, "income", LookMode.Value, LookMode.Value);
-            Scribe_Collections.Look(ref this.expenses, "expenses", LookMode.Value, LookMode.Value);
+            Scribe_Collections.Look(ref this.booking, "booking", LookMode.Value, LookMode.Value);
             Scribe_Values.Look(ref day, "day");
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
                 initNull();
@@ -56,16 +48,13 @@ namespace HospitalityArchitect
 
         private void initNull()
         {
-            if (income == null)
-                income = new Dictionary<string, float>();
-            if (expenses == null)
-                expenses = new Dictionary<string, float>();
+            if (booking == null)
+                booking = new Dictionary<string, float>();
         }
 
         private void reset()
         {
-            expenses.Clear();
-            income.Clear();
+            booking.Clear();
         }
     }
 }

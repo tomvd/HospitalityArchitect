@@ -109,7 +109,7 @@ namespace HospitalityArchitect
             removeMoney(value);
             //Log.Message($"expenses[{type.ToString()}]: {value} result: {moneyInBank}");
             Messages.Message($"{type.ToString()} -{value.ToStringMoney()}", null, MessageTypeDefOf.NegativeEvent);
-            _reports[currentDay].recordExpense(type, value);
+            _reports[currentDay].recordBooking(type, -value);
         }
         
         public void doAndBookIncome(FinanceReport.ReportEntryType type, float value)
@@ -122,7 +122,7 @@ namespace HospitalityArchitect
         {
             //Log.Message($"income[{type.ToString()}]: {value} result: {moneyInBank}");
             Messages.Message($"{type.ToString()} +{value.ToStringMoney()}", null, MessageTypeDefOf.PositiveEvent);
-            _reports[currentDay].recordIncome(type, value);
+            _reports[currentDay].recordBooking(type, value);
         }
 
         public void Deposit()
@@ -194,12 +194,20 @@ namespace HospitalityArchitect
             try
             {
                 // calculate building taxes of this map = Daily property taxes per cell build on. 0.1s per 25 tiles of home (or tile of roof??).
-                /*if (Math.Floor(map.areaManager.Home.ActiveCells.Count() / 250f) > 0)
-                    bookExpenses(FinanceReport.ReportEntryType.Taxes, map.areaManager.Home.ActiveCells.Count() / 250f);*/
+                Area homeArea = map.areaManager.Home;
+                float taxes = 0f;
+                foreach (var cell in homeArea.ActiveCells)
+                {
+                    taxes += Utils.GetLandValue(map, cell) / 250;
+                }
+                taxes = Mathf.Round(taxes);
+                
+                if (taxes > 0)
+                    doAndBookExpenses(FinanceReport.ReportEntryType.Taxes, taxes);
             
                 // pay taxes on the money on the bank, 1s per 1000s on the bank - this is the price player pays for the advantage of having "hidden wealth"/smaller raids 
-                if (Math.Floor(moneyInBank / 1000f) > 0)
-                    doAndBookExpenses(FinanceReport.ReportEntryType.Taxes, (float)Math.Floor(moneyInBank / 1000f));
+                //if (Math.Floor(moneyInBank / 1000f) > 0)
+//                    doAndBookExpenses(FinanceReport.ReportEntryType.Taxes, (float)Math.Floor(moneyInBank / 1000f));
 
                 foreach (var loan  in _loans)
                 {

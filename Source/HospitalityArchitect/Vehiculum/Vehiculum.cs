@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Hospitality.Utilities;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -26,8 +27,9 @@ namespace HospitalityArchitect
         private const float RampMargin = 5f;
         public int UnloadTick;
         public ThingOwner innerContainer;
-        public int State; // 0 arriving, 1 waiting, 2 unloading, 3 leaving 
+        public int State; // 0 arriving, 1 waiting, 2 unloading, 3 leaving, 4 loading
         protected IntVec3 destLocation;
+        public int LOAD_UNLOAD_DELAY = 100;        
 
         public override void ExposeData()
         {
@@ -103,7 +105,7 @@ namespace HospitalityArchitect
                 currentSpeed = 0;
                 Log.Message("AtDestination:" + currentPos);
                 State = 2;
-                UnloadTick = 100;
+                UnloadTick = LOAD_UNLOAD_DELAY;
             }
         }
 
@@ -140,12 +142,31 @@ namespace HospitalityArchitect
                     continue;
                 }
                 Thing spawn = GenSpawn.Spawn(innerContainer.GetAt(innerContainer.Count - 1), deliveryCells[triedCell], Map);
-                if (spawn is Pawn pawn && pawn.IsCustomer(out _))
+                if (spawn is Pawn pawn && pawn.IsGuest())
                 {
-                    CustomerUtility.SetUpNewCustomer(pawn);
+                    GuestUtility.SetUpHotelGuest(pawn);
                 }
                 break;
             }
+            UnloadTick = LOAD_UNLOAD_DELAY;
         }
+        
+        // picks up all pawns in the delivery area
+        public void Load(Map map)
+        {
+            CellRect deliveryRect = CellRect.CenteredOn(destLocation + IntVec3.West * 4, 1);
+            List<IntVec3> deliveryCells = deliveryRect.Cells.InRandomOrder().ToList();
+            for (int triedCell = 0; triedCell < deliveryCells.Count;triedCell++)
+            {
+                Pawn p = deliveryCells[triedCell].GetFirstPawn(map);
+                if (p == null)
+                {
+                    continue;
+                }
+                innerContainer.TryAddOrTransfer(p);
+                break;
+            }
+            State = 3;
+        }        
     }
 }

@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+    <ResearchProjectDef>
+        <defName>HA_BusinessGuests</defName>
+        <label>business guests</label>
+        <description>Learn how to attract business guests to your hotel. Business guests provide a more steady stream of income.</description>
+        <baseCost>500</baseCost>
+		<tab>Hotel</tab>
+        <techLevel>Industrial</techLevel>
+        <researchViewX>0</researchViewX>
+        <researchViewY>0</researchViewY>
+    </ResearchProjectDef>
+
+    <ResearchProjectDef>
+        <defName>HA_LuxuryGuests</defName>
+        <label>luxury guests</label>
+        <tab>Hotel</tab>
+        <techLevel>Industrial</techLevel>
+        <description>Luxury guests. Learn how to treat them well and they will fill your pockets with loads of silver.</description>
+        <baseCost>500</baseCost>
+        <researchViewX>1</researchViewX>
+        <researchViewY>0</researchViewY>
+    </ResearchProjectDef>
+
+    <ResearchProjectDef>
+        <defName>HA_BetterLoans</defName>
+        <label>better loans</label>
+        <tab>Hotel</tab>
+        <techLevel>Industrial</techLevel>
+        <description>Find places where you can loan at lower fees.</description>
+        <baseCost>500</baseCost>
+        <researchViewX>1</researchViewX>
+        <researchViewY>1</researchViewY>
+    </ResearchProjectDef>    
+
+</Defs>

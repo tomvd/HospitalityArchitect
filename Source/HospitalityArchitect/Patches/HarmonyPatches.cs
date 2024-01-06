@@ -35,9 +35,8 @@ namespace HospitalityArchitect
                 AccessTools.Method(typeof(EquipmentUtility), nameof(EquipmentUtility.QuestLodgerCanUnequip)),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(QuestLodgerCanUnequip_Postfix)));
             RimworldTycoon.harmonyInstance.Patch(
-                AccessTools.Method(typeof(GuestUtility), nameof(GuestUtility.OnLordSpawned)),
+                AccessTools.Method(typeof(Hospitality.Utilities.GuestUtility), nameof(Hospitality.Utilities.GuestUtility.OnLordSpawned)),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(VisitorGroupWithBus_Postfix)));
-
 
             RimworldTycoon.harmonyInstance.Patch(
                 AccessTools.Method(typeof(CaravanFormingUtility), nameof(CaravanFormingUtility.AllSendablePawns)),
@@ -50,7 +49,6 @@ namespace HospitalityArchitect
             RimworldTycoon.harmonyInstance.Patch(
                 AccessTools.Method(typeof(ForbidUtility), nameof(ForbidUtility.CaresAboutForbidden)),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(CaresAboutForbidden_Postfix)));
-            // TODO 
 
             /*
             RimworldTycoon.harmonyInstance.Patch(
@@ -91,7 +89,15 @@ namespace HospitalityArchitect
                     new Type[] { typeof(Thing), typeof(IntVec3), typeof(Map), typeof(ThingPlaceMode), typeof(int), typeof(Thing).MakeByRefType() , typeof(Action<Thing, int>), typeof(Predicate<IntVec3>) });
                 RimworldTycoon.harmonyInstance.Patch(m_GetAfterArmorDamage,
                     postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(RegisterIncome)));
-
+                // disable default hospitality leave message
+                var m_LeaveMessage = AccessTools.Method("Hospitality.LordToil_VisitPoint:DisplayLeaveMessage");
+                RimworldTycoon.harmonyInstance.Patch(m_LeaveMessage,
+                    prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(DoNothing)));
+                // TODO improve visit message
+        }
+        public static bool DoNothing()
+        {
+            return false;
         }
         
         public static void RegisterIncome(ThingOwner __instance, Thing thing, IntVec3 dropLoc, Map map, ThingPlaceMode mode, int count)

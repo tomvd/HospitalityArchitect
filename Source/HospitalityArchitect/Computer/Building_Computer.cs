@@ -39,10 +39,10 @@ namespace HospitalityArchitect
                 return new FloatMenuOption("CannotUseSolarFlare".Translate(), null);
             if (powerComp != null && !powerComp.PowerOn)
                 return new FloatMenuOption("CannotUseNoPower".Translate(), null);
-            if (!myPawn.health.capacities.CapableOf(PawnCapacityDefOf.Talking))
+            if (!myPawn.health.capacities.CapableOf(PawnCapacityDefOf.Sight))
                 return new FloatMenuOption(
                     "CannotUseReason".Translate(
-                        "IncapableOfCapacity".Translate((NamedArgument)PawnCapacityDefOf.Talking.label,
+                        "IncapableOfCapacity".Translate((NamedArgument)PawnCapacityDefOf.Sight.label,
                             myPawn.Named("PAWN"))), null);
             if (CanUseComputerNow)
                 return null;

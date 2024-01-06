@@ -53,7 +53,7 @@ namespace HospitalityArchitect
                 // every 12 hour remove a random candidate and find some new candidates?
                 if (candidates.Count > 0) candidates.Remove(candidates.RandomElement());
                 
-                nextCandidateCheckTick = Find.TickManager.TicksAbs + GenDate.TicksPerHour * 12;
+                nextCandidateCheckTick = Find.TickManager.TicksAbs + GenDate.TicksPerHour * 24;
                 while (candidates.Count < MaxCandidates)
                 {
                     var request = new PawnGenerationRequest(PawnKindDefOf.Colonist, Faction.OfPlayer);

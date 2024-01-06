@@ -9,7 +9,7 @@ public class IncidentWorker_RimazonSales : IncidentWorker_RimazonPriceEffect
     public override bool TryExecuteWorker(IncidentParms parms)
     {
         Map map = (Map)parms.target;
-        if (map.GetComponent<RimazonService>().categoryOnSale.Length > 0)
+        if (!map.GetComponent<RimazonService>().categoryOnSale.NullOrEmpty())
         {
             return false;
         }

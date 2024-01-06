@@ -4,11 +4,23 @@
 - ownership: when pawn joins colony check relationship, if not a partner, ask if you want to swap owner.
 - marketing: slightly more options
 - loans: testing
-- preview image
 
-- ownership: in the name of a pawn clearly display owner (owner)
-- quicksell button on everything haulable(hauls to delivery area to be picked up)
-- land ownership: cant build, mine or chop wood un unowned land
-- price on land depends on resource on it (trees, minable +, water swamp -)
-- land ownership +/- home area
-- readd mountains in generator
+- visitors come in groups of 1 to 4
+- different trigger
+- new: guest level: 1 to 5 stars royal title
+    - higher level guests depends on room level, bring more money
+- new: guest type, which are new pawn kinds
+    - if certain facilities are available they attract other types:
+      Traveller Guest(None), Spa Guest, Casino Guest, Business Guest(Gastronomy), Tourist Guest(Store)
+
+- new: room level (corresponds to how many of the room requirements are met) reuse RoomRequirement
+
+
+- disco integration
+- backpackers -> campers using camping tent (https://steamcommunity.com/sharedfiles/filedetails/?id=2407128339)
+- gastronomy: bar/restaurant...
+
+events: covid: only campers
+
+quests/achievements?
+

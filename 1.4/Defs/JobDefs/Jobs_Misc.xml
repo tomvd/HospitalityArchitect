@@ -26,4 +26,34 @@
         <reportString>Selling TargetA.</reportString>
         <allowOpportunisticPrefix>true</allowOpportunisticPrefix>
     </JobDef>    
+    
+    <JobDef>
+        <defName>Reception_StandBy</defName>
+        <driverClass>HospitalityArchitect.Reception.JobDriver_StandBy</driverClass>
+        <reportString>waiting for reception work.</reportString>
+        <allowOpportunisticPrefix>true</allowOpportunisticPrefix>
+    </JobDef>
+  
+    <JobDef>
+        <defName>Reception_Host</defName>
+        <driverClass>HospitalityArchitect.Reception.JobDriver_Host</driverClass>
+        <reportString>receiving TargetA.</reportString>
+        <allowOpportunisticPrefix>true</allowOpportunisticPrefix>
+    </JobDef>  
+    <JobDef>
+        <defName>Reception_CheckIn</defName>
+        <driverClass>HospitalityArchitect.Reception.JobDriver_CheckIn</driverClass>
+        <reportString>Checking in.</reportString>
+    </JobDef>
+    <JobDef>
+        <defName>InspectBed</defName>
+        <driverClass>HospitalityArchitect.Reception.JobDriver_InspectBed</driverClass>
+        <reportString>Inspecting my bed.</reportString>
+    </JobDef>    
+    <JobDef>
+        <defName>ClaimBed</defName>
+        <driverClass>HospitalityArchitect.JobDriver_ClaimBed</driverClass>
+        <reportString>Claiming my bed.</reportString>
+    </JobDef>
+    
 </Defs>

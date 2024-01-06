@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+<WorkGiverDef>
+    <defName>Reception_StandBy</defName>
+    <label>stand by</label>
+    <giverClass>HospitalityArchitect.Reception.WorkGiver_StandBy</giverClass>
+    <workType>Reception_Hosting</workType>
+    <priorityInType>0</priorityInType>
+    <verb>stand by</verb>
+    <gerund>standing by</gerund>
+</WorkGiverDef>
+
+<WorkGiverDef>
+    <defName>Reception_Host</defName>
+    <label>host</label>
+    <giverClass>HospitalityArchitect.Reception.WorkGiver_Host</giverClass>
+    <workType>Reception_Hosting</workType>
+    <priorityInType>110</priorityInType>
+    <verb>host</verb>
+    <gerund>hosting</gerund>
+    <requiredCapacities>
+        <li>Manipulation</li>
+    </requiredCapacities>
+    <prioritizeSustains>true</prioritizeSustains>
+</WorkGiverDef>
+    
+    <WorkGiverDef>
+        <defName>RoomClean</defName>
+        <label>clean guestrooms</label>
+        <giverClass>HospitalityArchitect.WorkGiver_RoomClean</giverClass>
+        <workType>RoomCleaning</workType>
+        <verb>clean</verb>
+        <gerund>cleaning</gerund>
+        <priorityInType>1</priorityInType>
+        <requiredCapacities>
+            <li>Manipulation</li>
+        </requiredCapacities>
+    </WorkGiverDef>    
+</Defs>

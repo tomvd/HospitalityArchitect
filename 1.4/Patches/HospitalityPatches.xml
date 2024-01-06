@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+    <!-- Add tab to cash register -->
+    <Operation Class="PatchOperationAdd">
+        <xpath>/Defs/ThingDef[defName = "CashRegister_CashRegister"]/inspectorTabs</xpath>
+        <value>
+            <li>HospitalityArchitect.Reception.ITab_Register_Reception</li>		
+        </value>
+    </Operation>
+    <!-- instead of immediately claim a bed, first go check in at the reception desk -->
+    <Operation Class="PatchOperationReplace">
+        <xpath>*/DutyDef[defName = "Relax"]/thinkNode[@Class="ThinkNode_Priority"]/subNodes/li[@Class="Hospitality.ThinkNode_OnlyAllowed"]/subNodes/li[@Class="Hospitality.JobGiver_ClaimBed"]</xpath>
+        <value>
+            <li Class="HospitalityArchitect.Reception.JobGiver_CheckIn" />
+        </value>
+    </Operation>
+    <!-- remove the original guests tab as it conflicts with hospital guests tab -->
+    <Operation Class="PatchOperationReplace">
+        <xpath>/Defs/MainButtonDef[defName = "Guests"]/tabWindowClass</xpath>
+        <value><tabWindowClass>HospitalityArchitect.Dialog_Guests</tabWindowClass></value>
+    </Operation>
+</Patch>

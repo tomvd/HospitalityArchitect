@@ -21,9 +21,10 @@ namespace HospitalityArchitect
             foreach (var thing in thingList)
             {
                 if (thing.def == ThingDefOf.SteamGeyser) cost += 100f;
-                if (thing.def.mineable)
+                if (thing.def.building != null && thing.def.mineable)
                 {
-                    cost += Mathf.CeilToInt(thing.def.building.mineableThing.BaseMarketValue * (thing.def.building.mineableYield/2f));
+                    cost += Mathf.CeilToInt(thing.def.building.mineableThing.BaseMarketValue *
+                                            (thing.def.building.mineableYield / 2f));
                 }
 
                 if (thing.def.plant is { IsTree: true })

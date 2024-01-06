@@ -3,41 +3,13 @@
   <StorytellerDef ParentName="BaseStoryteller">
     <defName>CassandraCapitalist</defName>
     <label>Cassandra Capitalist</label>
-    <description>Cassandra Capitalist creates story events on a classic increasing curve of challenge and tension.</description>
+    <description>Raids etc are disabled</description>
     <portraitLarge>UI/HeroArt/Storytellers/CassandraClassic</portraitLarge>
     <portraitTiny>UI/HeroArt/Storytellers/CassandraClassicTiny</portraitTiny>
     <listOrder>0</listOrder>
     <comps>
-      <!-- Intro -->
+      <!-- Intro  To Change?-->
       <li Class="StorytellerCompProperties_ClassicIntro"/>
-      <!-- Home threats -->
-      <li Class="StorytellerCompProperties_OnOffCycle">
-        <category>ThreatSmall</category>
-        <minDaysPassed>5.0</minDaysPassed>
-        <onDays>2.3</onDays>
-        <offDays>3.0</offDays>
-        <numIncidentsRange>0.2~1</numIncidentsRange>
-        <acceptPercentFactorPerThreatPointsCurve>
-          <points>
-            <li>(800, 1)</li>
-            <li>(2800, 0)</li>
-          </points>
-        </acceptPercentFactorPerThreatPointsCurve>
-      </li>
-			<!-- Home special threats -->
-			<li Class="StorytellerCompProperties_ThreatsGenerator">
-				<allowedTargetTags>
-					<li>Map_RaidBeacon</li>
-				</allowedTargetTags>
-				<parms>
-					<allowedThreats>Raids</allowedThreats>
-					<onDays>1.0</onDays>
-					<offDays>0.5</offDays>
-					<minSpacingDays>0.04</minSpacingDays>
-					<numIncidentsRange>1~2</numIncidentsRange>
-					<minThreatPoints>500</minThreatPoints>
-				</parms>
-			</li>      
       <!-- Home misc incidents-->
       <li Class="StorytellerCompProperties_CategoryMTB">
         <category>Misc</category>
@@ -49,116 +21,12 @@
       </li>
       <li Class="StorytellerCompProperties_Disease">
         <category>DiseaseHuman</category>
-        <minDaysPassed>6</minDaysPassed>
+        <minDaysPassed>12</minDaysPassed>
       </li>
       <li Class="StorytellerCompProperties_Disease">
         <category>DiseaseAnimal</category>
-        <minDaysPassed>5</minDaysPassed>
+        <minDaysPassed>10</minDaysPassed>
       </li>
-      <!-- Ally/neutral interaction -->
-      <li Class="StorytellerCompProperties_FactionInteraction">
-        <incident>RaidFriendly</incident>
-        <baseIncidentsPerYear>15</baseIncidentsPerYear>
-        <minSpacingDays>0.4</minSpacingDays>
-        <fullAlliesOnly>true</fullAlliesOnly>
-        <minDanger>High</minDanger>
-      </li>
-      <li Class="StorytellerCompProperties_FactionInteraction">
-        <incident>TraderCaravanArrival</incident>
-        <minDaysPassed>5</minDaysPassed>
-        <baseIncidentsPerYear>5</baseIncidentsPerYear>
-        <minSpacingDays>6</minSpacingDays>
-        <allowedTargetTags>
-          <li>Map_PlayerHome</li>
-        </allowedTargetTags>
-      </li>
-      <li Class="StorytellerCompProperties_FactionInteraction">
-        <incident>VisitorGroup</incident>
-        <minDaysPassed>1</minDaysPassed>
-        <baseIncidentsPerYear>10</baseIncidentsPerYear>
-        <minSpacingDays>1</minSpacingDays>
-        <allowedTargetTags>
-          <li>Map_PlayerHome</li>
-        </allowedTargetTags>
-      </li>
-      <!-- Caravan / temp map -->
-      <li Class="StorytellerCompProperties_CategoryIndividualMTBByBiome">
-        <category>Misc</category>
-        <allowedTargetTags>
-          <li>Caravan</li>
-          <li>Map_TempIncident</li>
-        </allowedTargetTags>
-      </li>
-      <li Class="StorytellerCompProperties_CategoryIndividualMTBByBiome">
-        <category>ThreatSmall</category>
-        <applyCaravanVisibility>true</applyCaravanVisibility>
-        <allowedTargetTags>
-          <li>Caravan</li>
-          <li>Map_TempIncident</li>
-        </allowedTargetTags>
-      </li>
-      <li Class="StorytellerCompProperties_CategoryIndividualMTBByBiome">
-        <category>ThreatBig</category>
-        <applyCaravanVisibility>true</applyCaravanVisibility>
-        <allowedTargetTags>
-          <li>Caravan</li>
-          <li>Map_TempIncident</li>
-        </allowedTargetTags>
-      </li>
-      <!-- Quests - non-Royalty -->
-      <li Class="StorytellerCompProperties_RandomQuest">
-        <category>GiveQuest</category>
-        <allowedTargetTags>
-          <li>World</li>
-        </allowedTargetTags>
-        <onDays>10</onDays>
-        <numIncidentsRange>1</numIncidentsRange>
-        <acceptFractionByDaysPassedCurve>
-          <points>
-            <li>(8, 0)</li>
-            <li>(15, 1)</li>
-          </points>
-        </acceptFractionByDaysPassedCurve>
-        <minSpacingDays>3</minSpacingDays>
-        <disableIfAnyModActive>
-          <li>Ludeon.RimWorld.Royalty</li>
-        </disableIfAnyModActive>
-      </li>
-      <!-- Quests - Royalty -->
-      <li Class="StorytellerCompProperties_RandomQuest">
-        <category>GiveQuest</category>
-        <allowedTargetTags>
-          <li>World</li>
-        </allowedTargetTags>
-        <onDays>12</onDays>
-        <numIncidentsRange>2</numIncidentsRange>
-        <acceptFractionByDaysPassedCurve>
-          <points>
-            <li>(8, 0)</li>
-            <li>(15, 1)</li>
-          </points>
-        </acceptFractionByDaysPassedCurve>
-        <minSpacingDays>3</minSpacingDays>
-        <enableIfAnyModActive>
-          <li>Ludeon.RimWorld.Royalty</li>
-        </enableIfAnyModActive>
-      </li>
-      <!-- World misc incidents-->
-      <li Class="StorytellerCompProperties_CategoryMTB">
-        <category>Misc</category>
-        <allowedTargetTags>
-          <li>World</li>
-        </allowedTargetTags>
-        <minDaysPassed>15</minDaysPassed>
-        <mtbDays>15</mtbDays>
-      </li>
-      <!-- Orbital trader - removed they can be called
-      <li Class="StorytellerCompProperties_OnOffCycle">
-        <incident>OrbitalTraderArrival</incident>
-        <onDays>1</onDays>
-        <offDays>0</offDays>
-        <numIncidentsRange>3</numIncidentsRange>
-      </li>-->
       <!-- Triggered -->
       <li Class="StorytellerCompProperties_Triggered">
         <incident>StrangerInBlackJoin</incident>
@@ -173,4 +41,33 @@
       </points>
     </populationIntentFactorFromPopCurve>
   </StorytellerDef>
+  
+  <DifficultyDef>
+    <defName>HA</defName>
+    <label>Hospitality Architect</label>
+    <description>This difficulty level is balanced out for playing Hospitality Architect</description>
+    <difficulty>-1</difficulty>
+    <threatScale>1</threatScale>
+    <allowBigThreats>false</allowBigThreats>
+    <allowIntroThreats>false</allowIntroThreats>
+    <peacefulTemples>true</peacefulTemples>
+    <allowCaveHives>false</allowCaveHives>
+    <allowViolentQuests>false</allowViolentQuests>
+    <predatorsHuntHumanlikes>false</predatorsHuntHumanlikes>
+    <colonistMoodOffset>0</colonistMoodOffset>
+    <cropYieldFactor>1</cropYieldFactor>
+    <mineYieldFactor>1</mineYieldFactor>
+    <researchSpeedFactor>1</researchSpeedFactor>
+    <diseaseIntervalFactor>3</diseaseIntervalFactor>
+    <enemyReproductionRateFactor>0.1</enemyReproductionRateFactor>
+    <playerPawnInfectionChanceFactor>0.3</playerPawnInfectionChanceFactor>
+    <manhunterChanceOnDamageFactor>0.25</manhunterChanceOnDamageFactor>
+    <deepDrillInfestationChanceFactor>0</deepDrillInfestationChanceFactor>
+    <wastepackInfestationChanceFactor>0</wastepackInfestationChanceFactor>
+    <foodPoisonChanceFactor>0.3</foodPoisonChanceFactor>
+    <maintenanceCostFactor>1</maintenanceCostFactor>
+    <enemyDeathOnDownedChanceFactor>0.5</enemyDeathOnDownedChanceFactor>
+    <adaptationGrowthRateFactorOverZero>0</adaptationGrowthRateFactorOverZero>
+    <scariaRotChance>0</scariaRotChance>
+  </DifficultyDef>  
 </Defs>

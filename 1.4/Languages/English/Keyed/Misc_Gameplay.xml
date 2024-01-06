@@ -6,12 +6,12 @@
     <HT.choosecontracttype>Choose contract type</HT.choosecontracttype>
     <HT.hire>Hire</HT.hire>
     
-    <GameStartDialog>Congratulations! You are the founder of a new rimworld company.\n\n This piece of land is yours. I suggest you to start with installing your computer near the solar panel, order some materials and hire personnel to build yourself a small bed and breakfast, gain reputation and slowly grow your hospitality empire.</GameStartDialog>
-    <Colony>Company</Colony>
+    <GameStartDialog>This piece of land is yours.\n\n Create a small hostel with a sanitary building, then a reception, then hotel rooms and slowly grow your hospitality empire.</GameStartDialog>
+    <Colony>Hotel</Colony>
 
     <!-- Player faction naming -->
-    <NamePlayerFactionMessage>Since it looks like you'll be here for a while, {0} thinks that you should give your company a name. What should your company be called?</NamePlayerFactionMessage>
-    <PlayerFactionGainsName>Your company is now known as {0}.</PlayerFactionGainsName>
+    <NamePlayerFactionMessage>Since it looks like you'll be here for a while, {0} thinks that you should give your hotel a name. What should your hotel be called?</NamePlayerFactionMessage>
+    <PlayerFactionGainsName>Your hotel is now known as {0}.</PlayerFactionGainsName>
     <PlayerFactionNameIsInvalid>That name isn't valid.</PlayerFactionNameIsInvalid>
 
     <!-- Player faction base naming -->
@@ -21,7 +21,10 @@
 
     <!-- Player faction and faction base naming -->
     <NamePlayerFactionBaseMessage_NameFactionContinuation>{0} also thinks that you should give this place a name. What should this place be called?</NamePlayerFactionBaseMessage_NameFactionContinuation>
-    <PlayerFactionAndBaseGainsName>Your company is now known as {0}, and this place is now known as {1}.</PlayerFactionAndBaseGainsName>
-
-
+    <PlayerFactionAndBaseGainsName>Your hotel is now known as {0}, and this place is now known as {1}.</PlayerFactionAndBaseGainsName>
+        <!-- Messages -->
+    <HotelMessageIncomeToday>Your hotel has earned {0} today.</HotelMessageIncomeToday>
+    <TabRegisterReception>Reception</TabRegisterReception>
+    <TabRegisterBar>Bar</TabRegisterBar>
+    
 </LanguageData>

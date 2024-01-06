@@ -23,11 +23,10 @@ namespace HospitalityArchitect
             _hiringContractService = map.GetComponent<HiringContractService>();
 
             // TODO move apps to defs, to allow for other mods to add apps?
-            apps.Add(new App_Hire(actor, this));
-            apps.Add(new App_Staff(actor, this));
-            apps.Add(new App_Marketing(actor, this));
-            apps.Add(new App_Rimazon(actor, this));
-            apps.Add(new App_Banking(actor, this));
+            //apps.Add(new Dialog_Staff(actor, this));
+            //apps.Add(new App_Staff(actor, this));
+            //apps.Add(new Dialog_Rimazon(actor, this));
+            //apps.Add(new App_Banking(actor, this));
 
             currentApp = apps[0];
 
