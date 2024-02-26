@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <RecipeDef Abstract="True" Name="WashBeddingBase">
+        <jobString>Washing bedding.</jobString>
+        <effectWorking>Cook</effectWorking>
+        <soundWorking>Recipe_CookMeal</soundWorking>
+        <workAmount>450</workAmount>
+        <workSkill>Crafting</workSkill>
+        <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+        <requiredGiverWorkType>RoomCleaning</requiredGiverWorkType>
+        <workSkillLearnFactor>0.25</workSkillLearnFactor>
+        <targetCountAdjustment>10</targetCountAdjustment>
+        <recipeUsers>
+            <li>HandWashingSpot</li>
+        </recipeUsers>
+    </RecipeDef>    
+    
+    <RecipeDef ParentName="WashBeddingBase">
+        <defName>WashBedding</defName>
+        <jobString>Washing bedding.</jobString>
+        <label>wash bedding</label>
+        <description>Wash dirty bedding to be put on the bed again.</description>
+        <products>
+            <CleanBedding>1</CleanBedding>
+        </products>
+        <ingredients>
+            <li>
+                <filter>
+                    <thingDefs>
+                        <li>DirtyBedding</li>
+                    </thingDefs>
+                </filter>
+                <count>1</count>
+            </li>
+        </ingredients>
+        <fixedIngredientFilter>
+            <thingDefs>
+                <li>DirtyBedding</li>
+            </thingDefs>
+        </fixedIngredientFilter>
+    </RecipeDef>
+</Defs>

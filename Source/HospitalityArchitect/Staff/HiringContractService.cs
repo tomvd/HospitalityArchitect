@@ -36,12 +36,12 @@ namespace HospitalityArchitect
 
         public bool IsHired(Pawn pawn)
         {
-            return contracts.Any(contract => contract.pawn.Equals(pawn));
+            return contracts.Any(contract => contract.pawn != null && contract.pawn.Equals(pawn));
         }
 
-        public void SetNewContract(Pawn pawn)
+        public void SetNewContract(Pawn pawn, int type)
         {
-            contracts.Add(new HiringContract(Find.TickManager.TicksAbs, pawn, map));
+            contracts.Add(new HiringContract(Find.TickManager.TicksAbs, pawn, map, type));
         }
 
         public override void MapComponentTick()
@@ -78,22 +78,33 @@ namespace HospitalityArchitect
                         EndContract(contract);
                         return;
                     }*/
-                    if (Find.TickManager.TicksAbs - contract.lastBilledTicks > GenDate.TicksPerDay)
+                    
+                    // if contractor is not atWork, but it is his arrivesAt - spawn him
+                    if (!contract.atWork && contract.arrivesAt == GenLocalDate.HourOfDay(map))
                     {
-                        Log.Message($"daily billing: {contract.pawn.Wage()}");
+                        _busService.StartBusArrival(new List<Pawn> { contract.pawn });
+                        contract.atWork = true;
+                    }
+                    // if contractor is atWork, but it his leavesAt - despawn him and do billing
+                    if (contract.atWork && (contract.leavesAt + 1) == GenLocalDate.HourOfDay(map))
+                    {
+                        _busService.StartBusDeparture(new List<Pawn> { contract.pawn });
+                        contract.atWork = false;
+                        
                         totalBilling += Mathf.RoundToInt(contract.pawn.Wage());
-                        contract.lastBilledTicks = Find.TickManager.TicksAbs;
                         contract.daysHired++;
                         Reputation = Math.Min(Reputation+(0.1f * contract.daysHired), 100f);
                     }
                     // while under minor mental breakdown threshold, there is a 5% chance of a pawn leaving
                     //Log.Message($"mood: {contract.pawn.mindState.mentalBreaker.CurMood}");
+                    // TODO low mood warning - letter?
+                    //if (contract.pawn.mindState.mentalBreaker.CurMood < contract.pawn.mindState.mentalBreaker.BreakThresholdMinor)
                     if (contract.pawn.mindState.mentalBreaker.CurMood < contract.pawn.mindState.mentalBreaker.BreakThresholdMinor && Rand.Chance(0.05f))
                     {
                         Messages.Message("Staff left because of low mood!", contract.pawn, MessageTypeDefOf.NegativeEvent);
                         EndContract(contract);
                         return;                        
-                    }                    
+                    }
                 }
                 if (totalBilling > 0)
                     _financeService.doAndBookExpenses(FinanceReport.ReportEntryType.Wages, totalBilling);
@@ -129,7 +140,8 @@ namespace HospitalityArchitect
 
                     Messages.Message(pawn.NameFullColored + " contract ended. Pawn is leaving.", null,
                         MessageTypeDefOf.NeutralEvent);
-                    pawn.jobs.TryTakeOrderedJob(new Job(HADefOf.HA_LeaveMap, exit));
+                    //pawn.jobs.TryTakeOrderedJob(new Job(HADefOf.HA_LeaveMap, exit));
+                    _busService.StartBusDeparture(new List<Pawn> { pawn });                    
                 }
                 else if (pawn.GetCaravan() != null)
                 {
@@ -156,32 +168,17 @@ namespace HospitalityArchitect
             candidates ??= new List<Pawn>();
         }
 
-        public void hire(Pawn candidate)
+        public void hire(Pawn candidate, int type)
         {
 
-            float wage = candidate.Wage();
-            Log.Message($"hiring {candidate.Name} cost: {wage}");
-            _financeService.doAndBookExpenses(FinanceReport.ReportEntryType.Wages, wage);
-
-            if (!RCellFinder.TryFindRandomPawnEntryCell(out var cell, map, 1f))
-                cell = CellFinder.RandomEdgeCell(map);
-
+            //float wage = candidate.Wage();
+            //Log.Message($"hiring {candidate.Name} cost: {wage}");
+            //_financeService.doAndBookExpenses(FinanceReport.ReportEntryType.Wages, wage);
+            Messages.Message($"{candidate.Name} joins the company", null, MessageTypeDefOf.PositiveEvent);
             candidates.Remove(candidate);
-            
-            _busService.StartBus(new []{candidate});
-            /*
-            var loc = DropCellFinder.TryFindSafeLandingSpotCloseToColony(map, IntVec2.Two);
-            var activeDropPodInfo = new ActiveDropPodInfo();
-            activeDropPodInfo.innerContainer.TryAdd(pawn, 1);
-            activeDropPodInfo.openDelay = 60;
-            activeDropPodInfo.leaveSlag = false;
-            activeDropPodInfo.despawnPodBeforeSpawningThing = true;
-            activeDropPodInfo.spawnWipeMode = WipeMode.Vanish;
-            DropPodUtility.MakeDropPodAt(loc, map, activeDropPodInfo);*/
-
-            SetNewContract(candidate);
+            //_busService.StartBusArrival(new List<Pawn> { candidate });
+            SetNewContract(candidate, type);
+            //Find.World.worldPawns.PassToWorld(candidate);
         }
-
-
     }
 }

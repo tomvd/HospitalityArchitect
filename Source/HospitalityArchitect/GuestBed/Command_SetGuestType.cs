@@ -26,7 +26,9 @@ public class Command_SetGuestType : Command
 	{
 		base.ProcessInput(ev);
 		List<FloatMenuOption> list = new List<FloatMenuOption>();
-		var marketingData = _marketingService.MarketingData.OrderBy(data => data.Key.GetModExtension<GuestTypeDef>().bedBudget).ToList();
+		var marketingData = _marketingService.MarketingData
+			.Where(data => !data.Key.GetModExtension<GuestTypeDef>().dayVisitor)
+			.OrderBy(data => data.Key.GetModExtension<GuestTypeDef>().bedBudget).ToList();
 		foreach (var data in marketingData)
 		{
 			list.Add(new FloatMenuOption(data.Key.LabelCap, delegate

@@ -18,8 +18,16 @@ namespace HospitalityArchitect
         public static readonly JobDef Reception_CheckIn;
         public static readonly JobDef InspectBed;
         public static readonly JobDef ClaimBed;
+
+        public static readonly JobDef WaitForBus;
         //public static readonly ThoughtDef HospitalityArchitect_Serviced;
         public static readonly ThoughtDef HospitalityArchitect_ServicedMood;
         public static readonly ResearchProjectDef HA_BusinessGuests;
+        public static readonly ThingDef CleanBedding;
+        public static readonly ThingDef DirtyBedding;
+        public static readonly JobDef MakeBed;
+        public static readonly ThingDef WashingMachine;
+        public static readonly JobDef UnloadWashing;
+        public static readonly JobDef LoadWashing;
     }
 }

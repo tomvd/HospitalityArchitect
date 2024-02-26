@@ -61,6 +61,7 @@
       <ProjectReference Include="..\..\..\Storefront\Source\Storefront\Storefront.csproj">
         <Private>false</Private>
       </ProjectReference>
+      <ProjectReference Include="..\..\..\tent\source\tent\tent.csproj" />
     </ItemGroup>
     <ItemGroup>
       <Reference Include="0DubCore">

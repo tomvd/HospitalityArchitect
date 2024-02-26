@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+    <!-- replace the original washing machine code -->
+    <Operation Class="PatchOperationReplace">
+        <xpath>/Defs/ThingDef[defName = "WashingMachine"]/thingClass</xpath>
+        <value><thingClass>HospitalityArchitect.Building_WashingMachine</thingClass></value>
+    </Operation>
+    <Operation Class="PatchOperationReplace">
+        <xpath>/Defs/ThingDef[defName = "WashingMachine"]/description</xpath>
+        <value><description>Washes dirty bedding into clean bedding. Max capacity of 10 items.</description></value>
+    </Operation>    
+    <Operation Class="PatchOperationRemove">
+        <xpath>/Defs/ThingDef[defName = "WashingMachine"]/inspectorTabs</xpath>
+    </Operation>    
+    <Operation Class="PatchOperationReplace">
+        <xpath>/Defs/JobDef[defName = "LoadWashing"]/driverClass</xpath>
+        <value><driverClass>HospitalityArchitect.JobDriver_WashingMachineLoad</driverClass></value>
+    </Operation>    
+    <Operation Class="PatchOperationReplace">
+        <xpath>/Defs/JobDef[defName = "UnloadWashing"]/driverClass</xpath>
+        <value><driverClass>HospitalityArchitect.JobDriver_WashingMachineUnload</driverClass></value>
+    </Operation>    
+    <Operation Class="PatchOperationReplace">
+        <xpath>/Defs/WorkGiverDef[defName = "UnloadWashing"]/giverClass</xpath>
+        <value><giverClass>HospitalityArchitect.WorkGiver_WashingUnload</giverClass></value>
+    </Operation>    
+    <Operation Class="PatchOperationReplace">
+        <xpath>/Defs/WorkGiverDef[defName = "LoadWashing"]/giverClass</xpath>
+        <value><giverClass>HospitalityArchitect.WorkGiver_WashingLoad</giverClass></value>
+    </Operation>
+    
+</Patch>

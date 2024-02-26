@@ -21,7 +21,7 @@ namespace HospitalityArchitect
             Sales,
             Beds,
             Marketing,
-            Land
+            GroundRent
         }
 
         public void recordBooking(ReportEntryType type, float value)
@@ -33,6 +33,17 @@ namespace HospitalityArchitect
         {
             return booking.Values.Sum();
         }
+        
+        public float getIncome()
+        {
+            return booking.Values.Where(v => v > 0).Sum();
+        }
+        
+        public float getExpenses()
+        {
+            return booking.Values.Where(v => v < 0).Sum();
+        }        
+        
 
         public void ExposeData()
         {

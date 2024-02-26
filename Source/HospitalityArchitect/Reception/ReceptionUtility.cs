@@ -37,9 +37,9 @@ namespace HospitalityArchitect.Reception
             return map?.GetComponent<ReceptionManager>();
         }
 
-        public static List<ReceptionController> GetAllReceptions(this Thing thing)
+        public static List<ReceptionController> GetAllOpenReceptions(this Thing thing)
         {
-            return GetReceptionManager(thing.Map).Receptions;
+            return GetReceptionManager(thing.Map).Receptions.Where(r => r.openForBusiness).ToList();
         }
 
         public static IEnumerable<ReceptionController> GetAllReceptionsEmployed(this Pawn pawn)
@@ -132,7 +132,7 @@ namespace HospitalityArchitect.Reception
 
         public static void GiveWaitThought(Pawn patron)
         {
-            patron.needs.mood?.thoughts.memories.TryGainMemory(ShoppingDefOf.Storefront_HadToWait);
+            patron.needs.mood?.thoughts.memories.TryGainMemory(ShoppingDefOf.HospitalityArchitect_HadToWait);
         }
     }
 }

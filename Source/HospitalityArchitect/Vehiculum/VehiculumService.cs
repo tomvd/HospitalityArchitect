@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
+using Verse.AI;
 
 namespace HospitalityArchitect
 {
@@ -40,13 +41,36 @@ namespace HospitalityArchitect
             vehicles.Add(v);
         }
         
-        public void StartBus(IEnumerable<Pawn> passengers)
+        public void StartBusArrival(List<Pawn> passengers)
+        {
+            var busOnTheWay = vehicles.Find(v => v is Bus b && b.State == 0 && !b.load) as Bus;
+            // just add pawns on an already driving bus :)
+            if (busOnTheWay != null)
+            {
+                AddPawnsToBus(passengers, busOnTheWay);
+            }
+            else
+            {
+                var newBus = SpawnBus(passengers, startLocation, map, false);
+                newBus.SetDestination(deliveryLocation);
+                vehicles.Add(newBus);
+            }
+        }
+        
+        public void StartBusDeparture(List<Pawn> passengers)
         {
             // TODO check if we have a bus that did not leave yet, then add it to that one
-            var v = SpawnBus(passengers, startLocation, map);
-            v.SetDestination(deliveryLocation);
-            vehicles.Add(v);
-        }
+            var waitingLocation = deliveryLocation + IntVec3.West * 4;
+            foreach (var passenger in passengers)
+            {
+                passenger.jobs.ClearQueuedJobs();
+                passenger.jobs.StopAll();
+                passenger.jobs.StartJob(new Job(HADefOf.WaitForBus, waitingLocation));                
+            }            
+            Bus b = SpawnBus(passengers, startLocation, map, true);
+            b.SetDestination(deliveryLocation);
+            vehicles.Add(b);
+        }        
 
         public DeliveryVehicle SpawnDeliveryVehicle(IEnumerable<Thing> things, IntVec3 pos, Map map)
         {
@@ -56,16 +80,29 @@ namespace HospitalityArchitect
             return (DeliveryVehicle)GenSpawn.Spawn(vehicle, pos, map);
         }
         
-        public Bus SpawnBus(IEnumerable<Pawn> pawns, IntVec3 pos, Map map)
+        public Bus SpawnBus(IEnumerable<Pawn> pawns, IntVec3 pos, Map map, bool departure)
         {
-            Bus vehicle = (Bus)ThingMaker.MakeThing(HADefOf.HA_Bus);
+            Bus bus = (Bus)ThingMaker.MakeThing(HADefOf.HA_Bus);
+            if (!departure)
+            {
+                AddPawnsToBus(pawns, bus);
+            }
+            else
+            {
+                bus.load = true;
+            }
+            bus.service = this;
+            return (Bus)GenSpawn.Spawn(bus, pos, map);
+        }
+
+        private static void AddPawnsToBus(IEnumerable<Pawn> pawns, Bus bus)
+        {
             foreach (var pawn in pawns)
             {
                 if (pawn.Spawned) pawn.DeSpawn();
             }
-            vehicle.innerContainer.TryAddRangeOrTransfer(pawns);
-            vehicle.service = this;
-            return (Bus)GenSpawn.Spawn(vehicle, pos, map);
+
+            bus.innerContainer.TryAddRangeOrTransfer(pawns);
         }
 
         public override void MapComponentTick()
@@ -89,7 +126,7 @@ namespace HospitalityArchitect
                         vehicle.UnloadTick--;
                         if (vehicle.UnloadTick == 0)
                         {
-                            vehicle.Unload();
+                            vehicle.UnloadLoad();
                         }
                     }
                 }

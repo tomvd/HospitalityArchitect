@@ -50,7 +50,7 @@ public class Patch_Display_Owner
                 if (!pawn.Map.GetComponent<HiringContractService>().IsHired(pawn))
                 {
                     __result = new Color32(222, 0, 250, byte.MaxValue);
-                    pawn.story.title = "CEO";
+                    pawn.story.title = "Manager";
                 }
             }
         }

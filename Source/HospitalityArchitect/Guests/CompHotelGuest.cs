@@ -11,6 +11,7 @@ namespace HospitalityArchitect
     public class CompHotelGuest : ThingComp
     {
         public float totalSpent;
+        public float initialMoney;
         public bool dayVisit;
         public bool arrived;
         public bool slept;
@@ -20,6 +21,7 @@ namespace HospitalityArchitect
         {
             base.PostExposeData();
             Scribe_Values.Look(ref totalSpent, "totalSpent");
+            Scribe_Values.Look(ref initialMoney, "initialMoney");
             Scribe_Values.Look(ref dayVisit, "dayVisit");
             Scribe_Values.Look(ref arrived, "arrived");
             Scribe_Values.Look(ref slept, "slept");

@@ -13,7 +13,7 @@ namespace HospitalityArchitect.Reception
 
 		public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
         {
-            return pawn.GetAllReceptions().Select(r => r.Register).Where(r => r.shifts.Select(shift => shift.assigned.Contains(pawn)).Any()).Distinct().ToArray();
+            return pawn.GetAllOpenReceptions().Select(r => r.Register).Where(r => r.shifts.Select(shift => shift.assigned.Contains(pawn)).Any()).Distinct().ToArray();
         }
 
         public override bool HasJobOnThing(Pawn pawn, Thing t, bool forced = false)

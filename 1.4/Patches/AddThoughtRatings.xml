@@ -6,10 +6,18 @@
         <success>Always</success>
         <operations>
         <li Class="PatchOperationAddModExtension">
+            <xpath>Defs/ThoughtDef[defName="openDefecation"]</xpath>
+            <value>
+                <li Class="HospitalityArchitect.GuestThoughtRating">
+                    <ratings><li>-30</li></ratings>
+                </li>
+            </value>
+        </li>                 
+        <li Class="PatchOperationAddModExtension">
             <xpath>Defs/ThoughtDef[defName="AteWithoutTable"]</xpath>
             <value>
                 <li Class="HospitalityArchitect.GuestThoughtRating">
-                    <ratings><li>-10</li></ratings>
+                    <ratings><li>-30</li></ratings>
                 </li>
             </value>
         </li>                
@@ -17,7 +25,7 @@
             <xpath>Defs/ThoughtDef[defName="SleptOutside"]</xpath>
             <value>
                 <li Class="HospitalityArchitect.GuestThoughtRating">
-                    <ratings><li>-10</li></ratings>
+                    <ratings><li>-30</li></ratings>
                 </li>
             </value>
         </li>    
@@ -25,7 +33,7 @@
             <xpath>Defs/ThoughtDef[defName="SleptOnGround"]</xpath>
             <value>
                 <li Class="HospitalityArchitect.GuestThoughtRating">
-                    <ratings><li>-10</li></ratings>
+                    <ratings><li>-30</li></ratings>
                 </li>
             </value>
         </li>
@@ -33,7 +41,7 @@
             <xpath>Defs/ThoughtDef[defName="SleptInCold"]</xpath>
             <value>
                 <li Class="HospitalityArchitect.GuestThoughtRating">
-                    <ratings><li>-10</li></ratings>
+                    <ratings><li>-20</li></ratings>
                 </li>
             </value>
         </li>
@@ -41,7 +49,7 @@
             <xpath>Defs/ThoughtDef[defName="SleptInHeat"]</xpath>
             <value>
                 <li Class="HospitalityArchitect.GuestThoughtRating">
-                    <ratings><li>-10</li></ratings>
+                    <ratings><li>-20</li></ratings>
                 </li>
             </value>
         </li>        
@@ -96,10 +104,10 @@
             <value>
                 <li Class="HospitalityArchitect.GuestThoughtRating">
                     <ratings>
+                        <li>-20</li>
                         <li>-10</li>
                         <li>-5</li>
-                        <li>-5</li>
-                        <li>10</li>
+                        <li>5</li>
                         <li>20</li>
                     </ratings>
                 </li>
@@ -122,6 +130,78 @@
                 </value>
             </li>
             <!-- UsedPrivateBathroom -->
+            <li Class="PatchOperationAddModExtension">
+                <xpath>Defs/ThoughtDef[defName="RiggedSlotmachine"]</xpath>
+                <value>
+                    <li Class="HospitalityArchitect.GuestThoughtRating">
+                        <ratings><li>-10</li></ratings>
+                    </li>
+                </value>
+            </li>
+            <li Class="PatchOperationAddModExtension">
+                <xpath>Defs/ThoughtDef[defName="GenerousSlotmachine"]</xpath>
+                <value>
+                    <li Class="HospitalityArchitect.GuestThoughtRating">
+                        <ratings><li>10</li></ratings>
+                    </li>
+                </value>
+            </li>
+            <li Class="PatchOperationAddModExtension">
+                <xpath>Defs/ThoughtDef[defName="JoyActivityInImpressiveRecRoom"]</xpath>
+                <value>
+                    <li Class="HospitalityArchitect.GuestThoughtRating">
+                        <ratings>
+                            <li>0</li>
+                            <li>0</li>
+                            <li>0</li>
+                            <li>5</li>
+                            <li>8</li>
+                            <li>11</li>
+                            <li>14</li>
+                            <li>17</li>
+                            <li>20</li>
+                            <li>25</li>
+                        </ratings>
+                    </li>
+                </value>
+            </li>
+            <li Class="PatchOperationAddModExtension">
+                <xpath>Defs/ThoughtDef[defName="AteInImpressiveDiningRoom"]</xpath>
+                <value>
+                    <li Class="HospitalityArchitect.GuestThoughtRating">
+                        <ratings>
+                            <li>0</li>
+                            <li>0</li>
+                            <li>0</li>
+                            <li>5</li>
+                            <li>8</li>
+                            <li>11</li>
+                            <li>14</li>
+                            <li>17</li>
+                            <li>20</li>
+                            <li>25</li>
+                        </ratings>
+                    </li>
+                </value>
+            </li>
+            <li Class="PatchOperationAddModExtension">
+                <xpath>Defs/ThoughtDef[defName="UsedPrivateBathroom"]</xpath>
+                <value>
+                    <li Class="HospitalityArchitect.GuestThoughtRating">
+                        <ratings>
+                            <li>-20</li>
+                            <li>0</li>
+                            <li>5</li>
+                            <li>8</li>
+                            <li>11</li>
+                            <li>14</li>
+                            <li>17</li>
+                            <li>20</li>
+                            <li>25</li>
+                        </ratings>
+                    </li>
+                </value>
+            </li>                 
         </operations>
     </Operation>
 </Patch>

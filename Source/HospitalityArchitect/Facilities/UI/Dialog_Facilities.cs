@@ -50,11 +50,6 @@ namespace HospitalityArchitect
             titleRect.width = 100f;
             var valueRect = new Rect(titleRect);
             Widgets.Label(valueRect, "Reserved/Capacity");
-
-            titleRect.x += 100f;
-            titleRect.width = 100f;
-            var numRect = new Rect(titleRect);
-            Widgets.Label(numRect, "Advertisement".Translate().Colorize(ColoredText.SubtleGrayColor));
             
             Text.Font = GameFont.Small;
             GUI.color = Color.white;
@@ -63,9 +58,8 @@ namespace HospitalityArchitect
             {
                 nameRect.y += 20f;
                 valueRect.y += 20f;
-                numRect.y += 20f;
                 IPRect.y += 20f;
-                var fullRect = new Rect(nameRect.x - 4f, nameRect.y, nameRect.width + valueRect.width + numRect.width + IPRect.width,
+                var fullRect = new Rect(nameRect.x - 4f, nameRect.y, nameRect.width + valueRect.width + IPRect.width,
                     20f);
                 if (highlight) Widgets.DrawHighlight(fullRect);
                 highlight = !highlight;
@@ -73,12 +67,6 @@ namespace HospitalityArchitect
                 Widgets.Label(nameRect,data.Key);
                 Widgets.Label(IPRect,data.Value.isOpen?"Open":"Closed");
                 Widgets.Label(valueRect,data.Value.reservedCapacity.ToString() + "/" + data.Value.totalCapacity.ToString());
-/*                if (Widgets.ButtonText(numRect, "Run ad ("+(type.budget.max * 5)+"/day)"))
-                    Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("Are you sure?".Translate(), () =>
-                    {
-                        _financeService.doAndBookExpenses(FinanceReport.ReportEntryType.Marketing, type.bedBudget * 5);
-                        data.Value.influencePoints += 1f;
-                    }, true, "Run ad"));*/
             }
             Text.Anchor = anchor;
             Text.Font = font;

@@ -74,4 +74,78 @@
     </researchPrerequisites>
     <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
   </ThingDef>
+    
+    
+    <ThingDef ParentName="SleepingSpotBase">
+        <defName>CampingTentSpot</defName>
+        <label>camping spot</label>
+        <description>A spot where visitors will place their camping tent.</description>
+        <graphicData>
+            <texPath>Things/Building/Furniture/Bed/DoubleSleepSpot</texPath>
+            <graphicClass>Graphic_Multi</graphicClass>
+            <drawSize>(4,4)</drawSize>
+        </graphicData>
+        <size>(2,2)</size>
+      <specialDisplayRadius>4.9</specialDisplayRadius>
+    </ThingDef>
+    
+    
+  <ThingDef ParentName="BuildingBase">
+    <defName>HandWashingSpot</defName>
+    <label>hand washing spot</label>
+    <description>A place for hand washing dirty bedding. It goes slowly but has no requirements.</description>
+    <thingClass>Building_WorkTable</thingClass>
+    <graphicData>
+      <texPath>DBH/Things/Building/cleanBucket</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(1,1)</drawSize>
+    </graphicData>
+    <altitudeLayer>FloorEmplacement</altitudeLayer>
+    <statBases>
+      <WorkToBuild>0</WorkToBuild>
+      <WorkTableWorkSpeedFactor>0.5</WorkTableWorkSpeedFactor>
+    </statBases>
+    <scatterableOnMapGen>false</scatterableOnMapGen>
+    <useHitPoints>false</useHitPoints>
+    <size>(1,1)</size>
+    <designationCategory>Production</designationCategory>
+    <uiOrder>2000</uiOrder>
+    <passability>Standable</passability>
+    <hasInteractionCell>True</hasInteractionCell>
+    <interactionCellOffset>(0,0,-1)</interactionCellOffset>
+    <surfaceType>Item</surfaceType>
+    <inspectorTabs>
+      <li>ITab_Bills</li>
+    </inspectorTabs>
+    <building>
+      <spawnedConceptLearnOpportunity>BillsTab</spawnedConceptLearnOpportunity>
+      <sowTag>SupportPlantsOnly</sowTag>
+      <canPlaceOverImpassablePlant>false</canPlaceOverImpassablePlant>
+      <ai_chillDestination>false</ai_chillDestination>
+      <wakeDormantPawnsOnConstruction>false</wakeDormantPawnsOnConstruction>
+      <artificialForMeditationPurposes>false</artificialForMeditationPurposes>
+      <buildingTags>
+        <li>Production</li>
+      </buildingTags>
+    </building>
+    <comps>
+      <li Class="CompProperties_AffectedByFacilities">
+        <linkableFacilities>
+          <li>ToolCabinet</li>
+        </linkableFacilities>
+      </li>
+      <li>
+        <compClass>CompReportWorkSpeed</compClass>
+      </li>
+    </comps>
+    <designationHotKey>Misc1</designationHotKey>
+    <placeWorkers>
+      <li>PlaceWorker_ShowFacilitiesConnections</li>
+      <li>PlaceWorker_ReportWorkSpeedPenalties</li>
+      <li>PlaceWorker_PreventInteractionSpotOverlap</li>
+    </placeWorkers>
+  </ThingDef>    
+    
+
+
   </Defs>

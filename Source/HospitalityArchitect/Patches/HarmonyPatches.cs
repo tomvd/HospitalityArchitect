@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Emit;
+using DubsBadHygiene;
 using HarmonyLib;
+using Hospitality;
+using Hospitality.Utilities;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
@@ -34,9 +38,6 @@ namespace HospitalityArchitect
             RimworldTycoon.harmonyInstance.Patch(
                 AccessTools.Method(typeof(EquipmentUtility), nameof(EquipmentUtility.QuestLodgerCanUnequip)),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(QuestLodgerCanUnequip_Postfix)));
-            RimworldTycoon.harmonyInstance.Patch(
-                AccessTools.Method(typeof(Hospitality.Utilities.GuestUtility), nameof(Hospitality.Utilities.GuestUtility.OnLordSpawned)),
-                postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(VisitorGroupWithBus_Postfix)));
 
             RimworldTycoon.harmonyInstance.Patch(
                 AccessTools.Method(typeof(CaravanFormingUtility), nameof(CaravanFormingUtility.AllSendablePawns)),
@@ -50,12 +51,7 @@ namespace HospitalityArchitect
                 AccessTools.Method(typeof(ForbidUtility), nameof(ForbidUtility.CaresAboutForbidden)),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(CaresAboutForbidden_Postfix)));
 
-            /*
-            RimworldTycoon.harmonyInstance.Patch(
-                AccessTools.Method(typeof(Area_Home), "Set"),
-                prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(SetHome_Prefix)));
-*/
-            
+           
             // quicksell button on everything haulable(hauls to delivery area to be picked up)
             /*
              * 
@@ -85,20 +81,87 @@ namespace HospitalityArchitect
         */
         
                 // empty vending machine
-                var m_GetAfterArmorDamage = AccessTools.Method(typeof(ThingOwner), "TryDrop",
+                var methodTryDrop = AccessTools.Method(typeof(ThingOwner), "TryDrop",
                     new Type[] { typeof(Thing), typeof(IntVec3), typeof(Map), typeof(ThingPlaceMode), typeof(int), typeof(Thing).MakeByRefType() , typeof(Action<Thing, int>), typeof(Predicate<IntVec3>) });
-                RimworldTycoon.harmonyInstance.Patch(m_GetAfterArmorDamage,
+                RimworldTycoon.harmonyInstance.Patch(methodTryDrop,
                     postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(RegisterIncome)));
+                
                 // disable default hospitality leave message
                 var m_LeaveMessage = AccessTools.Method("Hospitality.LordToil_VisitPoint:DisplayLeaveMessage");
                 RimworldTycoon.harmonyInstance.Patch(m_LeaveMessage,
                     prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(DoNothing)));
-                // TODO improve visit message
+                
+                
+                var method = AccessTools.Method("DubsBadHygiene.RoomRoleWorker_PrivateBathroom:GetScore");
+                RimworldTycoon.harmonyInstance.Patch(method,
+                    prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(RoomRoleWorker_PrivateBathroom)));
+                
+                method = AccessTools.Method("DubsBadHygiene.RoomRoleWorker_PublicBathroom:GetScore");
+                RimworldTycoon.harmonyInstance.Patch(method,
+                    prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(RoomRoleWorker_PublicBathroom)));    
+                
+                method = AccessTools.Method("DubsBadHygiene.SanitationUtil:ApplyBathroomThought");
+                RimworldTycoon.harmonyInstance.Patch(method,
+                    postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(ApplyBathroomCleanlinessThought)));   
+                
         }
         public static bool DoNothing()
         {
             return false;
         }
+
+        public static void ApplyBathroomCleanlinessThought(Pawn actor, Thing fixture)
+        {
+            if (actor.IsGuest())
+                actor.ThoughtAboutToiletCleanliness(fixture);            
+        }        
+        
+        // fixes the fact that in the original roomworker the bed had to have pawns assigned to it,
+        // but that is not the case when a private bathroom has no guests yet, but it still is a private bathroom
+        public static bool RoomRoleWorker_PrivateBathroom(Room room, ref float __result)
+        {
+            int num = 0;
+            List<Thing> containedAndAdjacentThings = room.ContainedAndAdjacentThings;
+            for (int i = 0; i < containedAndAdjacentThings.Count; i++)
+            {
+                if (containedAndAdjacentThings[i] is Building_AssignableFixture building_AssignableFixture && building_AssignableFixture.AllSpawnedBeds().Any())
+                {
+                    num++;
+                }
+            }
+            if (num > 0 && !room.isPrisonCell)
+            {
+                __result = 4000f;
+                return false;
+            }
+            __result = 0f;
+            return false;
+        }
+        
+        // fixes the fact that basins and latrines did not count as public bathroom items
+        public static bool RoomRoleWorker_PublicBathroom(Room room, ref float __result)
+        {
+            float num = 0;
+            List<Thing> containedAndAdjacentThings = room.ContainedAndAdjacentThings;
+            for (int i = 0; i < containedAndAdjacentThings.Count; i++)
+            {
+                if (containedAndAdjacentThings[i] is Building_AssignableFixture building_AssignableFixture && !building_AssignableFixture.AllSpawnedBeds().Any())
+                {
+                    num += 4000;
+                } else
+                if (containedAndAdjacentThings[i] is Building_Bed || containedAndAdjacentThings[i] is Building_GuestBed)
+                {
+                    num -= 4000; // if some weird mind is creating some kind of barracks with toilets, this is no public bathroom :)
+                }
+            }
+            if (num > 0 && !room.isPrisonCell)
+            {
+                __result = Mathf.Clamp(num,0,4000);
+                return false;
+            }
+            __result = 0f;
+            return false;
+        }        
         
         public static void RegisterIncome(ThingOwner __instance, Thing thing, IntVec3 dropLoc, Map map, ThingPlaceMode mode, int count)
         {
@@ -217,11 +280,6 @@ namespace HospitalityArchitect
             }
         }
 
-        public static void VisitorGroupWithBus_Postfix(Lord lord)
-        {
-            VehiculumService busService = lord.Map.GetComponent<VehiculumService>();
-            busService.StartBus(lord.ownedPawns);
-        }
         public static void IsSurgeryViolation_Postfix(Bill_Medical bill, ref bool __result)
         {
             __result = __result || (GetContractTracker(bill.Map).IsHired(bill.GiverPawn) &&
@@ -246,26 +304,5 @@ namespace HospitalityArchitect
                 }
             }
          */
-        
-        // TODO overwrite Designator_AreaHome
-        public static bool SetHome_Prefix(IntVec3 c, bool val, Area_Home __instance)
-        {
-            if (__instance[c] == val) return true;
-            float landValue = Utils.GetLandValue(cachedMap, c);
-            if (val)
-            {
-                if (cachedMap.GetComponent<FinanceService>().canAfford(landValue))
-                    cachedMap.GetComponent<FinanceService>().doAndBookExpenses(FinanceReport.ReportEntryType.Land, landValue);
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                cachedMap.GetComponent<FinanceService>().doAndBookIncome(FinanceReport.ReportEntryType.Land, landValue);
-            }
-            return true;
-        }
     }
 }

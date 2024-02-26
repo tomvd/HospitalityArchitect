@@ -36,4 +36,34 @@
             <li>Manipulation</li>
         </requiredCapacities>
     </WorkGiverDef>    
+    
+    <WorkGiverDef>
+        <defName>MakeBed</defName>
+        <label>add clean bedding on guestbeds</label>
+        <giverClass>HospitalityArchitect.WorkGiver_MakeBed</giverClass>
+        <workType>RefreshBedding</workType>
+        <verb>make bed</verb>
+        <gerund>making bed</gerund>
+        <priorityInType>1</priorityInType>
+        <requiredCapacities>
+            <li>Manipulation</li>
+        </requiredCapacities>
+    </WorkGiverDef>
+    
+    <WorkGiverDef>
+        <defName>DoBillsUseHandWashingSpot</defName>
+        <label>hand wash dirty bedding</label>
+        <giverClass>WorkGiver_DoBill</giverClass>
+        <workType>RefreshBedding</workType>
+        <priorityInType>100</priorityInType>
+        <fixedBillGiverDefs>
+            <li>HandWashingSpot</li>
+        </fixedBillGiverDefs>
+        <verb>wash</verb>
+        <gerund>washing at</gerund>
+        <requiredCapacities>
+            <li>Manipulation</li>
+        </requiredCapacities>
+        <prioritizeSustains>true</prioritizeSustains>
+    </WorkGiverDef>    
 </Defs>

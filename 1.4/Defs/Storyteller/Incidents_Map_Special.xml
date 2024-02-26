@@ -1,6 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
   <IncidentDef>
+    <defName>HotelGuestGroup</defName>
+    <label>hotel guest group</label>
+    <targetTags>
+      <li>Map_PlayerHome</li>
+    </targetTags>
+    <workerClass>HospitalityArchitect.IncidentWorker_VisitorGroup</workerClass>
+    <category>FactionArrival</category>
+    <baseChance>0</baseChance>
+    <pointsScaleable>true</pointsScaleable>
+    <minRefireDays>1</minRefireDays>
+  </IncidentDef>  
+  
+  <IncidentDef>
     <defName>RimazonSales</defName>
     <label>rimazon sales</label>
     <category>Misc</category>
@@ -12,4 +25,20 @@
     <minRefireDays>5</minRefireDays>
     <durationDays>1.5~2.0</durationDays>
   </IncidentDef>
+  
+  <IncidentDef>
+    <defName>GlobalPandemic</defName>
+    <label>global pandemic</label>
+    <category>Misc</category>
+    <targetTags>
+      <li>Map_PlayerHome</li>
+    </targetTags>
+    <workerClass>HospitalityArchitect.IncidentWorker_RimazonSales</workerClass>
+    <baseChance>0.5</baseChance>
+    <minRefireDays>45</minRefireDays>
+    <durationDays>15~20</durationDays>
+    <letterLabel>global pandemic</letterLabel>
+    <letterText>A worldwide spread of a new disease is causing most guests to stay at home. Only campers are allowed to travel.</letterText>
+    <letterDef>ThreatSmall</letterDef>    
+  </IncidentDef>  
 </Defs>

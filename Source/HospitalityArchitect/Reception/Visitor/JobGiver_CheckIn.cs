@@ -3,6 +3,7 @@ using Hospitality.Utilities;
 using RimWorld;
 using Verse;
 using Verse.AI;
+using Verse.AI.Group;
 
 namespace HospitalityArchitect.Reception
 {
@@ -16,6 +17,16 @@ namespace HospitalityArchitect.Reception
             var hotelGuestComp = guest.GetComp<CompHotelGuest>();
             if (hotelGuestComp == null) return null;
             if (hotelGuestComp.dayVisit) return null;
+            if (guest.GetLord().ownedPawns.Count == 2)
+            {
+                foreach (var pawn in guest.GetLord().ownedPawns)
+                {
+                    if (pawn != guest && pawn.CurJobDef != null && (pawn.CurJobDef.Equals(HADefOf.InspectBed) || pawn.CurJobDef.Equals(HADefOf.ClaimBed))) // the other pawn is already claiming a bed
+                    {
+                        return null;
+                    }
+                }
+            }
             
 
             // Wait longer if we have more money, but do it as soon as otherwise possible
@@ -25,7 +36,7 @@ namespace HospitalityArchitect.Reception
 
             //var bed = guest.FindBedFor();
             //if (bed == null) return null;
-            ReceptionController reception = guest.GetAllReceptions().RandomElement(); // TODO closestby
+            ReceptionController reception = guest.GetAllOpenReceptions().RandomElement(); // TODO closestby
             if (reception == null)
             {
                 var thoughtDef = ThoughtDef.Named("HospitalityArchitect_NoReception");

@@ -130,10 +130,10 @@ namespace HospitalityArchitect.Reception
 		{
 			incomeYesterday = incomeToday;
 			incomeToday = 0;
-			if (incomeYesterday > 0)
+			/*if (incomeYesterday > 0)
 			{
 				Messages.Message("HotelMessageIncomeToday".Translate(incomeYesterday.ToStringMoney()), MessageTypeDefOf.NeutralEvent);
-			}
+			}*/
 		}
 
 		public void FinalizeInit()

@@ -11,7 +11,7 @@ public class RoomRequirement_Privacy : RoomRequirement
 
     public override string Label(Room r = null)
     {
-        return (privateBedRoom && (r==null || !r.OnlyOneBed()))?"Need private bedroom":"" + ((privateBathRoom && r == null || !HasLinkedBathroom(r))?"Need private bathroom":"");
+        return ((privateBedRoom && (r==null || !r.OnlyOneBed()))?"Need private bedroom ":"") + ((privateBathRoom && (r == null || !HasLinkedBathroom(r)))?"Need private bathroom":"");
     }
 
     public override bool Met(Room r, Pawn p = null)

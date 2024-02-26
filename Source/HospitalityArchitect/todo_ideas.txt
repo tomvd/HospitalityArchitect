@@ -24,3 +24,6 @@ events: covid: only campers
 
 quests/achievements?
 
+TODO:
+no visitor envelope, but a bell when arriving at reception and no-one is there
+laundry

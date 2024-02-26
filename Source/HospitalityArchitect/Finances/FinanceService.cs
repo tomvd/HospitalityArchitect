@@ -44,8 +44,17 @@ namespace HospitalityArchitect
             }
         }
 
-        public FinanceReport getCurrentReport()
+        public FinanceReport getReport(int currentSubTab)
         {
+            switch (currentSubTab)
+            {
+                case 0: // today
+                    return _reports[currentDay];
+                case 1: // yesterday
+                    return _reports.Count > 1? _reports[currentDay-1] : _reports[currentDay];
+                case 2: // alltime
+                    return FinanceUtil.Sum(_reports);
+            }
             return _reports[currentDay];
         }
 
@@ -191,44 +200,39 @@ namespace HospitalityArchitect
         private void OnNextDay(int today)
         {
             Log.Message("OnNextDay "+today);
-            try
-            {
-                // calculate building taxes of this map = Daily property taxes per cell build on. 0.1s per 25 tiles of home (or tile of roof??).
-                Area homeArea = map.areaManager.Home;
-                float taxes = 0f;
-                foreach (var cell in homeArea.ActiveCells)
-                {
-                    taxes += Utils.GetLandValue(map, cell) / 250;
-                }
-                taxes = Mathf.Round(taxes);
-                
-                if (taxes > 0)
-                    doAndBookExpenses(FinanceReport.ReportEntryType.Taxes, taxes);
+            Messages.Message("Cashflow today: " + _reports[currentDay].getNetResult().ToStringMoney(), MessageTypeDefOf.NeutralEvent);
+            var taxes = _reports[currentDay].getNetResult() * 0.01f; // 10% tax default
+            currentDay = today; // avoids being stuck when this for some reason became out of sync
+            while (_reports.Count < currentDay+1)
+                _reports.Add(new FinanceReport());                
+
+            // start a new report
             
-                // pay taxes on the money on the bank, 1s per 1000s on the bank - this is the price player pays for the advantage of having "hidden wealth"/smaller raids 
-                //if (Math.Floor(moneyInBank / 1000f) > 0)
+            // calculate building taxes of this map = Daily property taxes per cell build on. 0.1s per 25 tiles of home (or tile of roof??).
+            Area homeArea = map.areaManager.Home;
+            float groundrent = 0f;
+            foreach (var cell in homeArea.ActiveCells)
+            {
+                groundrent += Utils.GetLandValue(map, cell) / 250;
+            }
+            groundrent = Mathf.Round(groundrent);
+                
+            if (groundrent > 0)
+                doAndBookExpenses(FinanceReport.ReportEntryType.GroundRent, groundrent);
+            if (taxes > 0)
+                doAndBookExpenses(FinanceReport.ReportEntryType.Taxes, taxes);
+            
+            // pay taxes on the money on the bank, 1s per 1000s on the bank - this is the price player pays for the advantage of having "hidden wealth"/smaller raids 
+            //if (Math.Floor(moneyInBank / 1000f) > 0)
 //                    doAndBookExpenses(FinanceReport.ReportEntryType.Taxes, (float)Math.Floor(moneyInBank / 1000f));
 
-                foreach (var loan  in _loans)
+            foreach (var loan  in _loans)
+            {
+                // pay interest on the balance of the loan
+                if (loan.Balance > 0)
                 {
-                    // pay interest on the balance of the loan
-                    if (loan.Balance > 0)
-                    {
-                        doAndBookExpenses(FinanceReport.ReportEntryType.Interest, loan.Balance * loan.Interest);
-                    }
+                    doAndBookExpenses(FinanceReport.ReportEntryType.Interest, loan.Balance * loan.Interest);
                 }
-                Messages.Message("Cashflow today: " + _reports[currentDay].getNetResult().ToStringMoney(), MessageTypeDefOf.NeutralEvent);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-            finally
-            {
-                currentDay = today; // avoids being stuck when this for some reason became out of sync
-                while (_reports.Count < currentDay+1)
-                    _reports.Add(new FinanceReport());                
             }
         }
 

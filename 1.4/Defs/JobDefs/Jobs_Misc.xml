@@ -55,5 +55,15 @@
         <driverClass>HospitalityArchitect.JobDriver_ClaimBed</driverClass>
         <reportString>Claiming my bed.</reportString>
     </JobDef>
+    <JobDef>
+        <defName>WaitForBus</defName>
+        <driverClass>HospitalityArchitect.JobDriver_WaitForBus</driverClass>
+        <reportString>Waiting for the bus.</reportString>
+    </JobDef>    
+    <JobDef>
+        <defName>MakeBed</defName>
+        <driverClass>HospitalityArchitect.JobDriver_MakeBed</driverClass>
+        <reportString>Putting clean bedding on the bed.</reportString>
+    </JobDef>    
     
 </Defs>

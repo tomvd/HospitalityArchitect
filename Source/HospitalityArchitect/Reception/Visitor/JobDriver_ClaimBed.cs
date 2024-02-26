@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Hospitality;
 using Hospitality.Utilities;
+using HospitalityArchitect.Reception.Visitor;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -23,51 +24,12 @@ namespace HospitalityArchitect
         {
             this.EndOnDespawnedOrNull(TargetIndex.A);
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.Touch).FailOn(BedHasBeenClaimed);//.FailOnCannotTouch(TargetIndex.A, PathEndMode.Touch);
-            yield return ClaimBed();
+            yield return ClaimBedToil.ClaimBed(true, GetActor(), TargetA.Thing, job);
         }
 
         private bool BedHasBeenClaimed(Toil toil)
         {
             return !(TargetA.Thing is Building_GuestBed {AnyUnownedSleepingSlot: true});
-        }
-
-        private Toil ClaimBed()
-        {
-            return new Toil
-            {
-                initAction = () => {
-                    var actor = GetActor();
-                    var silver = actor.inventory.innerContainer.FirstOrDefault(i => i.def == ThingDefOf.Silver);
-                    var money = silver?.stackCount ?? 0;
-                    
-                    // Check the stored RentalFee (takeExtraIngestibles)... if it was increased, cancel!
-                    if (!(TargetA.Thing is Building_GuestBed newBed) 
-                        || newBed.GetRentalFee() > job.takeExtraIngestibles 
-                        || newBed.GetRentalFee() > money) 
-                    {
-                        actor.jobs.curDriver.EndJobWith(JobCondition.Incompletable);
-                        return;
-                    }
-
-                    if (!newBed.AnyUnownedSleepingSlot)
-                    {
-                        actor.jobs.curDriver.EndJobWith(JobCondition.Incompletable);
-                        return;
-                    }
-
-                    var compGuest = actor.GetComp<CompGuest>();
-                    if (compGuest.HasBed) Log.Error($"{actor.LabelShort} already has a bed ({compGuest.bed.Label})");
-
-                    compGuest.ClaimBed(newBed);
-
-                    if (newBed.GetRentalFee() > 0)
-                    {
-                        actor.inventory.innerContainer.TryDrop(silver, actor.Position, Map, ThingPlaceMode.Near, newBed.GetRentalFee(), out silver);
-                    }
-                    actor.ThoughtAboutClaimedBed(newBed, money);
-                    actor.ThoughtAboutRoomCleanliness(newBed);
-                }
-            }.FailOnDespawnedNullOrForbidden(TargetIndex.A);
         }
     }
 }

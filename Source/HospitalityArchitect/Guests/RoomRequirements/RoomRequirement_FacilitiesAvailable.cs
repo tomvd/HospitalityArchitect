@@ -28,6 +28,32 @@ public class RoomRequirement_FacilitiesAvailable : RoomRequirement
         }
         return true;
     }
+    
+    public bool Met(Map map)
+    {
+        FacilitiesService fs = map.GetComponent<FacilitiesService>();
+        foreach (string f in facilities)
+        {
+            if (!fs.FacilityAvailable(f))
+            {
+                return false;
+            }
+        }
+        return true;
+    }    
+    
+    public bool MetAndOpen(Map map)
+    {
+        FacilitiesService fs = map.GetComponent<FacilitiesService>();
+        foreach (string f in facilities)
+        {
+            if (!fs.FacilityIsOpen(f))
+            {
+                return false;
+            }
+        }
+        return true;
+    }        
 
     public override IEnumerable<string> ConfigErrors()
     {

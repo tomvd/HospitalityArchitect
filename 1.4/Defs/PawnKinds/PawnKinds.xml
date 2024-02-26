@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
     <PawnKindDef ParentName="VillagerBase">
+        <defName>CamperGuest</defName>
+        <label>camper</label>
+        <forcedTraits>
+            <Ascetic>0</Ascetic>
+        </forcedTraits>
+        <modExtensions>
+            <li Class="HospitalityArchitect.GuestTypeDef">
+                <isCamper>true</isCamper>
+                <bringsFood>true</bringsFood>
+                <budget>16~20</budget>
+                <bedBudget>10</bedBudget>
+                <travelWithPartnerChance>0.8</travelWithPartnerChance>
+                <arrivesAt>17~18</arrivesAt>
+                <leavesAt>8~10</leavesAt>
+                <maxVisitors>10</maxVisitors>
+                <seasonalVariance>1</seasonalVariance>
+                <initRest>0.7</initRest>
+                <initFood>1.0</initFood>
+                <initJoy>0.7</initJoy>
+                <influenceSpillover>BackpackerGuest</influenceSpillover>
+            </li>
+        </modExtensions>          
+    </PawnKindDef>       
+    <PawnKindDef ParentName="VillagerBase">
         <defName>BackpackerGuest</defName>
         <label>backpacker</label>
-        <forcedTraits>
-          <Ascetic>0</Ascetic>
-        </forcedTraits>
         <modExtensions>
             <li Class="HospitalityArchitect.GuestTypeDef">
                 <bringsFood>true</bringsFood>
@@ -13,14 +34,13 @@
                 <bedBudget>30</bedBudget>
                 <travelWithPartnerChance>0.2</travelWithPartnerChance>
                 <arrivesAt>20~23</arrivesAt>
-                <leavesAt>9~11</leavesAt>
-                <maxVisitors>20</maxVisitors>
-                <baseRating>90</baseRating>
-                <dayVisitChance>0</dayVisitChance>
+                <leavesAt>7~9</leavesAt>
+                <maxVisitors>10</maxVisitors>
                 <seasonalVariance>1</seasonalVariance>
-                <initRest>0.1</initRest>
-                <initFood>1.0</initFood>
-                <initJoy>1.0</initJoy>
+                <initRest>0.5</initRest>
+                <initFood>0.8</initFood>
+                <initJoy>0.7</initJoy>
+                <influenceSpillover>BudgetTouristGuest</influenceSpillover>
             </li>
         </modExtensions>          
     </PawnKindDef>       
@@ -32,21 +52,20 @@
                 <budget>76~105</budget>
                 <bedBudget>60</bedBudget>
                 <arrivesAt>16~18</arrivesAt>
-                <leavesAt>10~12</leavesAt>
+                <leavesAt>9~10</leavesAt>
                 <maxVisitors>15</maxVisitors>
-                <baseRating>80</baseRating>
-                <dayVisitChance>0</dayVisitChance>
                 <travelWithPartnerChance>1</travelWithPartnerChance>
                 <seasonalVariance>1</seasonalVariance>
                 <initRest>0.5</initRest>
                 <initFood>0.3</initFood>
-                <initJoy>0.8</initJoy>                
+                <initJoy>0.7</initJoy>                
                 <bedroomRequirements>
                   <li Class="HospitalityArchitect.RoomRequirement_Privacy">
                       <privateBedRoom>true</privateBedRoom>
                       <privateBathRoom>false</privateBathRoom>
                   </li>
-                </bedroomRequirements>                
+                </bedroomRequirements>
+                <influenceSpillover>TouristGuest</influenceSpillover>
             </li>
         </modExtensions>          
      </PawnKindDef>   
@@ -58,15 +77,13 @@
                 <budget>106~135</budget>
                 <bedBudget>90</bedBudget>
                 <arrivesAt>16~18</arrivesAt>
-                <leavesAt>10~12</leavesAt>
+                <leavesAt>9~10</leavesAt>
                 <maxVisitors>15</maxVisitors>
-                <baseRating>70</baseRating>
-                <dayVisitChance>0</dayVisitChance>
                 <travelWithPartnerChance>1</travelWithPartnerChance>
                 <seasonalVariance>1</seasonalVariance>
                 <initRest>0.5</initRest>
                 <initFood>0.3</initFood>
-                <initJoy>0.8</initJoy>                   
+                <initJoy>0.7</initJoy>                   
                 <bedroomRequirements>
                   <li Class="HospitalityArchitect.RoomRequirement_Privacy">
                       <privateBedRoom>true</privateBedRoom>
@@ -75,7 +92,8 @@
                     <li Class="HospitalityArchitect.RoomRequirement_Rating">
                         <rating>200</rating>
                     </li>
-                </bedroomRequirements>                
+                </bedroomRequirements>
+                <influenceSpillover>LuxTouristGuest</influenceSpillover>
             </li>
         </modExtensions>          
      </PawnKindDef>      
@@ -89,13 +107,11 @@
                 <arrivesAt>16~18</arrivesAt>
                 <leavesAt>10~12</leavesAt>
                 <maxVisitors>15</maxVisitors>
-                <baseRating>50</baseRating>
-                <dayVisitChance>0</dayVisitChance>
                 <travelWithPartnerChance>1</travelWithPartnerChance>
                 <seasonalVariance>1</seasonalVariance>
                 <initRest>0.5</initRest>
                 <initFood>0.3</initFood>
-                <initJoy>0.8</initJoy>                   
+                <initJoy>0.7</initJoy>                   
                 <bedroomRequirements>
                   <li Class="HospitalityArchitect.RoomRequirement_Privacy">
                       <privateBedRoom>true</privateBedRoom>
@@ -113,15 +129,12 @@
         <label>business guest</label>
         <modExtensions>
             <li Class="HospitalityArchitect.GuestTypeDef">
+                <baseRating>40</baseRating>
                 <budget>106~135</budget>
                 <bedBudget>90</bedBudget>
                 <arrivesAt>16~18</arrivesAt>
                 <leavesAt>10~12</leavesAt>
                 <maxVisitors>5</maxVisitors>
-                <baseRating>70</baseRating>
-                <dayVisitChance>0</dayVisitChance>
-                <travelWithPartnerChance>0</travelWithPartnerChance>
-                <seasonalVariance>0</seasonalVariance>
                 <initRest>0.5</initRest>
                 <initFood>0.3</initFood>
                 <initJoy>0.5</initJoy>                   
@@ -160,10 +173,6 @@
                 <arrivesAt>13~15</arrivesAt>
                 <leavesAt>10~12</leavesAt>
                 <maxVisitors>10</maxVisitors>
-                <baseRating>70</baseRating>
-                <dayVisitChance>0.5</dayVisitChance>
-                <travelWithPartnerChance>0</travelWithPartnerChance>
-                <seasonalVariance>0</seasonalVariance>
                 <initRest>0.9</initRest>
                 <initFood>0.9</initFood>
                 <initJoy>0.1</initJoy>                   
@@ -181,7 +190,159 @@
                         <rating>200</rating>
                     </li>                    
                 </bedroomRequirements>
+                <influenceSpillover>CasinoDayGuest</influenceSpillover>
             </li>
         </modExtensions>          
     </PawnKindDef>        
+    <PawnKindDef ParentName="VillagerBase">
+        <defName>CasinoDayGuest</defName>
+        <label>casino day guest</label>
+        <forcedTraits>
+            <Gambler>0</Gambler>
+        </forcedTraits>
+        <modExtensions>
+            <li Class="HospitalityArchitect.GuestTypeDef">
+                <dayVisitor>true</dayVisitor>
+                <baseRating>45</baseRating>
+                <budget>100~210</budget>
+                <arrivesAt>13~15</arrivesAt>
+                <leavesAt>17~23</leavesAt>
+                <maxVisitors>15</maxVisitors>
+                <initFood>0.9</initFood>
+                <initJoy>0.1</initJoy>                   
+                <facilityRequirements>
+                    <facilities>
+                        <li>Casino</li>
+                    </facilities>
+                </facilityRequirements>
+                <influenceSpillover>CasinoGuest</influenceSpillover>
+            </li>
+        </modExtensions>          
+    </PawnKindDef>
+    <TraitDef>
+        <defName>SpaLover</defName>
+        <commonality>0.0</commonality>
+        <degreeDatas>
+            <li>
+                <label>spa lover</label>
+                <description>{PAWN_nameDef} likes visiting a pool, sauna or hottub.</description>
+            </li>
+        </degreeDatas>
+    </TraitDef>    
+    <PawnKindDef ParentName="VillagerBase">
+        <defName>SpaGuest</defName>
+        <label>spa guest</label>
+       <forcedTraits>
+            <SpaLover>0</SpaLover>
+        </forcedTraits>
+        <modExtensions>
+            <li Class="HospitalityArchitect.GuestTypeDef">
+                <seasonalVariance>0.5</seasonalVariance>
+                <budget>240~300</budget>
+                <bedBudget>90</bedBudget>
+                <arrivesAt>13~15</arrivesAt>
+                <leavesAt>10~12</leavesAt>
+                <maxVisitors>10</maxVisitors>
+                <initRest>0.9</initRest>
+                <initFood>0.9</initFood>
+                <initJoy>0.1</initJoy>                   
+                <bedroomRequirements>
+                    <li Class="HospitalityArchitect.RoomRequirement_Privacy">
+                        <privateBedRoom>true</privateBedRoom>
+                        <privateBathRoom>true</privateBathRoom>
+                    </li>         
+                    <li Class="HospitalityArchitect.RoomRequirement_FacilitiesAvailable">
+                        <facilities>
+                            <li>Spa</li>
+                        </facilities>
+                    </li>
+                    <li Class="HospitalityArchitect.RoomRequirement_Rating">
+                        <rating>200</rating>
+                    </li>                    
+                </bedroomRequirements>
+                <influenceSpillover>SpaDayGuest</influenceSpillover>
+            </li>
+        </modExtensions>          
+    </PawnKindDef>        
+    <PawnKindDef ParentName="VillagerBase">
+        <defName>SpaDayGuest</defName>
+        <label>spa day guest</label>
+        <forcedTraits>
+            <SpaLover>0</SpaLover>
+        </forcedTraits>
+        <modExtensions>
+            <li Class="HospitalityArchitect.GuestTypeDef">
+                <seasonalVariance>0.5</seasonalVariance>
+                <dayVisitor>true</dayVisitor>
+                <baseRating>45</baseRating>
+                <budget>100~210</budget>
+                <arrivesAt>13~15</arrivesAt>
+                <leavesAt>17~23</leavesAt>
+                <maxVisitors>15</maxVisitors>
+                <initFood>0.9</initFood>
+                <initJoy>0.1</initJoy>                   
+                <facilityRequirements>
+                    <facilities>
+                        <li>Spa</li>
+                    </facilities>
+                </facilityRequirements>
+                <influenceSpillover>SpaGuest</influenceSpillover>
+            </li>
+        </modExtensions>          
+    </PawnKindDef>
+    <PawnKindDef ParentName="VillagerBase">
+        <defName>RestaurantDayGuest</defName>
+        <label>restaurant day guest</label>
+        <modExtensions>
+            <li Class="HospitalityArchitect.GuestTypeDef">
+                <dayVisitor>true</dayVisitor>
+                <baseRating>45</baseRating>
+                <budget>70~140</budget>
+                <arrivesAt>17~18</arrivesAt>
+                <leavesAt>20~22</leavesAt>
+                <maxVisitors>10</maxVisitors>
+                <initFood>0.1</initFood>
+                <initJoy>0.9</initJoy>                   
+                <facilityRequirements>
+                    <facilities>
+                        <li>Restaurant</li>
+                    </facilities>
+                </facilityRequirements>
+            </li>
+        </modExtensions>          
+    </PawnKindDef>
+    <TraitDef>
+        <defName>Shopper</defName>
+        <commonality>0.0</commonality>
+        <degreeDatas>
+            <li>
+                <label>shopper</label>
+                <description>{PAWN_nameDef} likes shopping.</description>
+            </li>
+        </degreeDatas>
+    </TraitDef>   
+    <PawnKindDef ParentName="VillagerBase">
+        <defName>ShoppingDayGuest</defName>
+        <label>shopping day guest</label>
+        <forcedTraits>
+            <Shopper>0</Shopper>
+        </forcedTraits>
+        <modExtensions>
+            <li Class="HospitalityArchitect.GuestTypeDef">
+                <dayVisitor>true</dayVisitor>
+                <baseRating>45</baseRating>
+                <budget>400~800</budget>
+                <arrivesAt>10~12</arrivesAt>
+                <leavesAt>13~16</leavesAt>
+                <maxVisitors>10</maxVisitors>
+                <initFood>0.9</initFood>
+                <initJoy>0.7</initJoy>                   
+                <facilityRequirements>
+                    <facilities>
+                        <li>Store</li>
+                    </facilities>
+                </facilityRequirements>
+            </li>
+        </modExtensions>          
+    </PawnKindDef>     
 </Defs>

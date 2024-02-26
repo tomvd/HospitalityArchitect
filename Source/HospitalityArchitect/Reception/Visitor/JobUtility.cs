@@ -5,6 +5,7 @@ using Storefront.Utilities;
 using UnityEngine;
 using Verse;
 using Verse.AI;
+using Verse.Sound;
 using StoreUtility = Storefront.Store.StoreUtility;
 
 namespace HospitalityArchitect.Reception
@@ -34,6 +35,8 @@ namespace HospitalityArchitect.Reception
                 if (pawn.jobs.curDriver.ticksLeftThisToil > 0) return JobCondition.Ongoing;
                 StorefrontUtility.GiveWaitThought(pawn);
                 Log.Message($"{pawn.NameShortColored} ended {pawn.CurJobDef?.label} because of wait timeout.");
+                SoundDef arriveSound = DefDatabase<SoundDef>.GetNamed("LetterArrive_Good"); // the letter arrive sound is a bell similar to a reception bell
+                arriveSound.PlayOneShotOnCamera();
                 return JobCondition.Incompletable;
             }
 
@@ -61,8 +64,8 @@ namespace HospitalityArchitect.Reception
             if (customer.needs.mood == null) return;
 
             int stage = GetServiceStage(customer, cashier);
-            customer.needs.mood.thoughts.memories.TryGainMemory(ThoughtMaker.MakeThought(ShoppingDefOf.Storefront_Serviced, stage), cashier);
-            customer.needs.mood.thoughts.memories.TryGainMemory(ThoughtMaker.MakeThought(ShoppingDefOf.Storefront_ServicedMood, stage));
+            customer.needs.mood.thoughts.memories.TryGainMemory(ThoughtMaker.MakeThought(ShoppingDefOf.HospitalityArchitect_Serviced, stage), cashier);
+            customer.needs.mood.thoughts.memories.TryGainMemory(ThoughtMaker.MakeThought(ShoppingDefOf.HospitalityArchitect_ServicedMood, stage));
         }
 
         private static int GetServiceStage(Pawn customer, Pawn cashier)

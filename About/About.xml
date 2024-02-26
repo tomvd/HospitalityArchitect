@@ -25,6 +25,16 @@
 			<displayName>Dubs Bad Hygiene</displayName>
 			<steamWorkshopUrl>steam://url/CommunityFilePage/836308268</steamWorkshopUrl>
 		</li>			
+		<li>
+			<packageId>Aoba.Tent</packageId>
+			<displayName>Camping Tent</displayName>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/2407128339</steamWorkshopUrl>
+		</li>	
+		<li>
+			<packageId>Orion.CashRegister</packageId>
+			<displayName>Cash Register</displayName>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/2506046833</steamWorkshopUrl>
+		</li>
 	</modDependencies>
 	<incompatibleWith>
 		<!-- <li>username.modname</li> -->
@@ -35,6 +45,7 @@
 		<li>Dubwise.DubsBadHygiene.Lite</li>
 		<li>balistafreak.StandaloneHotSpring</li>
 		<li>Aoba.Tent</li>
+		<li>Orion.CashRegister</li>
 	</loadAfter>
 	<description>Hospitality Architect is a new scenario where everything is about money and building up an imperium by getting silver out of guests and visitors.
 	The scenario starts with just 1 person - you. There will never be anyone joining your colony, you can only hire people.</description>

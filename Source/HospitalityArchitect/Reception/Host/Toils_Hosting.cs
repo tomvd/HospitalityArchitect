@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using CashRegister;
 using HarmonyLib;
@@ -10,6 +11,7 @@ using Verse;
 using Verse.AI;
 using Verse.Sound;
 using Hospitality.Utilities;
+using Verse.AI.Group;
 
 namespace HospitalityArchitect.Reception
 {
@@ -76,7 +78,7 @@ namespace HospitalityArchitect.Reception
         public static Toil AnnounceSelling(TargetIndex customerInd)
         {
             var toil = Toils_Interpersonal.Interact(customerInd, InteractionDefOf.Chitchat);
-            toil.defaultDuration = 200;
+            toil.defaultDuration = Rand.Range(50,100);
             toil.socialMode = RandomSocialMode.Off;
             toil.activeSkill = () => SkillDefOf.Social;
             toil.tickAction = TickAction;
@@ -119,9 +121,6 @@ namespace HospitalityArchitect.Reception
                 buyJob.WaitingInQueue = false; // this makes the buyer stop waiting in queue
                 JobUtility.GiveServiceThought(customer, toil.actor);
 
-                bool urgent = customer.needs?.food?.CurCategory >= HungerCategory.UrgentlyHungry;
-                if (urgent) toil.defaultDuration = 50;
-
             }
 
             void TickAction()
@@ -155,9 +154,7 @@ namespace HospitalityArchitect.Reception
                 //if (symbol != null)
                     MoteMaker.MakeInteractionBubble(actor, customer, ThingDefOf.Mote_Speech, InteractionDefOf.BuildRapport.GetSymbol());
                 //Log.Message($"{customer.jobs.curDriver} is curjob driver.");
-                actor.skills.GetSkill(SkillDefOf.Social).Learn(150);
-                if (customer.jobs.curDriver is JobDriver_CheckIn buyJob)
-                    buyJob.WaitingToBeServed = false; // this makes the buyer go on with his business - job is done
+
                 
                 var bed = customer.FindBedFor();
                 if (bed == null)
@@ -167,154 +164,57 @@ namespace HospitalityArchitect.Reception
                     return;
                 }
                 var price = bed.GetRentalFee();
-                if (price > 0)
+                foreach (var lordPawn in customer.GetLord().ownedPawns)
                 {
-                    var inventory = customer.inventory.innerContainer;                    
-                    Thing silver = inventory.FirstOrDefault(i => i.def == ThingDefOf.Silver);
-                    if (silver == null) return;
-
-                    if (register is not null)
+                    // check also if the guest didn already pay for a bed (and it got destroyed?) - in which case they get their bed for free now
+                    if (price > 0 && lordPawn.GetComp<CompHotelGuest>().totalSpent < price)
                     {
-                        //Log.Message($"transfer silver to register");
-                        int transferred = customer.inventory.innerContainer.TryTransferToContainer(silver,
-                            register.GetDirectlyHeldThings(), price);
-                        // check how much silver we got, and if its less than we ask for, create some extra silver out of thin air :)
-                        if (transferred < price)
+                        var inventory = lordPawn.inventory.innerContainer;                    
+                        Thing silver = inventory.FirstOrDefault(i => i.def == ThingDefOf.Silver);
+                        if (silver == null)                 
                         {
-                            int debt = price - transferred;
-                            var silverThing = ThingMaker.MakeThing(ThingDefOf.Silver);
-                            silverThing.stackCount = debt;
-                            register.GetDirectlyHeldThings().TryAdd(silverThing, true);
+                            // something went horribly wrong, sent the customer home
+                            lordPawn.Leave();
+                            return;
                         }
+
+                        if (register is not null)
+                        {
+                            int transferred = lordPawn.inventory.innerContainer.TryTransferToContainer(silver,
+                                register.GetDirectlyHeldThings(), price);
+                            // check how much silver we got, and if its less than we ask for, create some extra silver out of thin air :)
+                            Log.Message($"transferred {transferred} silver from {lordPawn.NameFullColored} to register");
+                            /*if (transferred < price)
+                            {
+                                int debt = price - transferred;
+                                var silverThing = ThingMaker.MakeThing(ThingDefOf.Silver);
+                                silverThing.stackCount = debt;
+                                Log.Message($"transfer {debt}  extra silver to register");
+                                register.GetDirectlyHeldThings().TryAdd(silverThing, true);
+                            }*/
+                        }
+                        else
+                        {
+                            Log.Message($"register is gone? drop silver on the ground");
+                            lordPawn.inventory.innerContainer.TryDrop(silver, lordPawn.Position, actor.Map, ThingPlaceMode.Near,
+                                price, out silver);
+                        }
+                        actor.Map.GetReceptionManager().GetLinkedReception(register).AddToIncomeToday(price);
+                        actor.Map.GetComponent<FinanceService>().bookIncome(FinanceReport.ReportEntryType.Beds, price);
+                        //lordPawn.GetComp<CompHotelGuest>().totalSpent += price;
                     }
-                    else
-                    {
-                        Log.Message($"register is gone? drop silver on the ground");
-                        customer.inventory.innerContainer.TryDrop(silver, customer.Position, actor.Map, ThingPlaceMode.Near,
-                            price, out silver);
-                    }
-                    actor.Map.GetReceptionManager().GetLinkedReception(register).AddToIncomeToday(price);
-                    actor.Map.GetComponent<FinanceService>().bookIncome(FinanceReport.ReportEntryType.Beds, price);
-                }                
+                }
+                // if we are a couple, only the first one inspects/claims the bed
+                if (customer.GetLord().ownedPawns.Count == 2)
+                {
+                    Pawn partner = customer.GetLord().ownedPawns.First(pawn => pawn != customer);
+                    partner.jobs.EndCurrentJob(JobCondition.Succeeded);
+                }
+                actor.skills.GetSkill(SkillDefOf.Social).Learn(150);
+                if (customer.jobs.curDriver is JobDriver_CheckIn buyJob)
+                    buyJob.WaitingToBeServed = false; // this makes the buyer go on with his business - job is done                
+                customer.jobs.EndCurrentJob(JobCondition.Succeeded);
                 customer.jobs.StartJob(new Job(HADefOf.InspectBed, bed));
-            }
-        }
-        
-        private static void SellThing(Pawn salesperson, Pawn customer, Thing item, Building_CashRegister register)
-        {
-            //Log.Message($"BuyThing MarketValue {item.MarketValue}");
-            if (item.MarketValue <= 0) return;
-
-            var inventory = customer.inventory.innerContainer;
-
-            Thing silver = inventory.FirstOrDefault(i => i.def == ThingDefOf.Silver);
-            if (silver == null) return;
-//            Log.Message($"BuyThing silver.stackCount {silver.stackCount}");
-
-            var itemCost = StorefrontUtility.GetPurchasingCost(item, customer, salesperson);
-//            Log.Message($"BuyThing itemCost {itemCost}");
-            int count = customer.jobs.curJob.count;
-
-            var price = Mathf.CeilToInt(count*itemCost);
-            //Log.Message($"BuyThing price {price}");
-
-            //if(silver.stackCount < price) return;
-
-            var map = customer.MapHeld;
-            var inventoryItemsBefore = inventory.ToArray();
-            var thing = item.SplitOff(count);
-
-            // Notification
-            //if (Settings.enableBuyNotification)
-            //{
-                var text = price <= 0 ? "GuestTookFreeItem" : "GuestBoughtItem";
-                Messages.Message(text.Translate(new NamedArgument(customer.Faction, "FACTION"), price, new NamedArgument(customer, "PAWN"), new NamedArgument(thing.GetInnerIfMinified(), "ITEM")), customer, MessageTypeDefOf.SilentInput);
-            //}
-
-            int tookItems;
-            if (thing.def.IsApparel && thing is Apparel apparel && ApparelUtility.HasPartsToWear(customer, apparel.def) && ItemUtility.AlienFrameworkAllowsIt(customer.def, apparel.def, "CanWear"))
-            {
-                customer.apparel.Wear(apparel);
-                tookItems = apparel.stackCount;
-            }
-            else if (thing.def.IsWeapon && thing is ThingWithComps equipment && equipment.def.IsWithinCategory(ThingCategoryDefOf.Weapons)
-                     && ItemUtility.AlienFrameworkAllowsIt(customer.def, thing.def, "CanEquip"))
-            {
-                var primary = customer.equipment.Primary;
-                if (equipment.def.equipmentType == EquipmentType.Primary && primary != null)
-                    if (!customer.equipment.TryTransferEquipmentToContainer(primary, customer.inventory.innerContainer))
-                    {
-                        Log.Message(customer.Name.ToStringShort + " failed to take " + primary + " to his inventory.");
-                    }
-                
-                customer.equipment.AddEquipment(equipment);
-                customer.equipment.Notify_EquipmentAdded(equipment);
-                equipment.def.soundInteract?.PlayOneShot(new TargetInfo(customer.Position, customer.Map));
-                tookItems = equipment.stackCount;
-            }
-            else
-            {
-                tookItems = inventory.TryAdd(thing, count);
-                //Log.Message($"tookItems {tookItems}");
-                // could not pick up item? we make it disappear
-                if (tookItems == 0)
-                {
-                    tookItems = thing.stackCount;
-                    thing.Destroy();
-                }
-            }
-
-            var comp = customer.TryGetComp<CompGuest>(); //customer.CompGuest();
-            if (tookItems > 0 && comp != null)
-            {
-                
-                if (price > 0)
-                {
-                    if (register is not null)
-                    {
-                        //Log.Message($"transfer silver to register");
-                        int transferred = customer.inventory.innerContainer.TryTransferToContainer(silver,
-                            register.GetDirectlyHeldThings(), price);
-                        // check how much silver we got, and if its less than we ask for, create some extra silver out of thin air :)
-                        if (transferred < price)
-                        {
-                            int debt = price - transferred;
-                            var silverThing = ThingMaker.MakeThing(ThingDefOf.Silver);
-                            silverThing.stackCount = debt;
-                            register.GetDirectlyHeldThings().TryAdd(silverThing, true);
-                        }
-                    }
-                    else
-                    {
-                        Log.Message($"register is gone? drop silver on the ground");
-                        customer.inventory.innerContainer.TryDrop(silver, customer.Position, map, ThingPlaceMode.Near,
-                            price, out silver);
-                    }
-                    map.GetStoresManager().GetLinkedStore(register).AddToIncomeToday(price);
-                }
-
-                // Check what's new in the inventory (TryAdd creates a copy of the original object!)
-                var newItems = customer.inventory.innerContainer.Except(inventoryItemsBefore).ToArray();
-                foreach (var currentItem in newItems)
-                {
-                    comp.boughtItems.Add(currentItem.thingIDNumber);
-
-                    // Handle trade stuff
-                    if (item is ThingWithComps twc)
-                    {
-                        twc.PreTraded(TradeAction.PlayerSells, salesperson, customer);
-                    }
-                }
-
-                JoyUtility.TryGainRecRoomThought(customer);
-            }
-            else
-            {
-                // Failed to equip or take
-                if (!GenDrop.TryDropSpawn(thing, customer.Position, map, ThingPlaceMode.Near, out _))
-                {
-                    Log.Warning(customer.Name.ToStringShort + " failed to buy and failed to drop " + thing.Label);
-                }
             }
         }
     }

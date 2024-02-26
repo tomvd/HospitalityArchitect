@@ -16,6 +16,7 @@ namespace HospitalityArchitect
         }
     }
 
+    // dummy mapcomponent to do some late init
     public class MyMapComponent : MapComponent
     {
         public MyMapComponent(Map map) : base(map)
@@ -25,6 +26,7 @@ namespace HospitalityArchitect
         public override void FinalizeInit()
         {
             //Find.ResearchManager.DebugSetAllProjectsFinished();
+            InjectHotelGuestTab.Inject();
         }
     }
 

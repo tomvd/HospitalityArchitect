@@ -6,6 +6,7 @@ using Hospitality;
 using Hospitality.Utilities;
 using RimWorld;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Verse;
 using Verse.AI.Group;
 
@@ -44,19 +45,26 @@ public class Scheduler : MapComponent
     {
         _marketingService.DoMinutely();
         
-        // handle leaving guests
+        // handle leaving guests + recalculate totalSpent
         Hospitality.Utilities.GuestUtility.GetAllGuests(map).ToList().ForEach(
                 guest =>
                 {
                     GuestTypeDef type = guest.kindDef.GetModExtension<GuestTypeDef>();
                     CompHotelGuest hotelGuest = guest.GetComp<CompHotelGuest>();
+                    Thing silver = guest.inventory.innerContainer.FirstOrDefault(i => i.def == ThingDefOf.Silver);
+                    if ( silver != null )
+                        hotelGuest.totalSpent = hotelGuest.initialMoney - silver.stackCount;
+                    else
+                    {
+                        hotelGuest.totalSpent = hotelGuest.initialMoney;
+                    }
                     bool leave = false;
                     if (!hotelGuest.left)
                     {
                         if (!hotelGuest.slept && GenLocalDate.HourOfDay(map) == 0) hotelGuest.slept = true;
                         if (hotelGuest.dayVisit)
                         {
-                            if (guest.IsTired())
+                            if (guest.IsTired() || GenLocalDate.HourOfDay(map) > type.leavesAt.RandomInRange)
                             {
                                 leave = true;
                             }
@@ -72,19 +80,7 @@ public class Scheduler : MapComponent
 
                         if (leave)
                         {
-                            map.GetComponent<MarketingService>().leaveRating(guest);
-                            Lord lord = guest.GetLord();
-                            if (lord == null)
-                            {
-                                Log.Warning("lord == null");
-                                return;
-                            }
-
-                            foreach (var pawn in lord.ownedPawns)
-                            {
-                                pawn.GetComp<CompGuest>().sentAway = true;
-                                pawn.GetComp<CompHotelGuest>().left = true;
-                            }
+                            GuestUtility.HotelGuestLeaves(guest);
                         }
                     }
                 }
@@ -93,8 +89,8 @@ public class Scheduler : MapComponent
 
     private void DoHourly()
     {
-        if (!dailyDone && GenLocalDate.HourOfDay(map) == 0) DoDaily(GenDate.DaysPassed);
-        if (GenLocalDate.HourOfDay(map) == 1) dailyDone = false;
+        if (!dailyDone && GenLocalDate.HourOfDay(map) == 1) DoDaily(GenDate.DaysPassed);
+        if (GenLocalDate.HourOfDay(map) == 2) dailyDone = false;
     }
 
     private void DoDaily(int today)

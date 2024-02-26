@@ -6,6 +6,7 @@ using Hospitality;
 using Hospitality.Utilities;
 using JetBrains.Annotations;
 using RimWorld;
+using Tent;
 using UnityEngine;
 using Verse;
 using Verse.AI;
@@ -20,7 +21,7 @@ public static class BedUtility
         var money = silver?.stackCount ?? 0;
 
         var beds = FindAvailableBeds(guest);
-        //Log.Message($"Found {beds.Length} guest beds that {guest.LabelShort} can afford (<= {money} silver).");
+        Log.Message($"Found {beds.Count} guest beds that {guest.LabelShort} can afford (<= {money} silver).");
         if (!beds.Any())
         {
             Log.Message($"Found NO guest beds that {guest.LabelShort} can afford (<= {money} silver).");            
@@ -54,7 +55,8 @@ public static class BedUtility
         return bed.GetRentalFee() <= guestTypeDef.bedBudget
                && (guestTypeDef.bedroomRequirements == null || guestTypeDef.bedroomRequirements.TrueForAll(requirement => requirement == null || requirement.Met(bed.GetRoom(), guest)))
                && bed.GetComp<CompHotelGuestBed>().guestType != null
-               && bed.GetComp<CompHotelGuestBed>().guestType == pawnKindDef;
+               && bed.GetComp<CompHotelGuestBed>().guestType == pawnKindDef
+               && (!guestTypeDef.isCamper || bed.def.defName.Equals("CampingTentSpotGuest") || bed.def.defName.Equals("ModernTentGuest"));
     }
 
     public static bool HasLinkedBathroom(Building_Bed bed)
@@ -63,27 +65,29 @@ public static class BedUtility
         bool hasToilet = SanitationUtil.AllFixtures(bed.Map)
             .Any(thing => thing is Building_BaseToilet toilet && toilet.AllSpawnedBeds().Contains(bed));
         bool hasWashing = SanitationUtil.AllFixtures(bed.Map)
-            .Any(thing => thing is Building_AssignableFixture fixture && fixture.fixture is FixtureType.Bath or FixtureType.Basin && fixture.AllSpawnedBeds().Contains(bed));
+            .Any(thing => thing is Building_AssignableFixture fixture && fixture.fixture is FixtureType.Bath && fixture.AllSpawnedBeds().Contains(bed));
         return hasToilet && hasWashing;
     }
 
 
-    private static IEnumerable<Building_GuestBed> FindAvailableBeds(Pawn guest)
+    private static List<Building_GuestBed> FindAvailableBeds(Pawn guest)
     {
         GuestTypeDef guestTypeDef = guest.kindDef.GetModExtension<GuestTypeDef>();
         return guest.MapHeld.GetGuestBeds(guest.GetGuestArea()).Where(bed => 
             bed.AnyUnownedSleepingSlot 
             && !bed.IsForbidden(guest) 
             && !bed.IsBurning() 
+            && (!guestTypeDef.isCamper || bed.def.defName.Equals("CampingTentSpotGuest") || bed.def.defName.Equals("ModernTentGuest"))
             && QualifiesForGuestType(bed, guestTypeDef, guest.kindDef, guest)
             && !BedClaimedByStranger(bed, guest) // hotel guests generally dont sleep with strangers :)
             && RestUtility.CanUseBedEver(guest, bed.def)
             && !bed.CompAssignableToPawn.IdeoligionForbids(guest)
-            && guest.CanReserveAndReach(bed, PathEndMode.OnCell, Danger.Some, maxPawns: 2));
+            && guest.CanReserveAndReach(bed, PathEndMode.OnCell, Danger.Some, maxPawns: 2)    
+            ).ToList();
     }
     
 
-    private static Building_GuestBed SelectBest(IEnumerable<Building_GuestBed> beds, Pawn guest, int money)
+    private static Building_GuestBed SelectBest(List<Building_GuestBed> beds, Pawn guest, int money)
     {
         return beds.MaxBy(bed => bed.BedValue(guest, money));
     }
@@ -101,7 +105,7 @@ public static class BedUtility
         var royalExpectations = GetRoyalExpectations(bed, guest, room, out var title);
 
         // Shared
-        var otherPawnOpinion = OtherPawnOpinion(bed, guest); // -150 - 0
+        var otherPawnOpinion = OtherPawnOpinion(bed, guest); // -150 - 0 - 999
 
         // Temperature
         var temperature = GetTemperatureScore(guest, room, bed); // -200 - 0
@@ -141,8 +145,8 @@ public static class BedUtility
 
         var score = impressiveness + quality + comfort + roomType + temperature + otherPawnOpinion + royalExpectations + ideologyNeeds + facilities - distance;
         var value = Mathf.CeilToInt(ScoreFactor * score - fee);
-        //Log.Message($"For {guest.LabelShort} {bed.Label} at {bed.Position} has a score of {score} and value of {value}:\n"
-        //            + $"impressiveness = {impressiveness}, quality = {quality}, fee = {fee}, roomType = {roomType}, opinion = {otherPawnOpinion}, temperature = {temperature}, distance = {distance}");
+        Log.Message($"For {guest.LabelShort} {bed.Label} at {bed.Position} has a score of {score} and value of {value}:\n"
+                    + $"impressiveness = {impressiveness}, quality = {quality}, fee = {fee}, roomType = {roomType}, opinion = {otherPawnOpinion}, temperature = {temperature}, distance = {distance}");
         return value;
     }
 
@@ -188,9 +192,9 @@ public static class BedUtility
 
     private static int OtherPawnOpinion(Building_GuestBed bed, Pawn guest)
     {
-        if (!BedClaimedByStranger(bed, guest)) {
+        if (bed.Owners().Count > 0 && !BedClaimedByStranger(bed, guest)) {
             Log.Message("assigning to bed of partner");
-            return 999; // max out to prefer joining partner bed
+            return 999; // max out to always join partner bed
         }
 
         // Take opinion of other into account
@@ -223,21 +227,78 @@ public static class BedUtility
 
     private static bool BedClaimedByStranger(Building_Bed bed, Pawn guest)
     {
-        return bed.Owners().Any(p => p != guest && !p.RaceProps.Animal && !LovePartnerRelationUtility.LovePartnerRelationExists(p, guest));
+        return bed.Owners().Any(p => p != guest && !p.RaceProps.Animal && RimWorld.BedUtility.WillingToShareBed(p, guest));
     }
 
     public static int StaticBedValue(Building_GuestBed bed, [CanBeNull] out Room room, out int quality, out int impressiveness, out int roomTypeScore, out int comfort, out int facilities)
     {
-        room = bed.Map != null && bed.Map.regionAndRoomUpdater.Enabled ? bed.GetRoom() : null;
-
-        //Facilities
-        facilities = GetFacilityScore(bed); // facilityCount * 10
-        quality = GetBedQuality(bed);
-        impressiveness = room != null ? GetRoomImpressiveness(room) : 0;
-        roomTypeScore = GetRoomTypeScore(room) * 2;
-        comfort = Mathf.RoundToInt(100*GetBedComfort(bed));
-        return quality + impressiveness + roomTypeScore + comfort + facilities;
+        if (bed.def.HasModExtension<TentModExtension>() || bed.def.defName.Equals("CampingTentSpotGuest"))
+        {
+            room = null;
+            facilities = 10; // facilityCount * 10 
+            quality = 10;
+            impressiveness = 0;
+            roomTypeScore = 0;
+            comfort = 10;
+            int beauty = GetBeautyAroundCampingSite(bed.Position, bed.Map, bed); //Mathf.RoundToInt(BeautyUtility.AverageBeautyPerceptible(bed.Position, bed.Map));
+            int score = quality + impressiveness + roomTypeScore + comfort + facilities + beauty;
+            //Log.Message($"For camping site {bed.Label} at {bed.Position} has a score of {score}:\n"
+//                        + $"impressiveness = {impressiveness}, quality = {quality}, beauty = {beauty}");
+            return score;
+        }
+        else
+        {
+            room = bed.Map != null && bed.Map.regionAndRoomUpdater.Enabled ? bed.GetRoom() : null;
+            //Facilities
+            facilities = GetFacilityScore(bed); // facilityCount * 10
+            quality = GetBedQuality(bed);
+            impressiveness = room != null ? GetRoomImpressiveness(room) : 0;
+            roomTypeScore = GetRoomTypeScore(room) * 2;
+            comfort = Mathf.RoundToInt(100 * GetBedComfort(bed));
+            return quality + impressiveness + roomTypeScore + comfort + facilities;
+        }
     }
+    
+    public static int GetBeautyAroundCampingSite(IntVec3 pos, Map map, Building_GuestBed bed)
+    {
+        float beauty = 0;
+        var cellsAround = CellsAroundA(pos, map);
+        foreach (IntVec3 cell in cellsAround)
+        {
+            beauty += Mathf.RoundToInt(BeautyUtility.CellBeauty(cell, map));
+            foreach (Thing item in cell.GetThingList(map))
+            {
+                if (item.def.defName.Equals("Campfire"))
+                {
+                    beauty += 50f;
+                }
+
+                if (item != bed && (item.def.HasModExtension<TentModExtension>() || item.def.defName.Equals("CampingTentSpotGuest")))
+                {
+                    beauty -= 100f;
+                }
+            }
+        }
+        return (int)beauty;
+    }
+
+    public static List<IntVec3> CellsAroundA(IntVec3 pos, Map map)
+    {
+        List<IntVec3> cellsAround = new List<IntVec3>();
+        if (!pos.InBounds(map))
+        {
+            return cellsAround;
+        }
+        IEnumerable<IntVec3> cells = CellRect.CenteredOn(pos, 5).Cells;
+        foreach (IntVec3 item in cells)
+        {
+            if (item.InHorDistOf(pos, 4.9f))
+            {
+                cellsAround.Add(item);
+            }
+        }
+        return cellsAround;
+    }    
 
     private static float GetBedComfort(Building_GuestBed bed)
     {

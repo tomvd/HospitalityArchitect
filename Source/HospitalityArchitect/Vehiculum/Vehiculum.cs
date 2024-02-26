@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Hospitality;
 using Hospitality.Utilities;
 using RimWorld;
+using RimWorld.Planet;
 using UnityEngine;
 using Verse;
+using Verse.AI.Group;
 using Verse.Sound;
 
 namespace HospitalityArchitect
@@ -29,7 +32,8 @@ namespace HospitalityArchitect
         public ThingOwner innerContainer;
         public int State; // 0 arriving, 1 waiting, 2 unloading, 3 leaving, 4 loading
         protected IntVec3 destLocation;
-        public int LOAD_UNLOAD_DELAY = 100;        
+        public int LOAD_UNLOAD_DELAY = 100;
+        public bool load;
 
         public override void ExposeData()
         {
@@ -42,6 +46,7 @@ namespace HospitalityArchitect
             Scribe_Values.Look(ref destPos, "destPos");
             Scribe_Values.Look(ref State, "State");
             Scribe_Values.Look(ref destLocation, "destLocation");
+            Scribe_Values.Look(ref load, "load");
             //Scribe_Values.Look<int>(ref this.ticksToImpactMax, "ticksToImpactMax", this.LeaveMapAfterTicks);
             //Scribe_Values.Look<float>(ref this.angle, "angle");
             Scribe_Deep.Look<ThingOwner>(ref this.innerContainer, "innerContainer", (object)this);
@@ -109,7 +114,18 @@ namespace HospitalityArchitect
             }
         }
 
-        protected virtual void LeaveMap() => this.Destroy(DestroyMode.Vanish);
+        protected virtual void LeaveMap()
+        {
+            foreach (Thing item in (IEnumerable<Thing>)innerContainer)
+            {
+                if (item is Pawn pawn)
+                {
+                    pawn.ExitMap(allowedToJoinOrCreateCaravan: false, Rot4.Invalid);
+                }
+            }
+            innerContainer.ClearAndDestroyContentsOrPassToWorld(DestroyMode.QuestLogic);
+            this.Destroy(DestroyMode.Vanish);
+        } 
         
         public void SetDestination(IntVec3 location)
         {
@@ -126,8 +142,55 @@ namespace HospitalityArchitect
             return Math.Abs(currentPos.z - loc.ToVector3Shifted().z) < Margin;
         }
 
-        public void Unload()
+        public void UnloadLoad()
         {
+            if (load)
+            {
+                Load();
+            }
+            else
+            {
+                Unload();
+            }
+        }
+        
+        // Currently only works for pawns!
+        private void Load()
+        {
+            CellRect deliveryRect = CellRect.CenteredOn(destLocation + IntVec3.West * 4, 1);
+            List<IntVec3> deliveryCells = deliveryRect.Cells.InRandomOrder().ToList();
+            Pawn p = null;
+            for (int triedCell = 0; triedCell < deliveryCells.Count;triedCell++)
+            {
+                p = deliveryCells[triedCell].GetFirstPawn(Map); //GetItemCount(Map)
+                if (p != null && p.CurJobDef.Equals(HADefOf.WaitForBus)) 
+                {
+                    //p.jobs.StopAll(false, false);
+                    //p.ClearMind();
+                    // before the vehicle leaves, we drop off the guests again and let them leave the map on their own
+                    // weird stuff happens if we do not finish this lordjob properly
+                    if (p.IsGuest() && p.GetLord() != null && p.GetLord().LordJob is Hospitality.LordJob_VisitColony lordJob)
+                    {
+                        p.guest?.SetGuestStatus(null);
+                        p.GetComp<CompGuest>()?.Leave(false);
+                        if (p.GetLord().ownedPawns.Where(p => p.Spawned).EnumerableCount() < 2)
+                            p.GetLord().Destroy(); // last pawn destroys the lord
+                    }
+                    p.DeSpawn();
+
+                    innerContainer.TryAddOrTransfer(p); // in the bus we go
+                    break;
+                }
+            }
+            if (p is null) // no more pawns waiting - lets go!
+            {
+                State = 3;
+                return;
+            }            
+            UnloadTick = LOAD_UNLOAD_DELAY;            
+        }
+
+        private void Unload() {            
             if (innerContainer.Count == 0)
             {
                 State = 3;
@@ -137,15 +200,31 @@ namespace HospitalityArchitect
             List<IntVec3> deliveryCells = deliveryRect.Cells.InRandomOrder().ToList();
             for (int triedCell = 0; triedCell < deliveryCells.Count;triedCell++)
             {
+                bool isStaff = false;
                 if (deliveryCells[triedCell].GetItemCount(Map) > 0)
                 {
                     continue;
+                }
+                if (innerContainer.GetAt(innerContainer.Count - 1) is Pawn p && p.IsWorldPawn())
+                {
+                    Find.WorldPawns.RemovePawn(p);
+                    if (Find.CurrentMap.GetComponent<HiringContractService>().IsHired(p))
+                    {
+                        p.SetFaction(Faction.OfPlayer);
+                        isStaff = true;
+                    }
                 }
                 Thing spawn = GenSpawn.Spawn(innerContainer.GetAt(innerContainer.Count - 1), deliveryCells[triedCell], Map);
                 if (spawn is Pawn pawn && pawn.IsGuest())
                 {
                     GuestUtility.SetUpHotelGuest(pawn);
                 }
+
+                if (isStaff && spawn is Pawn staff)
+                {
+                    StaffUtility.SetUpArrivingStaff(staff);
+                }
+
                 break;
             }
             UnloadTick = LOAD_UNLOAD_DELAY;

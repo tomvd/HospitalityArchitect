@@ -24,7 +24,7 @@
         <labelShort>Clean Rooms</labelShort>
         <pawnLabel>Room Cleaner</pawnLabel>
         <gerundLabel>room cleaning</gerundLabel>
-        <description>Clean guest bed and bathrooms.</description>
+        <description>Clean bedrooms and bathrooms.</description>
         <verb>Room Clean</verb>
         <naturalPriority>1175</naturalPriority>
         <alwaysStartActive>true</alwaysStartActive>
@@ -35,4 +35,21 @@
             <li>Commoner</li>
         </workTags>
     </WorkTypeDef>
+    
+    <WorkTypeDef>
+        <defName>RefreshBedding</defName>
+        <labelShort>Refresh Bedding</labelShort>
+        <pawnLabel>Bedding Cleaner</pawnLabel>
+        <gerundLabel>refresh bedding</gerundLabel>
+        <description>Clean bedding and put up new bedding.</description>
+        <verb>Bedding Refresh</verb>
+        <naturalPriority>1165</naturalPriority>
+        <alwaysStartActive>true</alwaysStartActive>
+        <requireCapableColonist>true</requireCapableColonist>
+        <workTags>
+            <li>ManualDumb</li>
+            <li>Cleaning</li>
+            <li>Commoner</li>
+        </workTags>
+    </WorkTypeDef>    
 </Defs>

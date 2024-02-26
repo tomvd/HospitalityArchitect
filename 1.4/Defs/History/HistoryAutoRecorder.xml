@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <HistoryAutoRecorderGroupDef>
+        <defName>Graphs_Finances</defName>
+        <label>Finances</label>
+        <onlyPositiveValues>false</onlyPositiveValues>
+        <historyAutoRecorderDefs>
+            <li>Graphs_Finances_Income</li>
+            <li>Graphs_Finances_Expenses</li>
+            <li>Graphs_Finances_Result</li>
+        </historyAutoRecorderDefs>
+    </HistoryAutoRecorderGroupDef>
+    <HistoryAutoRecorderDef>
+        <defName>Graphs_Finances_Income</defName>
+        <label>Income</label>
+        <graphColor>
+            <!--Light Green -->(0.717, 0.929, 0.576, 1)</graphColor>
+        <recordTicksFrequency>6000</recordTicksFrequency>
+        <workerClass>HospitalityArchitect.HistoryAutoRecorderWorker_Income</workerClass>
+        <valueFormat>${0}</valueFormat>
+    </HistoryAutoRecorderDef>
+    <HistoryAutoRecorderDef>
+        <defName>Graphs_Finances_Expenses</defName>
+        <label>Expenses</label>
+        <graphColor>
+            <!--Orange -->(0.978, 0.462, 0.184, 1)</graphColor>
+        <recordTicksFrequency>6000</recordTicksFrequency>
+        <workerClass>HospitalityArchitect.HistoryAutoRecorderWorker_Expenses</workerClass>
+        <valueFormat>${0}</valueFormat>
+    </HistoryAutoRecorderDef>    
+    <HistoryAutoRecorderDef>
+        <defName>Graphs_Finances_Result</defName>
+        <label>Result</label>
+        <graphColor>
+            <!--Blue -->(0.376, 0.819, 0.941, 1)</graphColor>
+        <recordTicksFrequency>6000</recordTicksFrequency>
+        <workerClass>HospitalityArchitect.HistoryAutoRecorderWorker_Result</workerClass>
+        <valueFormat>${0}</valueFormat>
+    </HistoryAutoRecorderDef>        
+</Defs>

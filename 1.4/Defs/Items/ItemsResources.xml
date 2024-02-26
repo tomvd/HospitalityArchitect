@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <ThingDef ParentName="ResourceBase">
+        <defName>CleanBedding</defName>
+        <label>clean bedding</label>
+        <description>What you need to put on a bed before one can sleep on it.</description>
+        <stackLimit>10</stackLimit>
+        <graphicData>
+            <texPath>Things/Beddings/beddingSingle</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <statBases>
+            <MaxHitPoints>90</MaxHitPoints>
+            <MarketValue>1.6</MarketValue>
+            <Mass>0.026</Mass>
+            <Flammability>1.2</Flammability>
+            <DeteriorationRate>3.5</DeteriorationRate>
+        </statBases>
+        <thingCategories>
+            <li>Apparel</li>
+        </thingCategories>
+    </ThingDef>       
+    <ThingDef ParentName="ResourceBase">
+        <defName>DirtyBedding</defName>
+        <label>dirty bedding</label>
+        <description>What you find after people slept in a bed.</description>
+        <stackLimit>10</stackLimit>
+        <graphicData>
+            <texPath>Things/Beddings/beddingDirty</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+
+        <statBases>
+            <MaxHitPoints>90</MaxHitPoints>
+            <MarketValue>1.0</MarketValue>
+            <Mass>0.026</Mass>
+            <Flammability>1.2</Flammability>
+            <DeteriorationRate>3.5</DeteriorationRate>
+        </statBases>
+        <thingCategories>
+            <li>Apparel</li>
+        </thingCategories>
+    </ThingDef>    
+</Defs>

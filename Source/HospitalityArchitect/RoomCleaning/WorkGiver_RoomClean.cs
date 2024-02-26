@@ -26,7 +26,7 @@ public class WorkGiver_RoomClean : WorkGiver_Scanner {
 
     private static bool IsPriorityFilth(Filth f) {
         bool isPriority = false;
-        if (f.GetRoom() == null || f.GetRoom().Role == null) return false;
+        if (f.GetRoom() == null || f.GetRoom().Role == null) return false; // Index was outside the bounds of the array.
 
         if (!isPriority) {
             switch (f.GetRoom()?.Role?.defName) {
@@ -35,7 +35,7 @@ public class WorkGiver_RoomClean : WorkGiver_Scanner {
                 case "PublicBathroom":
                     isPriority = true; break;
                 case "PrivateBathroom":
-                    isPriority = false; break; // TODO to check but I think if guests are not assigned to the room the bathroom becomes a public one :)
+                    isPriority = true; break;
             }
         }
 

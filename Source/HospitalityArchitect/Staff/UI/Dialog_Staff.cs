@@ -24,10 +24,10 @@ namespace HospitalityArchitect
         public override Vector2 InitialSize => new Vector2(1000f, 600f);
         public override float Margin => 15f;
 
-        private void OnHireKeyPressed(Pawn pawn)
+        private void OnHireKeyPressed(Pawn pawn, int type)
         {
             SoundDefOf.ExecuteTrade.PlayOneShotOnCamera();
-            _hiringContractService.hire(pawn);
+            _hiringContractService.hire(pawn, type);
         }
 
         public override void DoWindowContents(Rect inRect)
@@ -52,9 +52,17 @@ namespace HospitalityArchitect
             var buttonBarRect = rect.TakeBottomPart(40f);
             buttonBarRect.x = 150;
             buttonBarRect.width = 100;
-            if (Widgets.ButtonText(buttonBarRect, "Staff")) currentTab = 0;
+            if (Widgets.ButtonText(buttonBarRect, "Staff"))
+            {
+                currentTab = 0;
+                SoundDefOf.Click.PlayOneShotOnCamera();
+            }
             buttonBarRect.x += 100;
-            if (Widgets.ButtonText(buttonBarRect, "Hiring")) currentTab = 1;
+            if (Widgets.ButtonText(buttonBarRect, "Hiring"))
+            {
+                currentTab = 1;
+                SoundDefOf.Click.PlayOneShotOnCamera();
+            }
             Text.Anchor = anchor;
             Text.Font = font;
         }
@@ -95,7 +103,7 @@ namespace HospitalityArchitect
                 Text.Anchor = TextAnchor.MiddleLeft;
                 Widgets.Label(nameRect,
                     contract.pawn.NameShortColored + ", " +
-                    contract.pawn.story.Adulthood.TitleFor(contract.pawn.gender) + ", " + contract.pawn.Wage().ToStringMoney());
+                    contract.pawn.story.Adulthood.TitleFor(contract.pawn.gender) + ", " + contract.pawn.Wage().ToStringMoney() + ", " + contract.arrivesAt+"-"+contract.leavesAt);
                 Text.Anchor = TextAnchor.MiddleCenter;
 
                 var days = contract.daysHired;
@@ -137,6 +145,10 @@ namespace HospitalityArchitect
             titleRect.width = 100f;
             var numRect = new Rect(titleRect);
             Widgets.Label(titleRect, "hire");
+            titleRect.x += 100f;
+            titleRect.width = 100f;
+            var numRect2 = new Rect(titleRect);
+            Widgets.Label(titleRect, "hire");            
             GUI.color = Color.white;
             var highlight = true;
             foreach (var candidate in _hiringContractService.candidates.ToList())
@@ -144,6 +156,7 @@ namespace HospitalityArchitect
                 nameRect.y += 20f;
                 valueRect.y += 20f;
                 numRect.y += 20f;
+                numRect2.y += 20f;
                 var fullRect = new Rect(nameRect.x - 4f, nameRect.y, nameRect.width + valueRect.width + numRect.width,
                     20f);
                 if (highlight) Widgets.DrawHighlight(fullRect);
@@ -157,12 +170,19 @@ namespace HospitalityArchitect
                     (candidate.Wage()).ToStringMoney()+"/day");
 
 
-                if (Widgets.ButtonText(numRect.RightHalf(), "Hire"))
+                if (Widgets.ButtonText(numRect.RightHalf(), "Hire (day)"))
                 {
                     if (!_financeService.canAfford(candidate.Wage()))
                         Messages.Message("NotEnoughSilver".Translate(), MessageTypeDefOf.RejectInput);
                     else
-                        OnHireKeyPressed(candidate);
+                        OnHireKeyPressed(candidate,0);
+                }
+                if (Widgets.ButtonText(numRect2.RightHalf(), "Hire (late)"))
+                {
+                    if (!_financeService.canAfford(candidate.Wage()))
+                        Messages.Message("NotEnoughSilver".Translate(), MessageTypeDefOf.RejectInput);
+                    else
+                        OnHireKeyPressed(candidate,1);
                 }
             }
         }
