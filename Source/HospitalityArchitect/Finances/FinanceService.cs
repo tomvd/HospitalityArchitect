@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Gastronomy.Restaurant;
 using RimWorld;
 using RimWorld.Planet;
+using Storefront.Store;
 using UnityEngine;
 using Verse;
 
@@ -19,23 +21,13 @@ namespace HospitalityArchitect
         private Map mapCache;
 
         public float moneyInBank;
+        public float moneyInLoan;
 
         private List<FinanceReport> _reports = new List<FinanceReport>();
-        private List<LoanType> _loanTypes = new List<LoanType>();
-        private List<Loan> _loans = new List<Loan>();
-
-        public List<Loan> Loans => _loans;
-        
-        public List<LoanType> LoanTypes => _loanTypes;
 
         public FinanceService(Map map) : base(map)
         {
             currentDay = GenDate.DaysPassed;
-            _loanTypes ??= new List<LoanType>();
-            _loanTypes.Add(new LoanType(1000,0.01f,"Aunt Leeman", "loan1"));
-            _loanTypes.Add(new LoanType(2500,0.02f,"Wireshark Inc", "loan2"));
-            _loanTypes.Add(new LoanType(5000,0.03f,"Caxigo Oplo", "loan3"));
-            _loanTypes.Add(new LoanType(10000,0.04f,"Rimbank", "loan4"));
             _reports ??= new List<FinanceReport>();
             if (_reports.Count == 0)
             {
@@ -90,8 +82,8 @@ namespace HospitalityArchitect
         {
             base.ExposeData();
             Scribe_Collections.Look(ref _reports, "reports", LookMode.Deep);
-            Scribe_Collections.Look(ref _loans, "loans", LookMode.Deep);
             Scribe_Values.Look(ref currentDay, "currentDay");
+            Scribe_Values.Look(ref moneyInLoan, "moneyInLoan"); // game starts with 2000 in bank
             Scribe_Values.Look(ref moneyInBank, "moneyInBank", 2000); // game starts with 2000 in bank
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
@@ -108,17 +100,22 @@ namespace HospitalityArchitect
                 currentDay = GenDate.DaysPassed;
                 moneyInBank = 2000;
             }
-            _loans ??= new List<Loan>();
         }
 
 
 
-        public void doAndBookExpenses(FinanceReport.ReportEntryType type, float value)
+        public bool doAndBookExpenses(FinanceReport.ReportEntryType type, float value)
         {
+            if (!canAfford(value))
+            {
+                Messages.Message("Not enough money!", null, MessageTypeDefOf.NegativeEvent);
+                return false;
+            }
             removeMoney(value);
             //Log.Message($"expenses[{type.ToString()}]: {value} result: {moneyInBank}");
             Messages.Message($"{type.ToString()} -{value.ToStringMoney()}", null, MessageTypeDefOf.NegativeEvent);
             _reports[currentDay].recordBooking(type, -value);
+            return true;
         }
         
         public void doAndBookIncome(FinanceReport.ReportEntryType type, float value)
@@ -142,19 +139,16 @@ namespace HospitalityArchitect
             moneyInBank += amount;
         }
         
-        public void TakeLoan(LoanType type)
+        public void TakeLoan(float amount)
         {
-            moneyInBank += type.Amount;
-            _loans.Add(new Loan(type));
+            moneyInBank += amount;
+            moneyInLoan += amount;
         }
 
-        public void Repay(float amount, Loan loan)
+        public void Repay(float amount)
         {
-            removeMoney(loan.Repay(amount));
-            if (loan.Balance == 0f)
-            {
-                _loans.Remove(loan);
-            }
+            removeMoney(amount);
+            moneyInLoan -= amount;
         }
 
         private void removeMoney(float value, bool firstFromBank = true)
@@ -171,13 +165,24 @@ namespace HospitalityArchitect
                 var silverList = map.listerThings.ThingsOfDef(ThingDefOf.Silver)
                     .Where(x => !x.Position.Fogged(x.Map) && (map.areaManager.Home[x.Position] || x.IsInAnyStorage()))
                     .ToList();
-                while (value > 0)
+                if (silverList.Count == 0)
                 {
-                    var silver = silverList.First(t => t.stackCount > 0);
-                    var num = Mathf.Min(value, silver.stackCount);
-                    silver.SplitOff((int)num).Destroy();
-                    value -= num;
-                }
+                    // we are out of money
+                    Messages.Message("You are out of silver! Take a loan or sell stuff or bad things will happen!", MessageTypeDefOf.NegativeEvent);
+                } else
+                    while (value > 0)
+                    {
+                        var silver = silverList.FirstOrDefault(t => t.stackCount > 0);
+                        if (silver == null)
+                        {
+                            // we are out of money
+                            Messages.Message("You are out of silver! Take a loan or sell stuff or bad things will happen!", MessageTypeDefOf.NegativeEvent);
+                            break;
+                        } 
+                        var num = Mathf.Min(value, silver.stackCount);
+                        silver.SplitOff((int)num).Destroy();
+                        value -= num;
+                    }
 
                 //invalidates cache
                 mapCache = null;
@@ -200,8 +205,26 @@ namespace HospitalityArchitect
         private void OnNextDay(int today)
         {
             Log.Message("OnNextDay "+today);
+            // Add store and restaurant incomes of yesterday
+            float income = 0f;
+            RestaurantsManager restaurants = Find.CurrentMap.GetComponent<RestaurantsManager>();
+            foreach (var restaurantController in restaurants.restaurants)
+            {
+                income += restaurantController.Debts.incomeYesterday;
+            }
+
+            bookIncome(FinanceReport.ReportEntryType.Restaurant, income);
+            income = 0;
+        
+            StoresManager stores = Find.CurrentMap.GetComponent<StoresManager>();
+            foreach (var store in stores.Stores)
+            {
+                income += store.incomeYesterday;
+            }
+            bookIncome(FinanceReport.ReportEntryType.Store, income);
+            
             Messages.Message("Cashflow today: " + _reports[currentDay].getNetResult().ToStringMoney(), MessageTypeDefOf.NeutralEvent);
-            var taxes = _reports[currentDay].getNetResult() * 0.01f; // 10% tax default
+            var taxes = _reports[currentDay].getNetResult() * (HADefOf.HA_TaxReduction.IsFinished? 0.02f : 0.1f);
             currentDay = today; // avoids being stuck when this for some reason became out of sync
             while (_reports.Count < currentDay+1)
                 _reports.Add(new FinanceReport());                
@@ -226,13 +249,10 @@ namespace HospitalityArchitect
             //if (Math.Floor(moneyInBank / 1000f) > 0)
 //                    doAndBookExpenses(FinanceReport.ReportEntryType.Taxes, (float)Math.Floor(moneyInBank / 1000f));
 
-            foreach (var loan  in _loans)
+            // pay interest on the balance of the loan
+            if (moneyInLoan > 0)
             {
-                // pay interest on the balance of the loan
-                if (loan.Balance > 0)
-                {
-                    doAndBookExpenses(FinanceReport.ReportEntryType.Interest, loan.Balance * loan.Interest);
-                }
+                doAndBookExpenses(FinanceReport.ReportEntryType.Interest, moneyInLoan * getLoanInterest());
             }
         }
 
@@ -240,6 +260,11 @@ namespace HospitalityArchitect
         public float GetCashFlow()
         {
             return _reports[currentDay].getNetResult();
+        }
+
+        public float getLoanInterest()
+        {
+            return 0.05f;
         }
     }
 }

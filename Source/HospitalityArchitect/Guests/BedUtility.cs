@@ -252,6 +252,10 @@ public static class BedUtility
             //Facilities
             facilities = GetFacilityScore(bed); // facilityCount * 10
             quality = GetBedQuality(bed);
+            if (bed.GetComp<CompHotelGuestBed>().needBedding)
+            {
+                quality -= 100;
+            }            
             impressiveness = room != null ? GetRoomImpressiveness(room) : 0;
             roomTypeScore = GetRoomTypeScore(room) * 2;
             comfort = Mathf.RoundToInt(100 * GetBedComfort(bed));

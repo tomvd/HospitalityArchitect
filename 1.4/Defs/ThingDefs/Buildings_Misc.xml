@@ -3,8 +3,8 @@
 <ThingDef ParentName="BuildingBase">
     <defName>HA_Computer</defName>
     <label>computer</label>
-    <description>Can only be used by a CEO to manage the company.</description>
-    <thingClass>HospitalityArchitect.Building_Computer</thingClass>
+    <description>A computer is very useful to do research and watch educational videos.</description>
+    <thingClass>Building_WorkTable</thingClass>
     <graphicData>
         <texPath>Things/Building/ModernComputer/ModernComputer</texPath>
         <graphicClass>Graphic_Multi</graphicClass>
@@ -28,12 +28,13 @@
     <pathCost>50</pathCost>
     <blockWind>true</blockWind>
     <canOverlapZones>false</canOverlapZones>
-    <statBases>
-        <MaxHitPoints>100</MaxHitPoints>
-        <WorkToBuild>20000</WorkToBuild>
-        <Mass>18</Mass>
+      <statBases>
+        <MaxHitPoints>250</MaxHitPoints>
+        <WorkToBuild>5000</WorkToBuild>
         <Flammability>1.0</Flammability>
-    </statBases>
+        <ResearchSpeedFactor>10.0</ResearchSpeedFactor>
+        <Mass>18</Mass>
+      </statBases>
     <size>(2,1)</size>
     <building>
       <destroySound>BuildingDestroyed_Metal_Big</destroySound>
@@ -56,15 +57,27 @@
       </li>
       <li Class="CompProperties_Flickable"/>
       <li Class="CompProperties_Breakdownable"/>
-      <li Class="CompProperties_Usable">
-        <useJob>HA_UseComputer</useJob>
-        <useLabel>Use computer</useLabel>
-      </li>
+
         <li Class="CompProperties_Glower">
             <glowRadius>5.5</glowRadius>
             <glowColor>(0,0,75,0)</glowColor>
         </li>
     </comps>
+  <recipes>
+    <li>YTVideoAnimals</li>
+    <li>YTVideoArtistic</li>
+    <li>YTVideoConstruction</li>
+    <li>YTVideoCooking</li>
+    <li>YTVideoCrafting</li>
+    <li>YTVideoGrowing</li>
+    <li>YTVideoMedicine</li>
+    <li>YTVideoMining</li>
+    <li>YTVideoIntellectual</li>
+    <li>YTVideoSocial</li>
+  </recipes>
+  <inspectorTabs>
+    <li>ITab_Bills</li>
+  </inspectorTabs>    
     <designationHotKey>Misc3</designationHotKey>
     <placeWorkers>
       <li>PlaceWorker_PreventInteractionSpotOverlap</li>

@@ -53,7 +53,17 @@ public class RoomRequirement_FacilitiesAvailable : RoomRequirement
             }
         }
         return true;
-    }        
+    }
+    
+    public int Capacity(Map map)
+    {
+        FacilitiesService fs = map.GetComponent<FacilitiesService>();
+        foreach (string f in facilities)
+        {
+            return fs.FacilityCapacity(f); // just return first facility, since this is used for daytime guests with only 1 facility requirement
+        }
+        return 0;
+    }     
 
     public override IEnumerable<string> ConfigErrors()
     {

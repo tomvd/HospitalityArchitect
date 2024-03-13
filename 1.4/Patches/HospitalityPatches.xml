@@ -96,7 +96,6 @@
                     <li Class="DubsBadHygiene.JobGiver_UseToilet"/>
     				<li Class="JobGiver_GetFood" />
     				<li Class="Hospitality.JobGiver_BuyFood" />
-					<li Class="Hospitality.JobGiver_ScroungeFood" />
     				<li Class="HospitalityArchitect.JobGiver_Sleep" />
     				<li Class="HospitalityArchitect.JobGiver_Relax" />   
 				    <li Class="DubsBadHygiene.JobGiver_HaveWash"/>

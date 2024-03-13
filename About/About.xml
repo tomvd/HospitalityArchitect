@@ -6,6 +6,7 @@
 	<supportedVersions>
 		<li>1.4</li>
 	</supportedVersions>
+	<url>https://steamcommunity.com/sharedfiles/filedetails/?id=3146556446</url>
 
 	<modDependencies>
 		<!-- TODO add hospitality, storefront and gastronomy -->
@@ -19,7 +20,12 @@
 			<packageId>Orion.Hospitality</packageId>
 			<displayName>Hospitality</displayName>
 			<steamWorkshopUrl>steam://url/CommunityFilePage/2553700067</steamWorkshopUrl>
-		</li>		
+		</li>
+		<li>
+			<packageId>Orion.Gastronomy</packageId>
+			<displayName>Gastronomy</displayName>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/2279786905</steamWorkshopUrl>
+		</li>
 		<li>
 			<packageId>Dubwise.DubsBadHygiene</packageId>
 			<displayName>Dubs Bad Hygiene</displayName>
@@ -35,18 +41,41 @@
 			<displayName>Cash Register</displayName>
 			<steamWorkshopUrl>steam://url/CommunityFilePage/2506046833</steamWorkshopUrl>
 		</li>
+		<li>
+			<packageId>Adamas.HospitalityCasino</packageId>
+			<displayName>Hospitality: Casino</displayName>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/2939292644</steamWorkshopUrl>
+		</li>
+		<li>
+			<packageId>Adamas.HospitalitySpa</packageId>
+			<displayName>Hospitality: Spa</displayName>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/2971831654</steamWorkshopUrl>
+		</li>
+		<li>
+			<packageId>Adamas.Storefront</packageId>
+			<displayName>Hospitality: Storefront</displayName>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/2952321484</steamWorkshopUrl>
+		</li>		
+		<li>
+			<packageId>Adamas.Storefront</packageId>
+			<displayName>Hospitality: Storefront</displayName>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/2952321484</steamWorkshopUrl>
+		</li>
+		<li>
+			<packageId>Adamas.VendingMachines</packageId>
+			<displayName>Hospitality: Vending machines</displayName>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/3014885065</steamWorkshopUrl>
+		</li>				
 	</modDependencies>
 	<incompatibleWith>
-		<!-- <li>username.modname</li> -->
+		<li>Dubwise.DubsBadHygiene.Lite</li>
 	</incompatibleWith>
 	<loadAfter>
 		<li>Orion.Hospitality</li>
 		<li>Dubwise.DubsBadHygiene</li>
-		<li>Dubwise.DubsBadHygiene.Lite</li>
-		<li>balistafreak.StandaloneHotSpring</li>
 		<li>Aoba.Tent</li>
 		<li>Orion.CashRegister</li>
 	</loadAfter>
 	<description>Hospitality Architect is a new scenario where everything is about money and building up an imperium by getting silver out of guests and visitors.
-	The scenario starts with just 1 person - you. There will never be anyone joining your colony, you can only hire people.</description>
+	The scenario starts with just 1 person - you - the manager. There will never be anyone joining your colony, you can only hire people.</description>
 </ModMetaData>

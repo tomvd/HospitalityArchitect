@@ -7,6 +7,11 @@ public static class MarketingUtility
 {
     public static float GetMarketingCost(GuestTypeDef type)
     {
-        return Mathf.Round(type.budget.min * 0.75f);
+        return 100;
+    }
+
+    public static float GetMarketing2Cost(GuestTypeDef type)
+    {
+        return 40;
     }
 }

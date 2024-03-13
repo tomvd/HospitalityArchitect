@@ -160,7 +160,7 @@ namespace HospitalityArchitect.Reception
                 if (bed == null)
                 {
                     // something went horribly wrong, sent the customer home
-                    customer.Leave();
+                    GuestUtility.HotelGuestLeaves(customer);
                     return;
                 }
                 var price = bed.GetRentalFee();
@@ -174,7 +174,7 @@ namespace HospitalityArchitect.Reception
                         if (silver == null)                 
                         {
                             // something went horribly wrong, sent the customer home
-                            lordPawn.Leave();
+                            GuestUtility.HotelGuestLeaves(lordPawn);
                             return;
                         }
 

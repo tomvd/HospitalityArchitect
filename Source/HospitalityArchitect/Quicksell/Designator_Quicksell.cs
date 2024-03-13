@@ -10,7 +10,7 @@ public class Designator_Quicksell : Designator
         public Designator_Quicksell()
         {
             this.defaultLabel = "Quicksell";
-            this.defaultDesc = "Sell item immediately at 50% of market value.";
+            this.defaultDesc = "Sell an item fast.";
             this.icon = ContentFinder<Texture2D>.Get("UI/Designators/Claim", true);
             this.soundDragSustain = SoundDefOf.Designate_DragStandard;
             this.soundDragChanged = SoundDefOf.Designate_DragStandard_Changed;
@@ -23,7 +23,7 @@ public class Designator_Quicksell : Designator
 
         public override string DescReverseDesignating(Thing t)
         {
-            return "Sell for " + ((t.MarketValue / 2f) * t.stackCount).ToStringMoney();
+            return "Sell for " + QuickSellUtil.QSPrice(t).ToStringMoney();
         }
 
         public override AcceptanceReport CanDesignateThing(Thing t)
@@ -49,7 +49,7 @@ public class Designator_Quicksell : Designator
         }
         public override void DesignateThing(Thing t)
         {
-            Map.GetComponent<FinanceService>().doAndBookIncome(FinanceReport.ReportEntryType.Sales,(t.MarketValue/2f)*t.stackCount);
+            Map.GetComponent<FinanceService>().doAndBookIncome(FinanceReport.ReportEntryType.Misc,QuickSellUtil.QSPrice(t));
             t.Destroy(DestroyMode.Refund);
         }
         public override void DesignateSingleCell(IntVec3 c)

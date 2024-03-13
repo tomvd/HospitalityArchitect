@@ -75,6 +75,17 @@ namespace HospitalityArchitect
             return cols;
         }
         
+        public static Rect[] CreateKeyValueColumns(Rect rect)
+        {
+            Rect[] cols = new Rect[2];
+            Rect toprect = rect.TakeTopPart(20f);
+            float colwidth = toprect.width * 0.1f;
+            cols[0] = toprect.TakeLeftPart(colwidth);
+            colwidth = toprect.width * 0.9f;
+            cols[1] = toprect.TakeLeftPart(colwidth);
+            return cols;
+        }        
+        
         public static float Percentage(Rect inRect, float f)
         {
             return (inRect.width / 100.0f) * f;

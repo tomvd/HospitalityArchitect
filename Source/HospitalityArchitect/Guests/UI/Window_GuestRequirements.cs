@@ -53,7 +53,7 @@ namespace HospitalityArchitect
             GuestTypeDef gt = type.GetModExtension<GuestTypeDef>();
             var col = UIUtility.CreateColumns(inRect, 2);
             Widgets.Label(col[0], "Arrives at");
-            Widgets.Label(col[1], gt.arrivesAt.ToString());
+            Widgets.Label(col[1], string.Join("h,",gt.arrivalSlots));
             UIUtility.NextRow(col);
             Widgets.Label(col[0], "Bed budget");
             Widgets.Label(col[1], ((float)gt.bedBudget).ToStringMoney());

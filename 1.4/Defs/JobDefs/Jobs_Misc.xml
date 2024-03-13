@@ -10,7 +10,7 @@
         <alwaysShowWeapon>true</alwaysShowWeapon>
     </JobDef>
       <JobDef>
-        <defName>HA_UseComputer</defName>
+        <defName>HA_WatchYoutube</defName>
         <driverClass>HospitalityArchitect.JobDriver_UseComputer</driverClass>
         <reportString>Using TargetA.</reportString>
       </JobDef>

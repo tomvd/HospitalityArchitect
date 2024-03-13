@@ -24,7 +24,7 @@ namespace HospitalityArchitect
         
         public static int QualifiedBedsCount(Map map, GuestTypeDef guestTypeDef, PawnKindDef pawnKindDef)
         {
-            if (guestTypeDef.dayVisitor) return guestTypeDef.maxVisitors;
+            if (guestTypeDef.dayVisitor) return guestTypeDef.facilityRequirements.Capacity(map);
             return BedUtility.FindQualifiedBeds(map, guestTypeDef, pawnKindDef, true).Count();
         }        
 
@@ -35,9 +35,10 @@ namespace HospitalityArchitect
             GuestTypeDef type = pawn.kindDef.GetModExtension<GuestTypeDef>();
             LordJob_VisitColony lordjob = ((LordJob_VisitColony)guest.lord.LordJob);
             hotelGuest.arrived = true;
+            hotelGuest.lastHourSeen = GenLocalDate.HourOfDay(pawn.Map);
+            hotelGuest.hoursSpent = 0;
             hotelGuest.totalSpent = 0;
             hotelGuest.left = false;
-            hotelGuest.slept = false;
             hotelGuest.dayVisit = false;
             // reset memories
             pawn.needs.mood.thoughts.memories.memories.Clear();
@@ -63,10 +64,11 @@ namespace HospitalityArchitect
             // setup food
             if (!type.bringsFood)
             {
-                var ownedFood =
-                    pawn.inventory.innerContainer.FirstOrFallback(thing => thing.def.IsNutritionGivingIngestible, null);
-                if (ownedFood != null)
-                    pawn.inventory.innerContainer.Remove(ownedFood);
+                pawn.inventory.innerContainer.RemoveAll(thing => thing.def.ingestible is
+                {
+                    cachedNutrition: > 0.0f
+                });
+                pawn.carryTracker.DestroyCarriedThing(); // very hungry pawns carry food in their hands ?
             }
             // setup apparel
             
@@ -264,9 +266,16 @@ namespace HospitalityArchitect
                 pawn.GetComp<CompHotelGuest>().left = true;
             }
             VehiculumService busService = map.GetComponent<VehiculumService>();
-            busService.StartBusDeparture(lord.ownedPawns);            
+            busService.GetPawnsReadyForDeparture(lord.ownedPawns);            
         }
 
 
+        // 40s for 20%
+        public static void Gift(Pawn lordOwnedPawn)
+        {
+            var thoughtDef = ThoughtDef.Named("HospitalityArchitect_Gift");
+            var thoughtMemory = ThoughtMaker.MakeThought(thoughtDef,0);
+            lordOwnedPawn.needs?.mood?.thoughts?.memories?.TryGainMemory(thoughtMemory);
+        }
     }
 }

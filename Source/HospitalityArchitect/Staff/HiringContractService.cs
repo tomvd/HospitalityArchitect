@@ -13,9 +13,7 @@ namespace HospitalityArchitect
     {
         public List<HiringContract> contracts = new List<HiringContract>();
         public List<Pawn> candidates = new List<Pawn>();
-        public float Reputation; // 0 to 100f
-        public int nextCandidateCheckTick;
-        
+
         private FinanceService _financeService;
         private VehiculumService _busService;
 
@@ -23,9 +21,6 @@ namespace HospitalityArchitect
         {
             contracts = new List<HiringContract>();
         }
-
-        public int MaxCandidates => Math.Max((int)Math.Round(Reputation / 10f), 1);
-        public int MinValue => (int)Math.Round(Reputation * 10f);
 
         public override void FinalizeInit()
         {
@@ -48,23 +43,6 @@ namespace HospitalityArchitect
         {
             base.MapComponentTick();
 
-            if (Find.TickManager.TicksAbs > nextCandidateCheckTick)
-            {
-                // every 12 hour remove a random candidate and find some new candidates?
-                if (candidates.Count > 0) candidates.Remove(candidates.RandomElement());
-                
-                nextCandidateCheckTick = Find.TickManager.TicksAbs + GenDate.TicksPerHour * 24;
-                while (candidates.Count < MaxCandidates)
-                {
-                    var request = new PawnGenerationRequest(PawnKindDefOf.Colonist, Faction.OfPlayer);
-                    request.ValidatorPostGear = pawn1 => pawn1.MarketValue > MinValue; 
-                    var pawn = PawnGenerator.GeneratePawn(request);
-                    candidates.Add(pawn);
-                    Log.Message($"Added {pawn.Name} as new candidate");
-                }
-                Messages.Message("New candidates for hire found.", MessageTypeDefOf.PositiveEvent);
-            }
-
             // 6 times every ingame hour, go over the contracts, see if they are finished, do billing, see if people still like it here
             if (Find.TickManager.TicksAbs % (GenDate.TicksPerHour / 6) == 0)
             {
@@ -78,34 +56,45 @@ namespace HospitalityArchitect
                         EndContract(contract);
                         return;
                     }*/
-                    
+
+                    // something wgron
+                    if (contract.pawn == null)
+                    {
+                        EndContract(contract);
+                    }
+
                     // if contractor is not atWork, but it is his arrivesAt - spawn him
                     if (!contract.atWork && contract.arrivesAt == GenLocalDate.HourOfDay(map))
                     {
-                        _busService.StartBusArrival(new List<Pawn> { contract.pawn });
+                        _busService.PutPawnsOnTheBusToColony(new List<Pawn> { contract.pawn });
                         contract.atWork = true;
                     }
+
                     // if contractor is atWork, but it his leavesAt - despawn him and do billing
                     if (contract.atWork && (contract.leavesAt + 1) == GenLocalDate.HourOfDay(map))
                     {
-                        _busService.StartBusDeparture(new List<Pawn> { contract.pawn });
+                        _busService.GetPawnsReadyForDeparture(new List<Pawn> { contract.pawn });
                         contract.atWork = false;
-                        
+
                         totalBilling += Mathf.RoundToInt(contract.pawn.Wage());
                         contract.daysHired++;
-                        Reputation = Math.Min(Reputation+(0.1f * contract.daysHired), 100f);
                     }
+
                     // while under minor mental breakdown threshold, there is a 5% chance of a pawn leaving
                     //Log.Message($"mood: {contract.pawn.mindState.mentalBreaker.CurMood}");
                     // TODO low mood warning - letter?
                     //if (contract.pawn.mindState.mentalBreaker.CurMood < contract.pawn.mindState.mentalBreaker.BreakThresholdMinor)
-                    if (contract.pawn.mindState.mentalBreaker.CurMood < contract.pawn.mindState.mentalBreaker.BreakThresholdMinor && Rand.Chance(0.05f))
+                    if (contract.atWork &&
+                        contract.pawn.mindState.mentalBreaker.CurMood <
+                        contract.pawn.mindState.mentalBreaker.BreakThresholdMinor && Rand.Chance(0.05f))
                     {
-                        Messages.Message("Staff left because of low mood!", contract.pawn, MessageTypeDefOf.NegativeEvent);
+                        Messages.Message("Staff left because of low mood!", contract.pawn,
+                            MessageTypeDefOf.NegativeEvent);
                         EndContract(contract);
-                        return;                        
+                        return;
                     }
                 }
+
                 if (totalBilling > 0)
                     _financeService.doAndBookExpenses(FinanceReport.ReportEntryType.Wages, totalBilling);
             }
@@ -122,7 +111,8 @@ namespace HospitalityArchitect
         {
             var pawn = contract.pawn;
             contracts.Remove(contract);
-            if (pawn.health.capacities.CapableOf(PawnCapacityDefOf.Moving))
+            if (pawn == null) return;
+            if (contract.atWork && pawn.health.capacities.CapableOf(PawnCapacityDefOf.Moving))
             {
                 if (pawn.Map != null && pawn.CurJobDef != HADefOf.HA_LeaveMap)
                 {
@@ -141,7 +131,7 @@ namespace HospitalityArchitect
                     Messages.Message(pawn.NameFullColored + " contract ended. Pawn is leaving.", null,
                         MessageTypeDefOf.NeutralEvent);
                     //pawn.jobs.TryTakeOrderedJob(new Job(HADefOf.HA_LeaveMap, exit));
-                    _busService.StartBusDeparture(new List<Pawn> { pawn });                    
+                    _busService.GetPawnsReadyForDeparture(new List<Pawn> { pawn });
                 }
                 else if (pawn.GetCaravan() != null)
                 {
@@ -162,8 +152,6 @@ namespace HospitalityArchitect
             base.ExposeData();
             Scribe_Collections.Look(ref contracts, "contracts", LookMode.Deep);
             Scribe_Collections.Look(ref candidates, "candidates", LookMode.Deep);
-            Scribe_Values.Look(ref Reputation, "reputation");
-            Scribe_Values.Look(ref nextCandidateCheckTick, "nextCandidateCheckTick");
             contracts ??= new List<HiringContract>();
             candidates ??= new List<Pawn>();
         }
@@ -180,5 +168,80 @@ namespace HospitalityArchitect
             SetNewContract(candidate, type);
             //Find.World.worldPawns.PassToWorld(candidate);
         }
+
+        private void addCandidate(int amount, int minTotalSkillLevels, SkillDef skillDef)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                var request = new PawnGenerationRequest(PawnKindDefOf.Colonist, Faction.OfPlayer);
+                if (skillDef == null)
+                    request.ValidatorPreGear = pawn1 => HasCorrectMinTotalSkillLevels(pawn1, minTotalSkillLevels);
+                else
+                {
+                    request.ValidatorPreGear = pawn1 => HasCorrectSkill(pawn1, skillDef);
+                }
+                request.AllowAddictions = amount == 1 && skillDef == null;
+                var pawn = PawnGenerator.GeneratePawn(request);
+                candidates.Add(pawn);
+            }
+        }
+
+        private static bool HasCorrectMinTotalSkillLevels(Pawn pawn, int minTotalSkillLevels)
+        {
+            int num = 0;
+            for (int i = 0; i<pawn.skills.skills.Count; i++)
+            {
+                num += pawn.skills.skills[i].Level;
+                if (num >= minTotalSkillLevels)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        private static bool HasCorrectSkill(Pawn pawn, SkillDef skillDef)
+        {
+            for (int i = 0; i<pawn.skills.skills.Count; i++)
+            {
+                if (pawn.skills.skills[i].def == skillDef)
+                {
+                    if (pawn.skills.skills[i].Level >= 7)
+                    {
+                        return true;
+                    }
+                    if (pawn.skills.skills[i].passion == Passion.Major && pawn.skills.skills[i].Level >= 4)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }        
+
+        public void addPawn(int recruitmentType)
+        {
+            switch (recruitmentType)
+            {
+                case 0:
+                    if (_financeService.doAndBookExpenses(FinanceReport.ReportEntryType.Wages, 20))
+                        addCandidate(1, 12, null);    
+                    break;
+                case 1:
+                    if (_financeService.doAndBookExpenses(FinanceReport.ReportEntryType.Wages, 40))
+                        addCandidate(2, 24, null); 
+                    break;
+                case 2:
+                    if (_financeService.doAndBookExpenses(FinanceReport.ReportEntryType.Wages, 80))
+                        addCandidate(3, 50, null);
+                    break;
+            }
+        }
+        
+        public void addPawn(int recruitmentType, SkillDef skillDef)
+        {
+            if (_financeService.doAndBookExpenses(FinanceReport.ReportEntryType.Wages, 100))
+                addCandidate(1, 0, skillDef);
+        }        
     }
 }

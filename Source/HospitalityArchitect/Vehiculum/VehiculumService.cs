@@ -1,19 +1,22 @@
 using System.Collections.Generic;
 using System.Linq;
+using RimWorld;
 using Verse;
 using Verse.AI;
 
 namespace HospitalityArchitect
 {
     /*
- * this class basically spawns  vehicles and manages them if they are queued, it is basically the driver for all vehicles
-     * TODO: handle multiple vehicles
+     * this class basically spawns  vehicles and manages them if they are queued, it is basically the driver for all vehicles
+     * 
  */
     public class VehiculumService : MapComponent
     {
         private List<Vehiculum> vehicles;
         private IntVec3 deliveryLocation;
         private IntVec3 startLocation;
+        private int lastHourChecked;
+        private int ticksDelay; // this delay so shortlived (5ticks) that it is not needed to persist
         
         public VehiculumService(Map map) : base(map)
         {
@@ -24,6 +27,7 @@ namespace HospitalityArchitect
         {
             base.ExposeData();
             Scribe_Collections.Look<Vehiculum>(ref vehicles, "vehicles", LookMode.Reference);
+            Scribe_Values.Look(ref lastHourChecked, "lastHourChecked");
         }
 
         public override void FinalizeInit()
@@ -40,10 +44,10 @@ namespace HospitalityArchitect
             v.SetDestination(deliveryLocation);
             vehicles.Add(v);
         }
-        
-        public void StartBusArrival(List<Pawn> passengers)
+
+        public void PutPawnsOnTheBusToColony(List<Pawn> passengers)
         {
-            var busOnTheWay = vehicles.Find(v => v is Bus b && b.State == 0 && !b.load) as Bus;
+            var busOnTheWay = vehicles.Find(v => v is Bus b && b.State == 0) as Bus;
             // just add pawns on an already driving bus :)
             if (busOnTheWay != null)
             {
@@ -51,15 +55,13 @@ namespace HospitalityArchitect
             }
             else
             {
-                var newBus = SpawnBus(passengers, startLocation, map, false);
+                var newBus = SpawnBus(passengers, startLocation, map);
                 newBus.SetDestination(deliveryLocation);
                 vehicles.Add(newBus);
             }
         }
-        
-        public void StartBusDeparture(List<Pawn> passengers)
+        public void GetPawnsReadyForDeparture(List<Pawn> passengers)
         {
-            // TODO check if we have a bus that did not leave yet, then add it to that one
             var waitingLocation = deliveryLocation + IntVec3.West * 4;
             foreach (var passenger in passengers)
             {
@@ -67,9 +69,6 @@ namespace HospitalityArchitect
                 passenger.jobs.StopAll();
                 passenger.jobs.StartJob(new Job(HADefOf.WaitForBus, waitingLocation));                
             }            
-            Bus b = SpawnBus(passengers, startLocation, map, true);
-            b.SetDestination(deliveryLocation);
-            vehicles.Add(b);
         }        
 
         public DeliveryVehicle SpawnDeliveryVehicle(IEnumerable<Thing> things, IntVec3 pos, Map map)
@@ -80,16 +79,12 @@ namespace HospitalityArchitect
             return (DeliveryVehicle)GenSpawn.Spawn(vehicle, pos, map);
         }
         
-        public Bus SpawnBus(IEnumerable<Pawn> pawns, IntVec3 pos, Map map, bool departure)
+        public Bus SpawnBus(IEnumerable<Pawn> pawns, IntVec3 pos, Map map)
         {
             Bus bus = (Bus)ThingMaker.MakeThing(HADefOf.HA_Bus);
-            if (!departure)
+            if (pawns.Any())
             {
                 AddPawnsToBus(pawns, bus);
-            }
-            else
-            {
-                bus.load = true;
             }
             bus.service = this;
             return (Bus)GenSpawn.Spawn(bus, pos, map);
@@ -109,6 +104,29 @@ namespace HospitalityArchitect
         {
             base.MapComponentTick();
             vehicles.RemoveAll(vehiculum => vehiculum == null); // bit weird but vehicles sometimes get bugged;
+
+            if (GenLocalDate.HourOfDay(map) != lastHourChecked)
+            {
+                ticksDelay++;
+                if (ticksDelay > 5)
+                {
+                    ticksDelay = 0;
+                    lastHourChecked = GenLocalDate.HourOfDay(map);
+                    var busOnTheWay = vehicles.Find(v => v is Bus b && b.State == 0) as Bus;
+
+                    if (busOnTheWay != null || map.mapPawns.pawnsSpawned.Any(pa => pa.CurJobDef.Equals(HADefOf.WaitForBus)))
+                    {
+                        if (busOnTheWay == null)
+                        {
+                            Bus b = SpawnBus(new List<Pawn>(), startLocation, map);
+                            b.SetDestination(deliveryLocation);
+                            vehicles.Add(b);
+                        }
+                    }
+                }
+            }
+            
+            
             foreach (var vehicle in vehicles.ToList())
             {
                 if (vehicle.State == 0)

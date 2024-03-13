@@ -17,6 +17,7 @@ using LordJob_VisitColony = RimWorld.LordJob_VisitColony;
 namespace HospitalityArchitect
 {
     // Note that this implementation is a tiny bit different than hospitality
+    // TODO this whole class needs to be merged with all the stuff of architect
     public class IncidentWorker_VisitorGroup : IncidentWorker_NeutralGroup
     {
         private static ThingDef[] _items;
@@ -26,19 +27,6 @@ namespace HospitalityArchitect
         {
             new CurvePoint(45f, 0f), new CurvePoint(50f, 1f), new CurvePoint(100f, 1f), new CurvePoint(200f, 0.25f), new CurvePoint(300f, 0.1f), new CurvePoint(500f, 0f)
         };
-
-        public static float MaxPleaseAmount(float current)
-        {
-            // if current standing is 100, 10 can be gained
-            // if current standing is -100, 50 can be gained
-            // then clamped.
-            return Mathf.Clamp(current + 30 - Offset(current), -100, 100);
-        }
-
-        public static float MaxAngerAmount(float current)
-        {
-            return Mathf.Clamp(current - 30, -100, 100);
-        }
 
         private static float Offset(float current)
         {
@@ -175,33 +163,33 @@ namespace HospitalityArchitect
 
 
             // Did the player refuse guests until beds are made and there are no beds yet?
-            if (!BedCheck(map))
+    /*        if (!BedCheck(map))
             {
                 Log.Message("Guest group arrived, but there are no guest beds and the player asked to wait until they are built.");
 
                 MaybeRevisit(parms, map, new FloatRange(5, 10));
                 return true;
             }
-
+*/
             // We check here instead of CanFireNow, so we can reschedule the visit.
             // Any reasons not to come?
-            if (!map.GetMapComponent().askForSafety || CheckCanCome(map, parms.faction, out var reasons))
+           /* if (!map.GetMapComponent().askForSafety || CheckCanCome(map, parms.faction, out var reasons))
             {
                 // No, spawn
                 return SpawnGroup(parms, map);
             }
-
+*/
             // Yes, ask the player for permission
-            void Allow() => SpawnGroup(parms, map);
+            /*void Allow() => SpawnGroup(parms, map);
             void Refuse() => MaybeRevisit(parms, map, new FloatRange(2, 5));
             void DontAskAgain()
-            {
+            {*/
                 SpawnGroup(parms, map);
-                map.GetMapComponent().askForSafety = false;
+/*                map.GetMapComponent().askForSafety = false;
             }
 
             AskForSafety(parms, map, reasons, Allow, Refuse, DontAskAgain);
-            
+  */          
             return true;
         }
 
@@ -267,7 +255,7 @@ namespace HospitalityArchitect
 
                 GiveItems(visitors);
 
-                var stayDuration = (int)(Rand.Range(1f, 2.4f) * GenDate.TicksPerDay);
+                var stayDuration = (int)(3 * GenDate.TicksPerDay); // TODO we kick the guest out when leaving
                 CreateLord(parms.faction, spot, visitors, map, true, true, stayDuration);
 
                 // Update our mapcomponents guests.
@@ -567,7 +555,7 @@ namespace HospitalityArchitect
 
             lord.Map?.GetMapComponent()?.OnLordSpawned(lord);
             VehiculumService busService = map.GetComponent<VehiculumService>();
-            busService.StartBusArrival(lord.ownedPawns);            
+            busService.PutPawnsOnTheBusToColony(lord.ownedPawns);            
         }
 
         private static void RemovePawnsFromMapLords(List<Pawn> pawns, Map map)

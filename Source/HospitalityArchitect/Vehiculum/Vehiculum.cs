@@ -144,7 +144,7 @@ namespace HospitalityArchitect
 
         public void UnloadLoad()
         {
-            if (load)
+            if (innerContainer.Count == 0 || load)
             {
                 Load();
             }
@@ -160,6 +160,7 @@ namespace HospitalityArchitect
             CellRect deliveryRect = CellRect.CenteredOn(destLocation + IntVec3.West * 4, 1);
             List<IntVec3> deliveryCells = deliveryRect.Cells.InRandomOrder().ToList();
             Pawn p = null;
+            load = true;
             for (int triedCell = 0; triedCell < deliveryCells.Count;triedCell++)
             {
                 p = deliveryCells[triedCell].GetFirstPawn(Map); //GetItemCount(Map)
@@ -182,7 +183,7 @@ namespace HospitalityArchitect
                     break;
                 }
             }
-            if (p is null) // no more pawns waiting - lets go!
+            if (!Map.mapPawns.pawnsSpawned.Any(pa => pa.CurJobDef.Equals(HADefOf.WaitForBus))) // no more pawns waiting - lets go!
             {
                 State = 3;
                 return;
@@ -193,7 +194,6 @@ namespace HospitalityArchitect
         private void Unload() {            
             if (innerContainer.Count == 0)
             {
-                State = 3;
                 return;
             }
             CellRect deliveryRect = CellRect.CenteredOn(destLocation + IntVec3.West * 4, 1);

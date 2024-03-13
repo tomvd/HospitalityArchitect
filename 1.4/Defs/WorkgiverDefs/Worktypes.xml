@@ -51,5 +51,16 @@
             <li>Cleaning</li>
             <li>Commoner</li>
         </workTags>
+    </WorkTypeDef>
+    
+    <WorkTypeDef>
+        <defName>WatchYT</defName>
+        <labelShort>Watch YouTube</labelShort>
+        <pawnLabel>Noob</pawnLabel>
+        <gerundLabel>watched youtube</gerundLabel>
+        <description>Watching youtube.</description>
+        <verb>Watching youtube at</verb>
+        <naturalPriority>110</naturalPriority>
+        <requireCapableColonist>true</requireCapableColonist>
     </WorkTypeDef>    
 </Defs>

@@ -27,6 +27,7 @@ namespace HospitalityArchitect
         {
             //Find.ResearchManager.DebugSetAllProjectsFinished();
             InjectHotelGuestTab.Inject();
+            
         }
     }
 

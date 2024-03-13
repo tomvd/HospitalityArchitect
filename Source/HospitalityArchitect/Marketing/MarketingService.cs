@@ -20,7 +20,9 @@ public class MarketingService : MapComponent
     public List<GuestRating> guestRatings;
 
     public bool campaignChangedToday;
+    public bool campaign2ChangedToday;
     public PawnKindDef campaignRunning;
+    public PawnKindDef campaign2Running;
     private FinanceService _financeService;
     
     public MarketingService(Map map) : base(map)
@@ -34,7 +36,9 @@ public class MarketingService : MapComponent
         base.ExposeData();
         Scribe_Collections.Look(ref MarketingData, "MarketingData", LookMode.Def, LookMode.Deep, ref defs, ref values);
         Scribe_Defs.Look(ref campaignRunning, "campaignRunning");
+        Scribe_Defs.Look(ref campaign2Running, "campaign2Running");
         Scribe_Values.Look(ref campaignChangedToday, "campaignChangedToday");
+        Scribe_Values.Look(ref campaign2ChangedToday, "campaign2ChangedToday");
         Scribe_Collections.Look(ref guestRatings, "guestRatings", LookMode.Deep);
         guestRatings ??= new List<GuestRating>();
         InitMarketingData();
@@ -65,12 +69,29 @@ public class MarketingService : MapComponent
             }
             else
             {
-                Messages.Message("Marketing campaign stopped due to insufficient funds!", MessageTypeDefOf.NegativeEvent);
+                Messages.Message("An online marketing campaign stopped due to insufficient funds!", MessageTypeDefOf.NegativeEvent);
                 campaignRunning = null;
             }
 
             campaignChangedToday = false;
         }
+        
+        if (campaign2Running != null)
+        {
+            GuestTypeDef type = campaign2Running.GetModExtension<GuestTypeDef>();
+            var cost = MarketingUtility.GetMarketing2Cost(type);
+            if (_financeService.canAfford(cost))
+            {
+                _financeService.doAndBookExpenses(FinanceReport.ReportEntryType.Marketing, cost);
+            }
+            else
+            {
+                Messages.Message("A paper marketing campaign stopped due to insufficient funds!", MessageTypeDefOf.NegativeEvent);
+                campaign2Running = null;
+            }
+
+            campaign2ChangedToday = false;
+        }        
         
         var totalBookings = 0;
         foreach (var guestTypeData in MarketingData)
@@ -78,11 +99,19 @@ public class MarketingService : MapComponent
             GuestTypeDef type = guestTypeData.Key.GetModExtension<GuestTypeDef>();
             if (type.dayVisitor && !type.facilityRequirements.Met(map))
             {
-                break;
+                continue;
             }
-            float marketing = campaignRunning == guestTypeData.Key ? 1 : 0;
-            float bookings = Math.Min(guestTypeData.Value.influencePoints + marketing,
-                GuestUtility.QualifiedBedsCount(map, type, guestTypeData.Key));
+
+            if (map.gameConditionManager.ConditionIsActive(HADefOf.Pandemic) && !type.isCamper)
+            {
+                // only campers make bookings during global pandemic
+                continue;
+            }
+            float marketing = campaignRunning == guestTypeData.Key ? Rand.Range(1,5) : 0; // online ad
+            marketing += campaign2Running == guestTypeData.Key ? Rand.Range(1,2) : 0; // paper ad
+            guestTypeData.Value.influencePoints += marketing * 0.1f; // marketing also increases influence (future bookings)
+            float bookings = Math.Min(Math.Max(guestTypeData.Value.influencePoints, marketing),
+                type.dayVisitor?type.maxVisitors:GuestUtility.QualifiedBedsCount(map, type, guestTypeData.Key));
             if (bookings > type.maxVisitors)
             {
                 // soft cap : it really gets hard to get over this number of visitors a day
@@ -104,13 +133,34 @@ public class MarketingService : MapComponent
             guestTypeData.Value.bookings = (int)Math.Round(bookings);
             
             // spread bookings hourly
-            // TODO.. take into account facility capacity
+            // depending on facility capacity actual bookings can be lower than wanted bookings
             List<int> bookingHours = new List<int>();
+            int actualBookings = 0;
             for (int i = 0; i < guestTypeData.Value.bookings; i++)
             {
-                bookingHours.Add(type.arrivesAt.RandomInRange);
+                bool success = false;
+                int suggestedHour = type.arrivalSlots.RandomElement();
+                int tries = 24;
+                while (!success && tries > 0)
+                {
+                    tries--;
+                    suggestedHour = type.arrivalSlots.RandomElement();
+                    if (type.dayVisitor && type.facilityRequirements.Capacity(map) <=
+                        bookingHours.Count(h => h == suggestedHour))
+                    {
+                        success = false; // at capacity for this suggested hour
+                    }
+                    else
+                    {
+                        success = true;
+                        actualBookings++;
+                    }
+                }
+                if (success) bookingHours.Add(suggestedHour);
             }
-            var sorted = bookingHours.OrderBy(b => b);
+
+            guestTypeData.Value.bookings = actualBookings;
+            var sorted = bookingHours.OrderByDescending(b => b);
             guestTypeData.Value.bookingHours = new Stack<int>(sorted);
             Log.Message($"New booking hours for {guestTypeData.Key.defName} : {String.Join(",", guestTypeData.Value.bookingHours)}");
             totalBookings += guestTypeData.Value.bookings;
@@ -134,26 +184,33 @@ public class MarketingService : MapComponent
         GuestTypeData data;
         MarketingData.TryGetValue(pawnKind, out data);
         //float baseChance = 0.1f * data.bookings;  
-        if (GuestUtility.EmptyQualifiedBedsAvailable(map, type, pawnKind) > 0
-            && GenLocalDate.HourOfDay(map) == data.bookingHours.Peek())
+        if (GenLocalDate.HourOfDay(map) == data.bookingHours.Peek())
         {
             data.bookingHours.Pop();
             data.bookings--;
-            IncidentParms parms = new IncidentParms();
-            parms.target = map;
-            parms.faction = Find.FactionManager.AllFactions.Where(f =>
-                !f.IsPlayer && !f.defeated && !f.def.hidden && !f.HostileTo(Faction.OfPlayer) &&
-                f.def.humanlikeFaction).RandomElement();
-            parms.pawnCount = 1;
-            if (Rand.Chance(type.travelWithPartnerChance))
+            if (GuestUtility.EmptyQualifiedBedsAvailable(map, type, pawnKind) > 0)
             {
-                if (GuestUtility.EmptyQualifiedBedsAvailable(map, type, pawnKind, true) > 0)
+                IncidentParms parms = new IncidentParms();
+                parms.target = map;
+                parms.faction = Find.FactionManager.AllFactions.Where(f =>
+                    !f.IsPlayer && !f.defeated && !f.def.hidden && !f.HostileTo(Faction.OfPlayer) &&
+                    f.def.humanlikeFaction).RandomElement();
+                parms.pawnCount = 1;
+                if (Rand.Chance(type.travelWithPartnerChance))
                 {
-                    parms.pawnCount = 2;
+                    if (GuestUtility.EmptyQualifiedBedsAvailable(map, type, pawnKind, true) > 0)
+                    {
+                        parms.pawnCount = 2;
+                    }
                 }
+
+                parms.pawnKind = pawnKind;
+                DefDatabase<IncidentDef>.GetNamed("HotelGuestGroup").Worker.TryExecuteWorker(parms);
             }
-            parms.pawnKind = pawnKind;
-            DefDatabase<IncidentDef>.GetNamed("HotelGuestGroup").Worker.TryExecuteWorker(parms);
+            else
+            {
+                Messages.Message($"{pawnKind} cancelled booking.", MessageTypeDefOf.NeutralEvent);                
+            }
         }
         
     }
@@ -201,6 +258,21 @@ public class MarketingService : MapComponent
             MarketingData.TryGetValue(hotelGuest.influenceSpillover, out data);
             data.influencePoints += spillOverFactor * ((rating / 100.0f)-0.5f); // influence goes up with a >50% rating and goes down with a <50% rating
         }
+        // if a non-daytime guest had a good stay - it spills over into all daytime guests (cause the facilities get more known)
+        if (rating > 79)
+        {
+            float spillOverFactor = 0.1f;
+            foreach (var guestTypeData in MarketingData)
+            {
+                GuestTypeDef type = guestTypeData.Key.GetModExtension<GuestTypeDef>();
+                if (!type.dayVisitor)
+                {
+                    continue;
+                }
+                guestTypeData.Value.influencePoints += spillOverFactor * ((rating / 100.0f)-0.5f);
+            }
+
+        }
     }
 
     public int GetRating(Pawn pawn, bool save)
@@ -208,6 +280,16 @@ public class MarketingService : MapComponent
         GuestTypeDef hotelGuest = pawn.kindDef.GetModExtension<GuestTypeDef>();
         int rating = hotelGuest.baseRating;
         List<Thought> thoughts = new List<Thought>();
+        pawn.needs.mood.thoughts.GetAllMoodThoughts(thoughts);
+        // last minute thoughts:
+        // TODO if a pawn with Gambler could not gamble, leave complaint
+        if (pawn.kindDef.defName.Equals("RestaurantDayGuest") && !thoughts.Any(thought => thought.def.defName.Equals("Gastronomy_BoughtFood")))
+        {
+            // gastronomy guest did not buy food
+            var thoughtDef = ThoughtDef.Named("RestaurantDayGuest_NoFood");
+            var thoughtMemory = ThoughtMaker.MakeThought(thoughtDef,0);
+            pawn.needs.mood.thoughts.memories?.TryGainMemory(thoughtMemory);
+        }        
         pawn.needs.mood.thoughts.GetAllMoodThoughts(thoughts);
         string bestThought = "";
         int bestScore = 0;
@@ -218,12 +300,20 @@ public class MarketingService : MapComponent
             GuestThoughtRating gtr = thought.def.GetModExtension<GuestThoughtRating>();
             if (gtr != null)
             {
-                rating += gtr.ratings[thought.CurStageIndex];
+                float importanceFactor = 1.0f;
+                if (gtr.importantTo != null && gtr.importantTo.Count > 0 && !gtr.importantTo.Contains(pawn.kindDef))
+                {
+                    importanceFactor = 0.5f;
+                }
+                if (gtr.notImportantTo != null && gtr.notImportantTo.Count > 0 && gtr.notImportantTo.Contains(pawn.kindDef))
+                {
+                    importanceFactor = 0.5f;
+                }
+                rating += (int)(gtr.ratings[thought.CurStageIndex] * importanceFactor);
                 if (gtr.ratings[thought.CurStageIndex] > bestScore) bestThought = thought.CurStage.LabelCap + " (+" + gtr.ratings[thought.CurStageIndex] + ")";
                 if (gtr.ratings[thought.CurStageIndex] < worstScore) worstThought = thought.CurStage.LabelCap + " (" + gtr.ratings[thought.CurStageIndex] + ")";
             }
         }
-        // TODO if a pawn with Gambler could not gamble, leave complaint 
         if (rating > 100)
             Log.Message($"rating exceeded {rating} > 100 for type {pawn.kindDef} - lower base");
 
@@ -241,4 +331,11 @@ public class MarketingService : MapComponent
         campaignChangedToday = true;
         campaignRunning = type;
     }
+    
+    public void setCampaign2(PawnKindDef type)
+    {
+        //if (campaignChangedToday) return;
+        campaign2ChangedToday = true;
+        campaign2Running = type;
+    }    
 }

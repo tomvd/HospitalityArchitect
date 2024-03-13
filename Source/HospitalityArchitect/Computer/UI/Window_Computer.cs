@@ -80,11 +80,6 @@ namespace HospitalityArchitect
             inRect.x += 150f;
             Widgets.Label(inRect,
                 "Cashflow: " + _financeService.GetCashFlow().ToStringMoney());
-            inRect.x += 150f;
-            Widgets.Label(inRect,
-                "Reputation: " + _hiringContractService.Reputation.ToStringDecimalIfSmall() + " /100");
-            
-            
 
         }
     }

@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <RecipeDef>
+        <defName>YTVideoAnimals</defName>
+        <label>watch animals video</label>
+        <description>watching animals video.</description>
+        <jobString>Watching animals video.</jobString>
+        <workAmount>2500</workAmount>
+        <effectWorking>Smelt</effectWorking>
+        <workSkillLearnFactor>7</workSkillLearnFactor>
+        <workSkill>Animals</workSkill>
+    </RecipeDef>
+
+    <RecipeDef>
+        <defName>YTVideoArtistic</defName>
+        <label>watch art lesson</label>
+        <description>watching art lesson.</description>
+        <jobString>Watching art lesson.</jobString>
+        <workAmount>2500</workAmount>
+        <effectWorking>Smelt</effectWorking>
+        <workSkillLearnFactor>7</workSkillLearnFactor>
+        <workSkill>Artistic</workSkill>
+    </RecipeDef>
+
+    <RecipeDef>
+        <defName>YTVideoConstruction</defName>
+        <label>watch construction lesson</label>
+        <description>watching construction lesson.</description>
+        <jobString>Watching construction lesson.</jobString>
+        <workAmount>2500</workAmount>
+        <effectWorking>Smelt</effectWorking>
+        <workSkillLearnFactor>10</workSkillLearnFactor>
+        <workSkill>Construction</workSkill>
+    </RecipeDef>
+
+    <RecipeDef>
+        <defName>YTVideoCooking</defName>
+        <label>watch cooking</label>
+        <description>watching cooking.</description>
+        <jobString>Watching cooking.</jobString>
+        <workAmount>2500</workAmount>
+        <effectWorking>Smelt</effectWorking>
+        <workSkillLearnFactor>8</workSkillLearnFactor>
+        <workSkill>Cooking</workSkill>
+        <workSpeedStat>CookSpeed</workSpeedStat>
+    </RecipeDef>
+
+    <RecipeDef>
+        <defName>YTVideoCrafting</defName>
+        <label>watch crafting</label>
+        <description>watching crafting.</description>
+        <jobString>Watching crafting.</jobString>
+        <workAmount>2500</workAmount>
+        <effectWorking>Smelt</effectWorking>
+        <workSkillLearnFactor>7</workSkillLearnFactor>
+        <workSkill>Crafting</workSkill>
+    </RecipeDef>
+
+    <RecipeDef>
+        <defName>YTVideoGrowing</defName>
+        <label>watch gardening video</label>
+        <description>watching gardening video.</description>
+        <jobString>Watching gardening video.</jobString>
+        <workAmount>2500</workAmount>
+        <effectWorking>Smelt</effectWorking>
+        <workSkillLearnFactor>7</workSkillLearnFactor>
+        <workSkill>Plants</workSkill>
+    </RecipeDef>
+
+    <RecipeDef>
+        <defName>YTVideoMedicine</defName>
+        <label>watch first aid video</label>
+        <description>watching first aid video.</description>
+        <jobString>Watching first aid video.</jobString>
+        <workAmount>2500</workAmount>
+        <effectWorking>Smelt</effectWorking>
+        <workSkillLearnFactor>7</workSkillLearnFactor>
+        <workSkill>Medicine</workSkill>
+    </RecipeDef>
+
+    <RecipeDef>
+        <defName>YTVideoMining</defName>
+        <label>watch mining tips and tricks</label>
+        <description>watching mining tips and tricks.</description>
+        <jobString>Watching mining tips and tricks.</jobString>
+        <workAmount>2500</workAmount>
+        <effectWorking>Smelt</effectWorking>
+        <workSkillLearnFactor>7</workSkillLearnFactor>
+        <workSkill>Mining</workSkill>
+    </RecipeDef>
+
+    <RecipeDef>
+        <defName>YTVideoIntellectual</defName>
+        <label>watch mathematics explained</label>
+        <description>watching mathematics explained.</description>
+        <jobString>Watching mathematics explained.</jobString>
+        <workAmount>2500</workAmount>
+        <effectWorking>Smelt</effectWorking>
+        <workSkillLearnFactor>12</workSkillLearnFactor>
+        <workSkill>Intellectual</workSkill>
+    </RecipeDef>
+
+    <RecipeDef>
+        <defName>YTVideoSocial</defName>
+        <label>learn how to be nice to people</label>
+        <description>learning how to be nice to people.</description>
+        <jobString>Learning how to be nice to people.</jobString>
+        <workAmount>2500</workAmount>
+        <effectWorking>Smelt</effectWorking>
+        <workSkillLearnFactor>7</workSkillLearnFactor>
+        <workSkill>Social</workSkill>
+    </RecipeDef>
+</Defs>

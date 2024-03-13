@@ -125,59 +125,63 @@ namespace HospitalityArchitect
 
         private void DoHireableFaction(ref Rect inRect)
         {
-            var rect = inRect.TopPartPixels(Mathf.Max(20f + _hiringContractService.candidates.Count * 30f, 120f));
-            inRect.yMin += rect.height;
-            var titleRect = rect.TakeTopPart(20f);
-            Widgets.Label(titleRect, "Employer reputation: " + _hiringContractService.Reputation.ToStringDecimalIfSmall());
-            titleRect.y += 20f;
-            var iconRect = rect.LeftPartPixels(105f).ContractedBy(5f);
-            titleRect.x += 15f;
-            Text.Anchor = TextAnchor.MiddleLeft;
-            Text.Font = GameFont.Tiny;
-            var nameRect = new Rect(titleRect);
-            Widgets.Label(titleRect, "name, background");
-            titleRect.x += 550f;
-            titleRect.width = 120f;
-            Text.Anchor = TextAnchor.MiddleCenter;
-            var valueRect = new Rect(titleRect);
-            Widgets.Label(titleRect, "wage");
-            titleRect.x += 100f;
-            titleRect.width = 100f;
-            var numRect = new Rect(titleRect);
-            Widgets.Label(titleRect, "hire");
-            titleRect.x += 100f;
-            titleRect.width = 100f;
-            var numRect2 = new Rect(titleRect);
-            Widgets.Label(titleRect, "hire");            
+            var colTop0 = UIUtility.CreateColumns(inRect, 3);
+            if (Widgets.ButtonText(colTop0[0], "Look around (20s)")) _hiringContractService.addPawn(0);
+            if (Widgets.ButtonText(colTop0[1], "Advertisement (40s)")) _hiringContractService.addPawn(1);
+            if (Widgets.ButtonText(colTop0[2], "Recruitment agency (80s)")) _hiringContractService.addPawn(2);
+
+            var colTop = UIUtility.CreateColumns(inRect, 9);
+            UIUtility.NextRow(colTop);
+            Widgets.Label(colTop[0], "Spec(100s):");
+            // either some passion or level 7 or higher 
+            if (Widgets.ButtonText(colTop[1], "Construction")) _hiringContractService.addPawn(3,SkillDefOf.Construction);
+            if (Widgets.ButtonText(colTop[2], "Cook")) _hiringContractService.addPawn(3,SkillDefOf.Cooking);
+            if (Widgets.ButtonText(colTop[3], "Gardener")) _hiringContractService.addPawn(3,SkillDefOf.Plants);
+            if (Widgets.ButtonText(colTop[4], "Hospitality")) _hiringContractService.addPawn(3,SkillDefOf.Social);
+            if (Widgets.ButtonText(colTop[5], "Researcher")) _hiringContractService.addPawn(3,SkillDefOf.Intellectual);
+            if (Widgets.ButtonText(colTop[6], "Doctor")) _hiringContractService.addPawn(3,SkillDefOf.Medicine);
+            if (Widgets.ButtonText(colTop[7], "Craftsman")) _hiringContractService.addPawn(3,SkillDefOf.Crafting);
+            if (Widgets.ButtonText(colTop[8], "Artist")) _hiringContractService.addPawn(3,SkillDefOf.Artistic);
+
+            var col = UIUtility.CreateColumns(inRect, 7);
+            UIUtility.NextRow(col);
+            UIUtility.NextRow(col);
+            UIUtility.NextRow(col);
+            Widgets.Label(col[0], "Name");
+            Widgets.Label(col[1], "Background(child)");
+            Widgets.Label(col[2], "Background(adult)");
+            Widgets.Label(col[3], "Passion");
+            Widgets.Label(col[4], "Wage");
+            Widgets.Label(col[5], "Hire (day)");
+            Widgets.Label(col[6], "Hire (late)");
+
             GUI.color = Color.white;
             var highlight = true;
             foreach (var candidate in _hiringContractService.candidates.ToList())
             {
-                nameRect.y += 20f;
-                valueRect.y += 20f;
-                numRect.y += 20f;
-                numRect2.y += 20f;
-                var fullRect = new Rect(nameRect.x - 4f, nameRect.y, nameRect.width + valueRect.width + numRect.width,
-                    20f);
+                UIUtility.NextRow(col);
+                var fullRect = new Rect(col[0].x - 4f, col[0].y, inRect.width, 20f);
                 if (highlight) Widgets.DrawHighlight(fullRect);
                 highlight = !highlight;
                 Text.Anchor = TextAnchor.MiddleLeft;
-                Widgets.Label(nameRect, candidate.NameFullColored + ", " + candidate.story.Childhood.TitleFor(candidate.gender)
-                                        + ", " + candidate.story.Adulthood.TitleFor(candidate.gender)
-                                        + ", passion: " + candidate.skills.skills.OrderByDescending(record => record.passion).First().ToString());
+                Widgets.Label(col[0], candidate.NameFullColored);
+                Widgets.Label(col[1], candidate.story.Childhood.TitleFor(candidate.gender));
+                Widgets.Label(col[2], candidate.story.Adulthood.TitleFor(candidate.gender));
+                Widgets.Label(col[3], candidate.skills.skills.OrderByDescending(record => record.passion).First().def.skillLabel);
+
                 Text.Anchor = TextAnchor.MiddleCenter;
-                Widgets.Label(valueRect,
+                Widgets.Label(col[4],
                     (candidate.Wage()).ToStringMoney()+"/day");
 
 
-                if (Widgets.ButtonText(numRect.RightHalf(), "Hire (day)"))
+                if (Widgets.ButtonText(col[5], "7h-16h"))
                 {
                     if (!_financeService.canAfford(candidate.Wage()))
                         Messages.Message("NotEnoughSilver".Translate(), MessageTypeDefOf.RejectInput);
                     else
                         OnHireKeyPressed(candidate,0);
                 }
-                if (Widgets.ButtonText(numRect2.RightHalf(), "Hire (late)"))
+                if (Widgets.ButtonText(col[6], "16h-1h"))
                 {
                     if (!_financeService.canAfford(candidate.Wage()))
                         Messages.Message("NotEnoughSilver".Translate(), MessageTypeDefOf.RejectInput);

@@ -21,7 +21,7 @@
       <li>Map_PlayerHome</li>
     </targetTags>
     <workerClass>HospitalityArchitect.IncidentWorker_RimazonSales</workerClass>
-    <baseChance>1.0</baseChance>
+    <baseChance>0</baseChance>
     <minRefireDays>5</minRefireDays>
     <durationDays>1.5~2.0</durationDays>
   </IncidentDef>
@@ -33,12 +33,21 @@
     <targetTags>
       <li>Map_PlayerHome</li>
     </targetTags>
-    <workerClass>HospitalityArchitect.IncidentWorker_RimazonSales</workerClass>
-    <baseChance>0.5</baseChance>
+    <workerClass>HospitalityArchitect.IncidentWorker_Pandemic</workerClass>
+    <baseChance>1.0</baseChance>
     <minRefireDays>45</minRefireDays>
     <durationDays>15~20</durationDays>
-    <letterLabel>global pandemic</letterLabel>
-    <letterText>A worldwide spread of a new disease is causing most guests to stay at home. Only campers are allowed to travel.</letterText>
-    <letterDef>ThreatSmall</letterDef>    
   </IncidentDef>  
+  
+  <GameConditionDef>
+    <defName>Pandemic</defName>
+    <conditionClass>HospitalityArchitect.GameCondition_Pandemic</conditionClass>
+    <label>global pandemic</label>
+    <description>The Rimworld Health Organisation declared a fast spreading lung disease as a global pandemic.</description>
+    <letterText>Because of the rimworldwide fast spread of this new disease RHO decided to all travel to be restricted. Only outdoor campers are allowed to travel.</letterText>
+    <endMessage>The global pandemic is ending.</endMessage>
+    <letterDef>ThreatSmall</letterDef>
+    <natural>false</natural>
+  </GameConditionDef>
+  
 </Defs>

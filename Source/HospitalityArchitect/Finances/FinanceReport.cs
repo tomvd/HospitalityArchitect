@@ -18,10 +18,13 @@ namespace HospitalityArchitect
             Rimazon,
             Interest,
             Taxes,
-            Sales,
+            Store,
             Beds,
             Marketing,
-            GroundRent
+            GroundRent,
+            Restaurant,
+            Facilities,
+            Misc
         }
 
         public void recordBooking(ReportEntryType type, float value)

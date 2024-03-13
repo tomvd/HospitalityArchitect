@@ -110,6 +110,10 @@
                         <li>5</li>
                         <li>20</li>
                     </ratings>
+                    <notImportantTo>
+                        <li>RestaurantDayGuest</li>
+                        <li>ShoppingDayGuest</li>
+                    </notImportantTo>                    
                 </li>
             </value>
         </li>
@@ -201,7 +205,50 @@
                         </ratings>
                     </li>
                 </value>
-            </li>                 
+            </li>
+            <li Class="PatchOperationAddModExtension">
+                <xpath>Defs/ThoughtDef[defName="Gastronomy_ServicedMood"]</xpath>
+                <value>
+                    <li Class="HospitalityArchitect.GuestThoughtRating">
+                        <ratings>
+                            <li>-20</li>
+                            <li>-10</li>
+                            <li>10</li>
+                            <li>20</li>
+                            <li>30</li>
+                        </ratings>
+                        <importantTo>
+                            <li>RestaurantDayGuest</li>
+                        </importantTo>                        
+                    </li>
+                </value>
+            </li>            
+            <li Class="PatchOperationAddModExtension">
+                <xpath>Defs/ThoughtDef[defName="Gastronomy_BoughtFood"]</xpath>
+                <value>
+                    <li Class="HospitalityArchitect.GuestThoughtRating">
+                        <ratings>
+                            <li>20</li>
+                            <li>10</li>
+                            <li>10</li>
+                            <li>10</li>
+                            <li>-10</li>
+                            <li>-20</li>
+                        </ratings>
+                        <importantTo>
+                            <li>RestaurantDayGuest</li>
+                        </importantTo>                        
+                    </li>
+                </value>
+            </li>
+            <li Class="PatchOperationAddModExtension">
+                <xpath>Defs/ThoughtDef[defName="ColdWater"]</xpath>
+                <value>
+                    <li Class="HospitalityArchitect.GuestThoughtRating">
+                        <ratings><li>-5</li></ratings>
+                    </li>
+                </value>
+            </li>            
         </operations>
     </Operation>
 </Patch>

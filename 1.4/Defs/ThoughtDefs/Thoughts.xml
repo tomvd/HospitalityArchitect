@@ -20,7 +20,26 @@
             </li>
         </modExtensions>          
     </ThoughtDef>
-    
+    <ThoughtDef>
+        <defName>HospitalityArchitect_Gift</defName>
+        <durationDays>1</durationDays>
+        <stackLimit>1</stackLimit>
+        <stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+        <stages>
+            <li>
+                <label>had a gift</label>
+                <description>The manager gave me a small gift, which is a nice gesture.</description>
+                <baseMoodEffect>10</baseMoodEffect>
+            </li>
+        </stages>
+        <modExtensions>
+            <li Class="HospitalityArchitect.GuestThoughtRating">
+                <ratings>
+                    <li>20</li>
+                </ratings>
+            </li>
+        </modExtensions>          
+    </ThoughtDef>    
     <ThoughtDef>
         <defName>HospitalityArchitect_NoCleanBedding</defName>
         <durationDays>1</durationDays>
@@ -314,5 +333,26 @@
                 </ratings>
             </li>
         </modExtensions>        
-    </ThoughtDef>        
+    </ThoughtDef>
+    
+    <ThoughtDef>
+        <defName>RestaurantDayGuest_NoFood</defName>
+        <durationDays>1</durationDays>
+        <stackLimit>5</stackLimit>
+        <stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+        <stages>
+            <li>
+                <label>I had nothing to eat</label>
+                <description>I came for the food but left without getting any!</description>
+                <baseMoodEffect>-5</baseMoodEffect>
+            </li>
+        </stages>
+        <modExtensions>
+            <li Class="HospitalityArchitect.GuestThoughtRating">
+                <ratings>
+                    <li>-40</li>
+                </ratings>
+            </li>
+        </modExtensions>          
+    </ThoughtDef>    
 </Defs>

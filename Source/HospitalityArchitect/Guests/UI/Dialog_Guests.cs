@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Hospitality;
+using Hospitality.Utilities;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace HospitalityArchitect
         private MarketingService _marketingService;
         private int currentTab = 0;
         private float lastTimeCached;
+        private Hospitality_MapComponent comp;
 
         public Dialog_Guests()
         {
@@ -27,6 +29,7 @@ namespace HospitalityArchitect
             _hiringContractService = map.GetComponent<HiringContractService>();
             _financeService = map.GetComponent<FinanceService>();
             _marketingService = map.GetComponent<MarketingService>();
+            comp = map.GetMapComponent();
         }
 
         public override Vector2 InitialSize => new Vector2(1000f, 600f);
@@ -52,13 +55,19 @@ namespace HospitalityArchitect
                     DoGuestList(ref rect);
                     break;
                 case 1:
-                    DoOverview(ref rect);
+                    DoBookings(ref rect);
                     break;
                 case 2:
+                    DoOverview(ref rect);
+                    break;
+                case 3:
                     DoToughts(ref rect);
                     break;                     
-                case 3:
+                case 4:
                     DoReviews(ref rect);
+                    break;                
+                case 5:
+                    DoSettings(ref rect);
                     break;                
             }
             Text.Anchor = anchor;
@@ -73,36 +82,57 @@ namespace HospitalityArchitect
                 SoundDefOf.Click.PlayOneShotOnCamera();
             }
             buttonBarRect.x += 100;
-            if (Widgets.ButtonText(buttonBarRect, "Guest types"))
+            if (Widgets.ButtonText(buttonBarRect, "Bookings"))
             {
                 currentTab = 1;
                 SoundDefOf.Click.PlayOneShotOnCamera();
             }
-            buttonBarRect.x += 100;
-            if (Widgets.ButtonText(buttonBarRect, "Guest thoughts"))
+            buttonBarRect.x += 100;            
+            if (Widgets.ButtonText(buttonBarRect, "Guest types"))
             {
                 currentTab = 2;
                 SoundDefOf.Click.PlayOneShotOnCamera();
             }
             buttonBarRect.x += 100;
-            if (Widgets.ButtonText(buttonBarRect, "Reviews"))
+            if (Widgets.ButtonText(buttonBarRect, "Guest thoughts"))
             {
                 currentTab = 3;
                 SoundDefOf.Click.PlayOneShotOnCamera();
             }
+            buttonBarRect.x += 100;
+            if (Widgets.ButtonText(buttonBarRect, "Reviews"))
+            {
+                currentTab = 4;
+                SoundDefOf.Click.PlayOneShotOnCamera();
+            }
+            buttonBarRect.x += 100;
+            if (Widgets.ButtonText(buttonBarRect, "Settings"))
+            {
+                currentTab = 5;
+                SoundDefOf.Click.PlayOneShotOnCamera();
+            }
 
         }
+        
+        public static void DoAreaRestriction(Rect rect, Area area, Action<Area> setArea, Func<Area, string> getLabel, Map map)
+        {
+            var newArea = area;
+            Hospitality.Utilities.GuestUtility.DoAllowedAreaSelectors(rect, getLabel, ref newArea, map);
+            Text.Anchor = TextAnchor.UpperLeft;
+
+            if (newArea != area) setArea(newArea);
+        }        
         
         private void DoOverview(ref Rect inRect)
         {
             var marketingData = _marketingService.MarketingData.OrderBy(data => data.Key.GetModExtension<GuestTypeDef>().bedBudget).ToList();
             var col = UIUtility.CreateColumns(inRect, 6);
             Widgets.Label(col[0], "Guest type");
-            Widgets.Label(col[1], "Arrives at");
-            Widgets.Label(col[2], "Influence Points");
-            Widgets.Label(col[3], "Bookings/Capacity");
-            Widgets.Label(col[4], "Requirements");
-            Widgets.Label(col[5], "Advertisement");
+            Widgets.Label(col[1], "Influence Points");
+            Widgets.Label(col[2], "Bookings/Capacity");
+            Widgets.Label(col[3], "Requirements");
+            Widgets.Label(col[4], "Online ad");
+            Widgets.Label(col[5], "Paper ad");
             var highlight = true;
             foreach (var data in marketingData)
             {
@@ -115,39 +145,111 @@ namespace HospitalityArchitect
                 // Guest type
                 Widgets.Label(col[0],data.Key.label);
                 
-                // Arrives at
-                Widgets.Label(col[1],type.arrivesAt.ToString());
-                
                 //Influence Points
-                Widgets.Label(col[2],data.Value.influencePoints.ToStringDecimalIfSmall());
+                Widgets.Label(col[1],data.Value.influencePoints.ToStringDecimalIfSmall());
                 
                 // Bookings/Capacity
                 if (Time.unscaledTime > lastTimeCached + 2)
                 {
                     data.Value.QualifiedBedsCached = GuestUtility.QualifiedBedsCount(map, type, data.Key);
                 }                
-                Widgets.Label(col[3],data.Value.bookings.ToString() + "/" + data.Value.QualifiedBedsCached);
+                Widgets.Label(col[2],data.Value.bookings.ToString() + "/" + data.Value.QualifiedBedsCached);
 
                 // Requirements
-                if (Widgets.ButtonText(col[4], "Show Info"))
+                if (Widgets.ButtonText(col[3], "Show Info"))
                     Find.WindowStack.Add(new Window_GuestRequirements(data.Key));
 
-                // Advertisement
-                if (data.Key == _marketingService.campaignRunning)
+                // Online Advertisement
+                if (HADefOf.HA_OnlineMarketing.IsFinished)
                 {
-                    if (Widgets.ButtonText(col[5], "Cancel ad"))
-                        Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("Are you sure?".Translate(),
-                            () => { _marketingService.setCampaign(null); }, true, "Cancel ad"));                    
+                    if (data.Key == _marketingService.campaignRunning)
+                    {
+                        if (Widgets.ButtonText(col[4], "Cancel ad"))
+                            Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(
+                                "Are you sure to stop the online ad?",
+                                () => { _marketingService.setCampaign(null); }, true, "Cancel ad"));
+                    }
+                    else
+                    {
+                        if (Widgets.ButtonText(col[4], "Run ad (" + MarketingUtility.GetMarketingCost(type) + "/day)"))
+                            Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(
+                                "Are you sure to start an online ad for " + MarketingUtility.GetMarketingCost(type) +
+                                "/day?",
+                                () => { _marketingService.setCampaign(data.Key); }, true, "Run ad"));
+                    }
                 }
                 else
                 {
-                    if (Widgets.ButtonText(col[5], "Run ad (" + MarketingUtility.GetMarketingCost(type) + "/day)"))
-                        Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("Are you sure?".Translate(),
-                            () => { _marketingService.setCampaign(data.Key); }, true, "Run ad"));
+                    Widgets.Label(col[4],"research");
                 }
+
+                // Paper Advertisement
+                if (data.Key == _marketingService.campaign2Running)
+                {
+                    if (Widgets.ButtonText(col[5], "Cancel ad"))
+                        Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("Are you sure to stop the paper ad?",
+                            () => { _marketingService.setCampaign2(null); }, true, "Cancel ad"));                    
+                }
+                else
+                {
+                    if (Widgets.ButtonText(col[5], "Run ad (" + MarketingUtility.GetMarketing2Cost(type) + "/day)"))
+                        Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("Are you sure to start an paper ad for " + MarketingUtility.GetMarketing2Cost(type) + "/day?",
+                            () => { _marketingService.setCampaign2(data.Key); }, true, "Run ad"));
+                }                
             }
             if (Time.unscaledTime > lastTimeCached + 2)
                 lastTimeCached = Time.unscaledTime;
+        }
+        
+        private void DoBookings(ref Rect inRect)
+        {
+            List<Lord> visitorGroups = map.GetComponent<Hospitality_MapComponent>().PresentLords.ToList();
+            var col = UIUtility.CreateKeyValueColumns(inRect);
+            Widgets.Label(col[0], "Hour");
+            Widgets.Label(col[1], "");
+            var highlight = true;
+            Dictionary<int, Dictionary<PawnKindDef, int>> groupedBookings = new Dictionary<int, Dictionary<PawnKindDef, int>>();
+            foreach (var data in _marketingService.MarketingData)
+            {
+                foreach (var hour in data.Value.bookingHours.ToList())
+                {
+                    if (groupedBookings.ContainsKey(hour))
+                    {
+                        if (groupedBookings[hour].ContainsKey(data.Key))
+                        {
+                            groupedBookings[hour][data.Key]++;
+                        }
+                        else
+                        {
+                            groupedBookings[hour].Add(data.Key, 1);
+                        }
+                    }
+                    else
+                    {
+                        groupedBookings.Add(hour,new Dictionary<PawnKindDef, int>());
+                        groupedBookings[hour].Add(data.Key, 1);
+                    }
+                }
+            }
+
+            foreach (var booking in groupedBookings.OrderBy(data => data.Key).ToList())
+            {
+                UIUtility.NextRow(col);
+                if (col[0].y > inRect.height) break;
+                Widgets.Label(col[0], booking.Key.ToString());
+                Widgets.Label(col[1], bookingList(booking.Value));
+            }
+        }
+
+        private string bookingList(Dictionary<PawnKindDef, int> bookingValue)
+        {
+            string result = "";
+            foreach (var keyValuePair in bookingValue)
+            {
+                result += keyValuePair.Value + "x" + keyValuePair.Key.label + " ";
+            }
+
+            return result;
         }
 
         private void DoGuestList(ref Rect inRect)
@@ -183,8 +285,11 @@ namespace HospitalityArchitect
                     {
                         foreach (var pawn in lord.ownedPawns)
                         {
-                            _financeService.doAndBookExpenses(FinanceReport.ReportEntryType.Beds,
-                                pawn.GetComp<CompHotelGuest>().totalSpent);
+                            // Add money back in the pocket - just for roleplaying as the guest cant do anything with it anymore
+                            var money = ThingMaker.MakeThing(ThingDefOf.Silver);
+                            money.stackCount = (int)pawn.GetComp<CompHotelGuest>().totalSpent;
+                            pawn.inventory.innerContainer.TryAdd(money);
+                            _financeService.doAndBookExpenses(FinanceReport.ReportEntryType.Misc, pawn.GetComp<CompHotelGuest>().totalSpent);
                         }
 
                         GuestUtility.HotelGuestLeaves(lord.ownedPawns[0]);
@@ -192,7 +297,16 @@ namespace HospitalityArchitect
 
                     if (Widgets.ButtonText(col[5], "Gift"))
                     {
-                        Log.Message("not implemented yet");
+                        Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("For a gift of 40s you can increase the mood/review by the guest - continue?",
+                            () =>
+                            {
+                                var money = ThingMaker.MakeThing(ThingDefOf.Silver);
+                                money.stackCount = 40;
+                                lord.ownedPawns[0].inventory.innerContainer.TryAdd(money);
+                                GuestUtility.Gift(lord.ownedPawns[0]);
+                                _financeService.doAndBookExpenses(FinanceReport.ReportEntryType.Misc, 40);                                
+                            }, true, "Gift"));                              
+                        
                     }
                 }
                 else
@@ -252,6 +366,16 @@ namespace HospitalityArchitect
                 if (col[0].y > inRect.height) break;
                 Widgets.Label(col[0], groupedThought.Key + " (" + groupedThought.Value + ")");
             }
-        }        
+        }
+        
+        private void DoSettings(ref Rect inRect)
+        {
+            var col = UIUtility.CreateKeyValueColumns(inRect);
+            Widgets.Label(col[0], "Setting");
+            Widgets.Label(col[1], "Value");
+            UIUtility.NextRow(col);
+            Widgets.Label(col[0], "Guest area:");
+            DoAreaRestriction(col[1], comp.defaultAreaRestriction, area => comp.defaultAreaRestriction = area, AreaUtility.AreaAllowedLabel_Area, map);                
+        }             
     }
 }

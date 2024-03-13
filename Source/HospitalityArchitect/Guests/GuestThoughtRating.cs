@@ -8,4 +8,6 @@ namespace HospitalityArchitect;
 public class GuestThoughtRating : DefModExtension
 {
     public List<int> ratings; // the stages need to correspond to the list here
+    public List<PawnKindDef> importantTo;
+    public List<PawnKindDef> notImportantTo;
 }

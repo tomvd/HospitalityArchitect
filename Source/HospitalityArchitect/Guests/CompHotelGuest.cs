@@ -14,7 +14,8 @@ namespace HospitalityArchitect
         public float initialMoney;
         public bool dayVisit;
         public bool arrived;
-        public bool slept;
+        public int lastHourSeen;
+        public int hoursSpent;
         public bool left;
 
         public override void PostExposeData()
@@ -24,7 +25,8 @@ namespace HospitalityArchitect
             Scribe_Values.Look(ref initialMoney, "initialMoney");
             Scribe_Values.Look(ref dayVisit, "dayVisit");
             Scribe_Values.Look(ref arrived, "arrived");
-            Scribe_Values.Look(ref slept, "slept");
+            Scribe_Values.Look(ref lastHourSeen, "lastHourSeen");
+            Scribe_Values.Look(ref hoursSpent, "hoursSpent");
             Scribe_Values.Look(ref left, "left");
         }
 

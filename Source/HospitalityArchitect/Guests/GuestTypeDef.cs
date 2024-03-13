@@ -12,8 +12,8 @@ public class GuestTypeDef : DefModExtension
     public bool bringsFood = false;
     public float travelWithPartnerChance = 0.0f;
     public bool dayVisitor = false;
-    public IntRange arrivesAt = new IntRange(14, 16);
-    public IntRange leavesAt = new IntRange(10, 12);
+    public List<int> arrivalSlots = new List<int>() { 15, 16, 17, 18 }; // overnight stay arrival slots
+    public int duration = 16; // 16h is default for overnight stays
     public int maxVisitors = 15; // limit to visitors a day - ever - totals to about a limit of 100 over all types
     public int baseRating = 50; // 0-100 starting point of the guest rating
     public float seasonalVariance = 0f; // how much the season affects the bookings

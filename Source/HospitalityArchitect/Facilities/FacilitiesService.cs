@@ -79,12 +79,15 @@ public class FacilitiesService : MapComponent
         if (facilitiesData.TryGetValue("Restaurant", out data))
         {
             RestaurantsManager rm = Find.CurrentMap.GetComponent<RestaurantsManager>();
+            bool anyRestaurantIsOpen = false;
+            data.totalCapacity = 0;
             foreach (var restaurantController in rm.restaurants)
             {
-                if (restaurantController.IsOpenedRightNow)
+                if (restaurantController.IsOpenedRightNow) anyRestaurantIsOpen = true;
+                if (restaurantController.openForBusiness)
                     data.totalCapacity += restaurantController.Seats;
             }
-            if (data.totalCapacity > 0)
+            if (anyRestaurantIsOpen)
                 data.isOpen = true;
             else
                 data.isOpen = false;
@@ -93,12 +96,15 @@ public class FacilitiesService : MapComponent
         if (facilitiesData.TryGetValue("Store", out data))
         {
             StoresManager rm = Find.CurrentMap.GetComponent<StoresManager>();
-            foreach (var restaurantController in rm.Stores)
+            bool anyStoreOpen = false;
+            data.totalCapacity = 0;
+            foreach (var store in rm.Stores)
             {
-                if (restaurantController.IsOpenedRightNow)
-                    data.totalCapacity += 5;
+                if (store.IsOpenedRightNow) anyStoreOpen = true;
+                if (store.openForBusiness)
+                    data.totalCapacity += 4; // about 4 customers per hour can be handled
             }
-            if (data.totalCapacity > 0)
+            if (anyStoreOpen)
                 data.isOpen = true;
             else
                 data.isOpen = false;
@@ -129,6 +135,19 @@ public class FacilitiesService : MapComponent
         {
             return false;
         }
-    }    
+    }
+    
+    public int FacilityCapacity(string name)
+    {
+        FacilitiesData data;
+        if (facilitiesData.TryGetValue(name, out data))
+        {
+            return data.totalCapacity; // todo capacity check? facility value rating matches guest value rating
+        }
+        else
+        {
+            return 0;
+        }
+    }        
     
 }

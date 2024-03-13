@@ -172,7 +172,7 @@ namespace HospitalityArchitect
                 if (__instance.Owner is Pawn_InventoryTracker)
                     financeService.bookIncome(FinanceReport.ReportEntryType.Beds, count);
                 else
-                    financeService.bookIncome(FinanceReport.ReportEntryType.Sales, count);
+                    financeService.bookIncome(FinanceReport.ReportEntryType.Facilities, count);
             }
         }
 

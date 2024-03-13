@@ -140,36 +140,30 @@ namespace HospitalityArchitect
                 _financeService.Deposit();
             }
             categoryRect.width = 300f;
-            foreach (var loanType in _financeService.LoanTypes)
+            categoryRect.x = 0f;
+            categoryRect.y += 20f;
+            Widgets.Label(categoryRect,
+                $"Loan at {_financeService.getLoanInterest().ToStringPercent()} daily.");
+            categoryRect.x += 150f;
+            if (_financeService.moneyInLoan > 0)
             {
-                categoryRect.x = 0f;
-                categoryRect.y += 20f;
                 Widgets.Label(categoryRect,
-                    $"{loanType.Amount.ToStringMoney()} at {loanType.Interest.ToStringPercent()}");
-                categoryRect.x += 300f;
-                if (_financeService.Loans.Exists(loan => loan.LoanType.Equals(loanType.GetUniqueLoadID())))
+                    "balance: " + _financeService.moneyInLoan.ToStringMoney());
+                categoryRect.x += 100f;
+                categoryRect.width = 150f;
+                if (Widgets.ButtonText(categoryRect, "Repay 500s"))
                 {
-                    Loan l = _financeService.Loans.Find(loan => loan.LoanType.Equals(loanType.GetUniqueLoadID()));
-                    Widgets.Label(categoryRect,
-                        "balance: " + l.Balance.ToStringMoney());
-                    categoryRect.x += 100f;
-                    categoryRect.width = 150f;
-                    if (Widgets.ButtonText(categoryRect, "Repay 1K"))
-                    {
-                        if (!_financeService.canAfford(1000))
-                            Messages.Message("Not enough funds", MessageTypeDefOf.RejectInput);
-                        else
-                            _financeService.Repay(1000, l);
-                    }
+                    if (!_financeService.canAfford(500f))
+                        Messages.Message("Not enough funds", MessageTypeDefOf.RejectInput);
+                    else
+                        _financeService.Repay(500f);
                 }
-                else
-                {
-                    categoryRect.width = 150f;
-                    if (Widgets.ButtonText(categoryRect, "Take loan"))
-                    {
-                        _financeService.TakeLoan(loanType);
-                    }
-                }
+            }
+            categoryRect.x += 150f;
+            categoryRect.width = 150f;
+            if (Widgets.ButtonText(categoryRect, "Loan 500s"))
+            {
+                _financeService.TakeLoan(500f);
             }
         }
 

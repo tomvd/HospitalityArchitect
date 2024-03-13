@@ -9,7 +9,7 @@ public class JobDriver_Quicksell_Designated : JobDriver_Quicksell
     
     protected override void FinishedRemoving()
     {
-        Map.GetComponent<FinanceService>().doAndBookIncome(FinanceReport.ReportEntryType.Sales,(Target.MarketValue/2f)*Target.stackCount);
+        Map.GetComponent<FinanceService>().doAndBookIncome(FinanceReport.ReportEntryType.Misc,QuickSellUtil.QSPrice(Target));
         Target.Destroy(DestroyMode.Refund);
     }
 }

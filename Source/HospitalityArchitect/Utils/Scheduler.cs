@@ -58,29 +58,26 @@ public class Scheduler : MapComponent
                     {
                         hotelGuest.totalSpent = hotelGuest.initialMoney;
                     }
-                    bool leave = false;
+
+                    if (GenLocalDate.HourOfDay(map) != hotelGuest.lastHourSeen)
+                    {
+                        hotelGuest.hoursSpent++;
+                        hotelGuest.lastHourSeen = GenLocalDate.HourOfDay(map);
+                    }
                     if (!hotelGuest.left)
                     {
-                        if (!hotelGuest.slept && GenLocalDate.HourOfDay(map) == 0) hotelGuest.slept = true;
-                        if (hotelGuest.dayVisit)
-                        {
-                            if (guest.IsTired() || GenLocalDate.HourOfDay(map) > type.leavesAt.RandomInRange)
-                            {
-                                leave = true;
-                            }
-                        }
-                        else
-                        {
-                            if (hotelGuest.slept &&
-                                GenLocalDate.HourOfDay(map) > type.leavesAt.RandomInRange)
-                            {
-                                leave = true;
-                            }
-                        }
-
-                        if (leave)
+                        if (hotelGuest.hoursSpent >= type.duration || (hotelGuest.dayVisit && guest.IsTired()))
                         {
                             GuestUtility.HotelGuestLeaves(guest);
+                        }
+                    }
+                    else
+                    {
+                        // guest is leaving, but not waiting for bus?
+                        if (guest.CurJobDef != null && !guest.CurJobDef.Equals(HADefOf.WaitForBus))
+                        {
+                            VehiculumService busService = map.GetComponent<VehiculumService>();
+                            busService.GetPawnsReadyForDeparture(new List<Pawn>() {guest});                                 
                         }
                     }
                 }

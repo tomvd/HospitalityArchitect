@@ -10,12 +10,8 @@ public class GuestTypeData  : IExposable
     public int totalVisits;
     public float avgRating;
     public int QualifiedBedsCached;
-    public Stack<int> bookingHours;
+    public Stack<int> bookingHours = new();
 
-    public GuestTypeData()
-    {
-    }
-    
     public void ExposeData()
     {
         Scribe_Values.Look(ref influencePoints, "influencePoints");
@@ -23,6 +19,5 @@ public class GuestTypeData  : IExposable
         Scribe_Values.Look(ref avgRating, "avgRating");
         Scribe_Values.Look(ref bookings, "bookings");
         Scribe_Collections.Look(ref bookingHours, "bookingHours");
-        bookingHours ??= new Stack<int>();
     }
 }
