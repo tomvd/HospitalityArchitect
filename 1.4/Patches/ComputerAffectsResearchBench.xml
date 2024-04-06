@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Patch>
+    <Operation Class="PatchOperationConditional">
+        <xpath>Defs/ThingDef[defName="SimpleResearchBench"]/comps</xpath>
+        <nomatch Class="PatchOperationAdd">
+            <xpath>Defs/ThingDef[defName="SimpleResearchBench"]</xpath>
+            <value>
+                <comps>
+                    <li Class="CompProperties_AffectedByFacilities">
+                        <linkableFacilities>
+                            <li>HA_Computer</li>
+                        </linkableFacilities>
+                    </li>
+                </comps>
+            </value>
+        </nomatch>
+        <match Class="PatchOperationAdd">
+            <xpath>Defs/ThingDef[defName="SimpleResearchBench"]/comps</xpath>
+            <value>
+                <li Class="CompProperties_AffectedByFacilities">
+                    <linkableFacilities>
+                        <li>HA_Computer</li>
+                    </linkableFacilities>
+                </li>
+            </value>
+        </match>
+    </Operation>
+</Patch>

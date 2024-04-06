@@ -62,6 +62,12 @@
             <glowRadius>5.5</glowRadius>
             <glowColor>(0,0,75,0)</glowColor>
         </li>
+      <li Class="CompProperties_Facility">
+        <statOffsets>
+          <ResearchSpeedFactor>3.0</ResearchSpeedFactor>
+        </statOffsets>
+        <maxSimultaneous>1</maxSimultaneous>
+      </li>
     </comps>
   <recipes>
     <li>YTVideoAnimals</li>
@@ -81,6 +87,7 @@
     <designationHotKey>Misc3</designationHotKey>
     <placeWorkers>
       <li>PlaceWorker_PreventInteractionSpotOverlap</li>
+      <li>PlaceWorker_ShowFacilitiesConnections</li>
     </placeWorkers>
     <researchPrerequisites>
       <li>MicroelectronicsBasics</li>
