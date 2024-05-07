@@ -107,7 +107,7 @@ namespace HospitalityArchitect
         {
             get
             {
-                if (Spawned && Map.gameConditionManager.ElectricityDisabled)
+                if (Spawned && Map.gameConditionManager.ElectricityDisabled(Map))
                     return false;
                 return powerComp == null || powerComp.PowerOn;
             }
@@ -138,7 +138,7 @@ namespace HospitalityArchitect
         {
             if (!myPawn.CanReach((LocalTargetInfo)(Thing)this, PathEndMode.InteractionCell, Danger.Some))
                 return new FloatMenuOption("CannotUseNoPath".Translate(), null);
-            if (Spawned && Map.gameConditionManager.ElectricityDisabled)
+            if (Spawned && Map.gameConditionManager.ElectricityDisabled(Map))
                 return new FloatMenuOption("CannotUseSolarFlare".Translate(), null);
             if (powerComp != null && !powerComp.PowerOn)
                 return new FloatMenuOption("CannotUseNoPower".Translate(), null);

@@ -30,7 +30,7 @@ public class GenStep_Road : GenStep
 			// draw lines
 			if (tile.x == startX || tile.x == endX)
 			{
-				GenSpawn.Spawn(ThingMaker.MakeThing((ThingDef)HADefOf.HA_DecalLineThin), tile, map, tile.x == startX?Rot4.East:Rot4.West);
+				GenSpawn.Spawn(ThingMaker.MakeThing((ThingDef)HADefOf.HA_DecalLineThin), tile, map, tile.x == startX?Rot4.East:Rot4.West, WipeMode.Vanish,false, false);
 			}
 		}
 		// place concrete slab for the delivery area

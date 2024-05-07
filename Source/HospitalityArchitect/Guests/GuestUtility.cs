@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Hospitality;
+using Hospitality.Utilities;
 using RimWorld;
 using UnityEngine;
 using Verse;

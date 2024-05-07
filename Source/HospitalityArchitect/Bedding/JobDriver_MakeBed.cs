@@ -34,7 +34,7 @@ internal class JobDriver_MakeBed : JobDriver
 	{
 		this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
 		AddEndCondition(() => BedComp.needBedding ? JobCondition.Ongoing : JobCondition.Succeeded);
-		AddFinishAction(() => Bedding.Destroy());
+		AddFinishAction((x) => Bedding.Destroy());
 		yield return Toils_General.DoAtomic(delegate
 		{
 			job.count = 1;

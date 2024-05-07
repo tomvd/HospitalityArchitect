@@ -58,11 +58,6 @@ namespace HospitalityArchitect
             this.innerContainer.ClearAndDestroyContents();
         }
 
-        public override void Draw()
-        {
-            base.Draw();
-        }
-
         public override Vector3 DrawPos => currentPos;
 
         

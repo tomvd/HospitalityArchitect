@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using DubsBadHygiene;
 using RimWorld;
 using Verse;
 using Verse.AI;

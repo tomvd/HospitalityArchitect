@@ -27,9 +27,9 @@ namespace HospitalityArchitect
             base.ExposeData();
         }
 
-        public override void Draw()
+        public override void DrawAt(Vector3 drawLoc, bool flip = false)
         {
-            base.Draw();
+            base.DrawAt(drawLoc, flip);
             int pos = 0;
             foreach (var thing in innerContainer)
             {
